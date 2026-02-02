@@ -19,12 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\cpp\glad.c" />
+    <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Dependencies\include\glad\gl.h" />
-    <ClInclude Include="Source\Dependencies\include\glad\glad.h" />
     <ClInclude Include="Source\Dependencies\include\GLFW\glfw3.h" />
     <ClInclude Include="Source\Dependencies\include\GLFW\glfw3native.h" />
     <ClInclude Include="Source\Dependencies\include\KHR\khrplatform.h" />
