@@ -1,5 +1,8 @@
 // Sample from: https://www.glfw.org/documentation.html
+#include <glad/glad.h>
+// GLFW (include after glad)
 #include <GLFW/glfw3.h>
+#include <cstdio>
 
 int main(void)
 {
@@ -10,7 +13,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1920, 1080, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(500, 500, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -19,6 +22,16 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    
+    int version = gladLoadGL();
+    if (version == 0)
+    {
+        printf("Failed to initialize OpenGL context\n");
+        return -1;
+    }
+    
+    // Successfully loaded OpenGL
+    printf("Loaded OpenGL %d.%d\n", GLVersion.major, GLVersion.minor);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
