@@ -1,29 +1,46 @@
 // Sample from: https://www.glfw.org/documentation.html
-#include <glad/glad.h>
+#include <glad/gl.h>
 // GLFW (include after glad)
 #include <GLFW/glfw3.h>
 #include <cstdio>
 
+enum class screen_size : uint16_t
+{
+    width = 800,
+    height = 600
+};
+
+namespace
+{
+    auto error_callback(int error, const char* description) -> void
+    {
+        static_cast<void>(fprintf(stderr, "Error: %s\n", description));
+    }
+}
+
 int main(void)
 {
-    GLFWwindow* window;
-
-    /* Initialize the library */
+    // Initialize the library
     if (!glfwInit())
+    {
         return -1;
+    }
+    
+    glfwSetErrorCallback(error_callback);
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(500, 500, "Hello World", NULL, NULL);
+    // Create a windowed mode window and its OpenGL context
+    GLFWwindow* window = glfwCreateWindow(static_cast<int>(screen_size::width), static_cast<int>(screen_size::height), "Soul Engine", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
         return -1;
     }
 
-    /* Make the window's context current */
+    // Make the window's context current
     glfwMakeContextCurrent(window);
     
-    int version = gladLoadGL();
+    // Loading extension loader library (glad)
+    int version = gladLoadGL(glfwGetProcAddress);
     if (version == 0)
     {
         printf("Failed to initialize OpenGL context\n");
@@ -31,18 +48,18 @@ int main(void)
     }
     
     // Successfully loaded OpenGL
-    printf("Loaded OpenGL %d.%d\n", GLVersion.major, GLVersion.minor);
+    printf("Loaded OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
-    /* Loop until the user closes the window */
+    // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
     {
-        /* Render here */
+        // Render here
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Swap front and back buffers */
+        // Swap front and back buffers */
         glfwSwapBuffers(window);
 
-        /* Poll for and process events */
+        // Poll for and process events */
         glfwPollEvents();
     }
 
