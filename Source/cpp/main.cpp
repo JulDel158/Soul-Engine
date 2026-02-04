@@ -4,6 +4,13 @@
 #include <GLFW/glfw3.h>
 #include <cstdio>
 
+// math library includes
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
+#include "glm/mat4x4.hpp"
+#include "glm/ext/matrix_clip_space.hpp"
+#include "glm/ext/matrix_transform.hpp"
+
 enum class screen_size : uint16_t
 {
     width = 800,
@@ -36,18 +43,18 @@ namespace
     }
 }
 
-// typedef struct Vertex
-// {
-//     vec2 pos;
-//     vec3 col;
-// } Vertex;
-//  
-// static const Vertex vertices[3] =
-// {
-//     { { -0.6f, -0.4f }, { 1.f, 0.f, 0.f } },
-//     { {  0.6f, -0.4f }, { 0.f, 1.f, 0.f } },
-//     { {   0.f,  0.6f }, { 0.f, 0.f, 1.f } }
-// };
+struct vertex
+{
+    glm::vec2 pos;
+    glm::vec3 col;
+};
+ 
+static const vertex vertices[3] =
+{
+    { { -0.6f, -0.4f }, { 1.f, 0.f, 0.f } },
+    { {  0.6f, -0.4f }, { 0.f, 1.f, 0.f } },
+    { {   0.f,  0.6f }, { 0.f, 0.f, 1.f } }
+};
  
 static const char* vertex_shader_text =
 "#version 330\n"
@@ -79,8 +86,6 @@ int main(void)
     {
         return -1;
     }
-    
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create a windowed mode window and its OpenGL context
     GLFWwindow* window = glfwCreateWindow(static_cast<int>(screen_size::width), static_cast<int>(screen_size::height), "Soul Engine", NULL, NULL);
@@ -118,17 +123,60 @@ int main(void)
     
     double time = 0;
     
+    GLuint vertex_buffer;
+    glGenBuffers(1, &vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+ 
+    const GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+    glCompileShader(vertex_shader);
+ 
+    const GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+    glCompileShader(fragment_shader);
+ 
+    const GLuint program = glCreateProgram();
+    glAttachShader(program, vertex_shader);
+    glAttachShader(program, fragment_shader);
+    glLinkProgram(program);
+ 
+    const GLint mvp_location = glGetUniformLocation(program, "MVP");
+    const GLint vpos_location = glGetAttribLocation(program, "vPos");
+    const GLint vcol_location = glGetAttribLocation(program, "vCol");
+ 
+    GLuint vertex_array;
+    glGenVertexArrays(1, &vertex_array);
+    glBindVertexArray(vertex_array);
+    glEnableVertexAttribArray(vpos_location);
+    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(vertex), (void*) offsetof(vertex, pos));
+    glEnableVertexAttribArray(vcol_location);
+    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
+                          sizeof(vertex), (void*) offsetof(vertex, col));
+    
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
     {
-        time = glfwGetTime();
-        // Render here
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        const float ratio = width / (float) height;
+ 
+        glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        // Swap front and back buffers */
+ 
+        glm::mat4 m, p, mvp;
+        m = glm::mat4(1.0f);
+        m = glm::rotate(m, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+        p = glm::ortho( -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+        mvp = p * m;
+ 
+        glUseProgram(program);
+        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&mvp));
+        glBindVertexArray(vertex_array);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+ 
         glfwSwapBuffers(window);
-
-        // Poll for and process events */
         glfwPollEvents();
     }
 
