@@ -121,8 +121,6 @@ int main(void)
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
     
-    double time = 0;
-    
     GLuint vertex_buffer;
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -142,34 +140,33 @@ int main(void)
     glLinkProgram(program);
  
     const GLint mvp_location = glGetUniformLocation(program, "MVP");
-    const GLint vpos_location = glGetAttribLocation(program, "vPos");
-    const GLint vcol_location = glGetAttribLocation(program, "vCol");
+    const GLint pos_location = glGetAttribLocation(program, "vPos");
+    const GLint col_location = glGetAttribLocation(program, "vCol");
  
     GLuint vertex_array;
     glGenVertexArrays(1, &vertex_array);
     glBindVertexArray(vertex_array);
-    glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertex), (void*) offsetof(vertex, pos));
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(vertex), (void*) offsetof(vertex, col));
+    glEnableVertexAttribArray(pos_location);
+    glVertexAttribPointer(pos_location, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(vertex), reinterpret_cast<void*>(offsetof(vertex, pos)));  // NOLINT(performance-no-int-to-ptr)
+    glEnableVertexAttribArray(col_location);
+    glVertexAttribPointer(col_location, 3, GL_FLOAT, GL_FALSE,
+                          sizeof(vertex), reinterpret_cast<void*>(offsetof(vertex, col)));  // NOLINT(performance-no-int-to-ptr)
     
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
     {
-        int width, height;
         glfwGetFramebufferSize(window, &width, &height);
-        const float ratio = width / (float) height;
+        const float ratio = static_cast<float>(width) / static_cast<float>(height);
  
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
  
         glm::mat4 m, p, mvp;
         m = glm::mat4(1.0f);
-        m = glm::rotate(m, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+        m = glm::rotate(m, static_cast<float>(glfwGetTime()), glm::vec3(1.0f, 1.0f, 1.0f));
         p = glm::ortho( -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-        mvp = p * m;
+        mvp =  p * m;
  
         glUseProgram(program);
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&mvp));
@@ -183,3 +180,21 @@ int main(void)
     glfwTerminate();
     return 0;
 }
+
+// sample from https://github.com/g-truc/glm/blob/master/readme.md
+// #include <glm/vec3.hpp> // glm::vec3
+// #include <glm/vec4.hpp> // glm::vec4
+// #include <glm/mat4x4.hpp> // glm::mat4
+// #include <glm/ext/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
+// #include <glm/ext/matrix_clip_space.hpp> // glm::perspective
+// #include <glm/ext/scalar_constants.hpp> // glm::pi
+//
+// glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
+// {
+//     glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 4.0f / 3.0f, 0.1f, 100.f);
+//     glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Translate));
+//     View = glm::rotate(View, Rotate.y, glm::vec3(-1.0f, 0.0f, 0.0f));
+//     View = glm::rotate(View, Rotate.x, glm::vec3(0.0f, 1.0f, 0.0f));
+//     glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+//     return Projection * View * Model;
+// }
