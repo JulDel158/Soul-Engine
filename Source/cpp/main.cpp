@@ -158,9 +158,9 @@ int main(void)
     glVertexAttribPointer(colLocation, 3, GL_FLOAT, GL_FALSE,
                           sizeof(vertex), reinterpret_cast<void*>(offsetof(vertex, col)));  // NOLINT(performance-no-int-to-ptr)
     
-    // glEnable(GL_CULL_FACE);
-    // glCullFace(GL_BACK);
-    // glFrontFace(GL_CW);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
     
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
@@ -289,5 +289,3 @@ int main(void)
 *These parameters do not mean anything with regard to the API; they are simply hints to the OpenGL implementation. 
 *Proper use of these hints can be crucial for getting good buffer object performance when making frequent changes. 
  */
-
-// wtf is going on git
