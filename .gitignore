@@ -44,6 +44,7 @@
 /contentModel.xml
 /.idea.Soul.iml
 /modules.xml
+.idea/
 
 # Ignored default folder with query files
 /queries/
@@ -136,6 +137,7 @@ _Chutzpah*
 
 # Visual C++ cache files
 ipch/
+.vs/
 *.aps
 *.ncb
 *.opendb
