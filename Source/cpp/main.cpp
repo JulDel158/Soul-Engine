@@ -141,8 +141,12 @@ int main(void)
     glAttachShader(program, vertexShader);
     glAttachShader(program, fragmentShader);
     glLinkProgram(program);
+    
+    // Shaders no longer needed after program linkage
     glDetachShader(program, vertexShader);
     glDetachShader(program, fragmentShader);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
  
     const GLint mvpLocation = glGetUniformLocation(program, "MVP");
     const GLint posLocation = glGetAttribLocation(program, "vPos");
@@ -158,9 +162,9 @@ int main(void)
     glVertexAttribPointer(colLocation, 3, GL_FLOAT, GL_FALSE,
                           sizeof(vertex), reinterpret_cast<void*>(offsetof(vertex, col)));  // NOLINT(performance-no-int-to-ptr)
     
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CW);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    //glFrontFace(GL_CW);
     
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
@@ -185,6 +189,9 @@ int main(void)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    
+    glUseProgram(0);
+    glDeleteProgram(program);
 
     glfwTerminate();
     return 0;
