@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\main.cpp" />
+    <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
     <ClCompile Include="Source\Dependencies\include\glm\detail\glm.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +458,7 @@
     <ClInclude Include="Source\Dependencies\include\glm\vec4.hpp" />
     <ClInclude Include="Source\Dependencies\include\glm\vector_relational.hpp" />
     <ClInclude Include="Source\Dependencies\include\KHR\khrplatform.h" />
+    <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />
     <ClInclude Include="Source\hpp\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -553,8 +555,9 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Source\Dependencies\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Source\Dependencies\include;$(SolutionDir)\Source\hpp;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -595,7 +598,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Source\Dependencies\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Source\Dependencies\include;$(SolutionDir)\Source\hpp;</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
