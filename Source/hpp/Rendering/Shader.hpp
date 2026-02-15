@@ -11,6 +11,7 @@ class Shader
 private:
     // ID of program where shaders will be linked
     GLuint id_;
+    bool cleared_;
 
 public:
     Shader()=delete;
@@ -20,6 +21,7 @@ public:
     
     Shader& Use();
     unsigned int GetId() const;
+    void Clear();
     
     // functions for setting uniform on the shaders
     void SetUniformFloat    (const char *name, const float value, const bool useShader = false);

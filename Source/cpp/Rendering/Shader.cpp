@@ -4,7 +4,9 @@
 
 #include "glm/gtc/type_ptr.hpp"
 
-Shader::Shader(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
+Shader::Shader(const char* vertexSource, const char* fragmentSource, const char* geometrySource):
+id_(-1),
+cleared_(false)
 {
     Compile(vertexSource, fragmentSource, geometrySource);
 }
@@ -70,18 +72,31 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
 
 Shader::~Shader()
 {
-    glDeleteProgram(id_);
+    Clear();
 }
 
 Shader& Shader::Use()
 {
-    glUseProgram(id_);
+    if (!cleared_)
+    {
+        glUseProgram(id_);
+    }
     return *this;
 }
 
 unsigned int Shader::GetId() const
 {
     return id_;
+}
+
+void Shader::Clear()
+{
+    if (!cleared_)
+    {
+        glDeleteProgram(id_);
+        id_ = -1;
+        cleared_ = true;
+    }
 }
 
 void Shader::SetUniformFloat(const char* name, const float value, const bool useShader)

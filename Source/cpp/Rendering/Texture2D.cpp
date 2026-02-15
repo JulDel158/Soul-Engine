@@ -8,7 +8,8 @@ image_format_(GL_RGB),
 wrap_s_(GL_REPEAT), 
 wrap_t_(GL_REPEAT), 
 filter_min_(GL_LINEAR), 
-filter_max_(GL_LINEAR)
+filter_max_(GL_LINEAR),
+cleared_(false)
 {
     glGenTextures(1, &id_);
     Generate(data);
@@ -16,12 +17,24 @@ filter_max_(GL_LINEAR)
 
 Texture2D::~Texture2D()
 {
-    glDeleteTextures(1, &id_);
+    Clear();
 }
 
 void Texture2D::Bind() const
 {
-    glBindTexture(GL_TEXTURE_2D, id_);
+    if (!cleared_)
+    {
+        glBindTexture(GL_TEXTURE_2D, id_);
+    }
+}
+
+void Texture2D::Clear()
+{
+    if (!cleared_)
+    {
+        glDeleteTextures(1, &id_);
+        cleared_ = true;
+    }
 }
 
 void Texture2D::Generate(const unsigned char* data) const
