@@ -22,6 +22,7 @@
     <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\main.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
+    <ClCompile Include="Source\cpp\Rendering\Texture2d.cpp" />
     <ClCompile Include="Source\Dependencies\include\glm\detail\glm.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -459,6 +460,7 @@
     <ClInclude Include="Source\Dependencies\include\glm\vector_relational.hpp" />
     <ClInclude Include="Source\Dependencies\include\KHR\khrplatform.h" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />
+    <ClInclude Include="Source\hpp\Rendering\Texture2D.hpp" />
     <ClInclude Include="Source\hpp\stb_image.h" />
   </ItemGroup>
   <ItemGroup>

@@ -14,11 +14,12 @@ private:
 
 public:
     Shader()=delete;
+    // note: geometry source code is optional
     Shader(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);
     ~Shader();
     
     Shader& Use();
-    unsigned int GetID() const;
+    unsigned int GetId() const;
     
     // functions for setting uniform on the shaders
     void SetUniformFloat    (const char *name, const float value, const bool useShader = false);
@@ -32,7 +33,6 @@ public:
     void SetUniformMatrix4  (const char *name, const glm::mat4 &matrix, const bool useShader = false);
     
 private:
-    // note: geometry source code is optional
     void Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);  
     // checks if compilation or linking failed and if so, print the error logs
     static void CheckCompileErrors(const GLuint object, const std::string& type); 
