@@ -22,7 +22,7 @@
     <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\main.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
-    <ClCompile Include="Source\cpp\Rendering\Texture2d.cpp" />
+    <ClCompile Include="Source\cpp\Rendering\Texture2D.cpp" />
     <ClCompile Include="Source\Dependencies\include\glm\detail\glm.cpp" />
   </ItemGroup>
   <ItemGroup>

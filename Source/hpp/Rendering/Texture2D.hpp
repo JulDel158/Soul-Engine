@@ -1,5 +1,5 @@
-#ifndef TEXTURE2D_H
-#define TEXTURE2D_H
+#ifndef TEXTURE_2D_H
+#define TEXTURE_2D_H
 
 #include "glad/gl.h"
 
@@ -11,7 +11,7 @@ private:
     GLsizei width_, height_; // width and height of loaded image in pixels
     // texture Format
     GLint internal_format_; // format of texture object
-    unsigned int image_format_; // format of loaded image
+    GLenum image_format_; // format of loaded image
     // texture configuration
     GLint wrap_s_; // wrapping mode on S axis
     GLint wrap_t_; // wrapping mode on T axis
