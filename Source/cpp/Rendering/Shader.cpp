@@ -4,15 +4,20 @@
 
 #include "glm/gtc/type_ptr.hpp"
 
-Shader::Shader(const char* vertexSource, const char* fragmentSource, const char* geometrySource):
+Shader::Shader():
 id_(-1),
-cleared_(false)
+is_valid_(false)
+{
+}
+
+Shader::Shader(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
 {
     Compile(vertexSource, fragmentSource, geometrySource);
 }
 
 void Shader::Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
 {
+    is_valid_ = true;
     GLuint geometryId = 0;
     
     // We will load each shader if possible.
@@ -70,14 +75,14 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
     }
 }
 
-Shader::~Shader()
+bool Shader::IsValid() const
 {
-    Clear();
+    return is_valid_;
 }
 
 Shader& Shader::Use()
 {
-    if (!cleared_)
+    if (is_valid_)
     {
         glUseProgram(id_);
     }
@@ -91,11 +96,11 @@ unsigned int Shader::GetId() const
 
 void Shader::Clear()
 {
-    if (!cleared_)
+    if (is_valid_)
     {
         glDeleteProgram(id_);
         id_ = -1;
-        cleared_ = true;
+        is_valid_ = false;
     }
 }
 
@@ -192,7 +197,8 @@ void Shader::CheckCompileErrors(const GLuint object, const std::string& type)
             glGetShaderInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
                 << infoLog << "\n -- --------------------------------------------------- -- "
-                << std::endl;  // NOLINT(performance-avoid-endl)
+                << std::endl;
+            is_valid_ = false;
         }
     }
     else
@@ -203,7 +209,8 @@ void Shader::CheckCompileErrors(const GLuint object, const std::string& type)
             glGetProgramInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
                 << infoLog << "\n -- --------------------------------------------------- -- "
-                << std::endl; // NOLINT(performance-avoid-endl)
+                << std::endl;
+            is_valid_ = false;
         }
     }
 }

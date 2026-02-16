@@ -18,18 +18,21 @@ private:
     GLint filter_min_; // filtering mode if texture pixels < screen pixels
     GLint filter_max_; // filtering mode if texture pixels > screen pixels
     
-    bool cleared_;
+    bool is_valid_;
     
 public:
-    Texture2D()=delete;
-    Texture2D(const GLsizei width, const GLsizei height, const unsigned char* data);
-    ~Texture2D();
+    Texture2D();
+    Texture2D(GLsizei width, GLsizei height, GLint internalFormat, GLenum imageFormat, 
+        GLint wrapS, GLint wrapT, GLint filterMin, GLint filterMax, const unsigned char* data);
+    ~Texture2D()=default; // Resource Manager will be in charge of calling clear as destructor calls after going out of scope could lead to accidental clearing
     
     // binds the texture as the current active GL_TEXTURE_2D texture object
     void Bind() const;
     
     // calls glDeleteTextures and passes our id
     void Clear();
+    
+    bool IsValid() const;
     
 private:
     // generates texture from image data

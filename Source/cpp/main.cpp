@@ -12,7 +12,7 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 
-enum class screen_size : uint16_t
+enum class EScreen_size : uint16_t
 {
     width = 800,
     height = 600
@@ -50,9 +50,9 @@ struct vertex
  
 static constexpr vertex vertices[3] =
 {
-    { { -0.6f, -0.4f }, { 1.f, 0.f, 0.f } },
-    { {  0.6f, -0.4f }, { 0.f, 1.f, 0.f } },
-    { {   0.f,  0.6f }, { 0.f, 0.f, 1.f } }
+    {.pos = { -0.6f, -0.4f }, .col = { 1.f, 0.f, 0.f } },
+    {.pos = {  0.6f, -0.4f }, .col = { 0.f, 1.f, 0.f } },
+    {.pos = {   0.f,  0.6f }, .col = { 0.f, 0.f, 1.f } }
 };
 
 // shaders
@@ -91,7 +91,7 @@ int main(void)
     }
 
     // Create a windowed mode window and its OpenGL context
-    GLFWwindow* window = glfwCreateWindow(static_cast<int>(screen_size::width), static_cast<int>(screen_size::height), "Soul Engine", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(static_cast<int>(EScreen_size::width), static_cast<int>(EScreen_size::height), "Soul Engine", nullptr, nullptr);
     if (!window)
     {
         glfwTerminate();

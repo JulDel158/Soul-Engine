@@ -11,17 +11,18 @@ class Shader
 private:
     // ID of program where shaders will be linked
     GLuint id_;
-    bool cleared_;
+    bool is_valid_;
 
 public:
-    Shader()=delete;
+    Shader();
     // note: geometry source code is optional
     Shader(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);
-    ~Shader();
+    ~Shader()=default; // Resource Manager will be in charge of calling clear as destructor calls after going out of scope could lead to accidental clearing
     
     Shader& Use();
     unsigned int GetId() const;
     void Clear();
+    bool IsValid() const;
     
     // functions for setting uniform on the shaders
     void SetUniformFloat    (const char *name, const float value, const bool useShader = false);
@@ -35,9 +36,9 @@ public:
     void SetUniformMatrix4  (const char *name, const glm::mat4 &matrix, const bool useShader = false);
     
 private:
-    void Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);  
+    void Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);
     // checks if compilation or linking failed and if so, print the error logs
-    static void CheckCompileErrors(const GLuint object, const std::string& type); 
+    void CheckCompileErrors(const GLuint object, const std::string& type); 
 };
 
 #endif

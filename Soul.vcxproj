@@ -23,6 +23,7 @@
     <ClCompile Include="Source\cpp\main.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Texture2D.cpp" />
+    <ClCompile Include="Source\cpp\ResourceManagement\ResourceManager.cpp" />
     <ClCompile Include="Source\Dependencies\include\glm\detail\glm.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -461,6 +462,7 @@
     <ClInclude Include="Source\Dependencies\include\KHR\khrplatform.h" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Texture2D.hpp" />
+    <ClInclude Include="Source\hpp\ResourceManagement\ResourceManager.hpp" />
     <ClInclude Include="Source\hpp\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
