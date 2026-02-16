@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\cpp\Game.cpp" />
     <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\main.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
@@ -460,6 +461,45 @@
     <ClInclude Include="Source\Dependencies\include\glm\vec4.hpp" />
     <ClInclude Include="Source\Dependencies\include\glm\vector_relational.hpp" />
     <ClInclude Include="Source\Dependencies\include\KHR\khrplatform.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\allocators.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\document.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\encodedstream.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\encodings.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\error\en.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\error\error.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\filereadstream.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\filewritestream.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\fwd.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\clzll.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\itoa.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\meta.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\pow10.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\regex.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\stack.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\strtod.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\internal\swap.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\memorybuffer.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\memorystream.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\pointer.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\prettywriter.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\rapidjson.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\reader.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\schema.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\stream.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\stringbuffer.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\uri.h" />
+    <ClInclude Include="Source\Dependencies\include\rapidjson\writer.h" />
+    <ClInclude Include="Source\hpp\Game.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Texture2D.hpp" />
     <ClInclude Include="Source\hpp\ResourceManagement\ResourceManager.hpp" />
