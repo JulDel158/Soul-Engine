@@ -3,13 +3,15 @@
 #include <glad/gl.h>
 
 #include <iostream>
+#include <filesystem>
 #include <sstream>
 #include <fstream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "rapidjson/document.h"
 
-ResourceManager& ResourceManager::Instance()
+ResourceManager& ResourceManager::GetInstance()
 {
     static ResourceManager instance = ResourceManager();
     return instance;
@@ -81,8 +83,48 @@ void ResourceManager::Clear()
     textures_.clear();
 }
 
+Settings ResourceManager::LoadSettings()
+{
+    std::filesystem::path settingsPath = "Assets/Settings/Graphics.json";
+    try
+    {
+        std::ifstream settingsFile(settingsPath);
+        std::string fileData((std::istreambuf_iterator<char>(settingsFile)),std::istreambuf_iterator<char>());
+        settingsFile.close();
+        
+        rapidjson::Document settingsJson;
+        settingsJson.Parse(fileData.c_str());
+        
+        if (settingsJson.HasParseError())
+        {
+            std::cout << "ERROR:Failed to parse settings: " << settingsJson.GetParseError() << std::endl;
+        }
+        
+        if (settingsJson.HasMember("screenWidth"))
+        {
+            settings_.screen_width_ = settingsJson["screenWidth"].GetInt();
+        }
+        
+        if (settingsJson.HasMember("screenHeight"))
+        {
+            settings_.screen_height_ = settingsJson["screenHeight"].GetInt();
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "ERROR::Settings: Failed to read Settings file" << e.what() << std::endl;
+    }
+    
+    return settings_;
+}
+
+Settings ResourceManager::GetSettings() const
+{
+    return settings_;
+}
+
 Shader ResourceManager::LoadShaderFromFile(const char* vertexShaderPath, const char* fragmentShaderPath,
-    const char* geometryShaderPath)
+                                           const char* geometryShaderPath)
 {
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
