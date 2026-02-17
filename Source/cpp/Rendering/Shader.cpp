@@ -26,14 +26,14 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
     // Vertex Shader
     GLuint vertexId = glCreateShader(GL_VERTEX_SHADER);
     // ReSharper disable once CppZeroConstantCanBeReplacedWithNullptr
-    glShaderSource(vertexId, 1, &vertexSource, NULL);
+    glShaderSource(vertexId, 1, &vertexSource, nullptr);
     glCompileShader(vertexId);
     CheckCompileErrors(vertexId, "VERTEX");
     
     // Fragment Shader
     GLuint fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
     // ReSharper disable once CppZeroConstantCanBeReplacedWithNullptr
-    glShaderSource(fragmentId, 1, &fragmentSource, NULL); 
+    glShaderSource(fragmentId, 1, &fragmentSource, nullptr); 
     glCompileShader(fragmentId);
     CheckCompileErrors(fragmentId, "FRAGMENT");
     
@@ -42,7 +42,7 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
     {
         geometryId = glCreateShader(GL_GEOMETRY_SHADER);
         // ReSharper disable once CppZeroConstantCanBeReplacedWithNullptr
-        glShaderSource(geometryId, 1, &geometrySource, NULL);
+        glShaderSource(geometryId, 1, &geometrySource, nullptr);
         glCompileShader(geometryId);
         CheckCompileErrors(geometryId, "GEOMETRY");
     }

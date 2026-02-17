@@ -1,8 +1,12 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
+#include "glad/gl.h"
 #include "GLFW/glfw3.h"
 #include "Game.hpp"
+
+//TODO: Handle keyboard and mouse input
+//TODO: Handle controller input
 
 class InputManager
 {

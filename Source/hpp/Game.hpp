@@ -4,6 +4,7 @@
 #define KEYS_COUNT 1024
 
 #include "EngineDataStructures.hpp"
+#include "Rendering/SpriteRenderer.hpp"
 
 enum class EGameState : unsigned char
 {
@@ -28,6 +29,9 @@ private:
     EGameState game_state_;
     bool keys_[KEYS_COUNT];
     bool keys_previous_[KEYS_COUNT];
+    
+    SpriteRenderer* sprite_renderer_;
+    
     
 public:
     

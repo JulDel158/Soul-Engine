@@ -21,6 +21,7 @@ ResourceManager::ResourceManager()
 {
     shaders_ = std::map<std::string, Shader>();
     textures_ = std::map<std::string, Texture2D>();
+    settings_ = Settings();
 }
 
 ResourceManager::~ResourceManager()
@@ -28,7 +29,7 @@ ResourceManager::~ResourceManager()
     Clear();
 }
 
-Shader* ResourceManager::LoadShader(const char* vertexShaderFile, const char* fragmentShaderFile,
+Shader ResourceManager::LoadShader(const char* vertexShaderFile, const char* fragmentShaderFile,
 const char* geometryShaderFile, const std::string& name)
 {
     if (shaders_.contains(name))
@@ -40,15 +41,15 @@ const char* geometryShaderFile, const std::string& name)
     }
     
     shaders_[name] = LoadShaderFromFile(vertexShaderFile, fragmentShaderFile, geometryShaderFile);
-    return &shaders_[name];
+    return shaders_[name];
 }
 
-Shader* ResourceManager::GetShader(const std::string& name)
+Shader ResourceManager::GetShader(const std::string& name)
 {
-    return (shaders_.contains(name)) ? &shaders_[name] : nullptr;
+    return shaders_[name];
 }
 
-Texture2D* ResourceManager::LoadTexture2D(const char* filePath, bool alpha, const std::string& name)
+Texture2D ResourceManager::LoadTexture2D(const char* filePath, bool alpha, const std::string& name)
 {
     if (textures_.contains(name))
     {
@@ -58,12 +59,12 @@ Texture2D* ResourceManager::LoadTexture2D(const char* filePath, bool alpha, cons
     }
     
     textures_[name] = LoadTextureFromFile(filePath, alpha);
-    return &textures_[name];
+    return textures_[name];
 }
 
-Texture2D* ResourceManager::GetTexture2D(const std::string& name)
+Texture2D ResourceManager::GetTexture2D(const std::string& name)
 {
-    return (textures_.contains(name)) ? &textures_[name] : nullptr ;
+    return textures_[name];
 }
 
 void ResourceManager::Clear()

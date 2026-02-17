@@ -7,6 +7,9 @@
 
 #include <iostream>
 
+#include "glm/mat4x4.hpp"
+#include "glm/ext/matrix_clip_space.hpp"
+
 namespace 
 {
     void Framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -45,7 +48,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     
-    glfwSetKeyCallback(window, reinterpret_cast<GLFWkeyfun>(InputManager::GetInstance().KeyCallback));
+    //glfwSetKeyCallback(window, &InputManager::GetInstance().KeyCallback);
     glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(Framebuffer_size_callback));
     
     // OpenGL configuration
