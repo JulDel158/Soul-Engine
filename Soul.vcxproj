@@ -501,6 +501,7 @@
     <ClInclude Include="Source\Dependencies\include\rapidjson\stringbuffer.h" />
     <ClInclude Include="Source\Dependencies\include\rapidjson\uri.h" />
     <ClInclude Include="Source\Dependencies\include\rapidjson\writer.h" />
+    <ClInclude Include="Source\Dependencies\include\stb_image.h" />
     <ClInclude Include="Source\hpp\EngineDataStructures.hpp" />
     <ClInclude Include="Source\hpp\Game.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
@@ -508,7 +509,6 @@
     <ClInclude Include="Source\hpp\Rendering\SpriteRenderer.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Texture2D.hpp" />
     <ClInclude Include="Source\hpp\ResourceManagement\ResourceManager.hpp" />
-    <ClInclude Include="Source\hpp\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Source\Dependencies\include\glm\CMakeLists.txt" />
