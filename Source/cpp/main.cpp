@@ -18,6 +18,11 @@ namespace
         // height will be significantly larger than specified on retina displays.
         glViewport(0, 0, width, height);
     }
+    
+    auto ErrorCallback(int error, const char* description) -> void
+    {
+        static_cast<void>(fprintf(stderr, "Error: %s\n", description));
+    }
 }
 
 int main(int argc, char *argv[])
@@ -27,6 +32,8 @@ int main(int argc, char *argv[])
     Game gameInstance = Game(settings);
     InputManager& inputManager = InputManager::GetInstance();
     inputManager.SetGameInstance(gameInstance);
+    
+    glfwSetErrorCallback(ErrorCallback);
     
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -48,6 +55,8 @@ int main(int argc, char *argv[])
         return -1;
     }
     
+    glfwSwapInterval(1);
+    
     //glfwSetKeyCallback(window, &InputManager::GetInstance().KeyCallback);
     glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(Framebuffer_size_callback));
     
@@ -68,14 +77,14 @@ int main(int argc, char *argv[])
         lastFrame = currentFrame;
         glfwPollEvents();
         
-        gameInstance.ProcessInput(deltaTime);
+        //gameInstance.ProcessInput(deltaTime);
 
         // update game state and audio
-        gameInstance.Update(deltaTime);
-        gameInstance.ProcessAudio(deltaTime);
+        //gameInstance.Update(deltaTime);
+        //gameInstance.ProcessAudio(deltaTime);
 
         // render
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         gameInstance.Render(deltaTime);
 

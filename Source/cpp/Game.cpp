@@ -20,20 +20,19 @@ Game::~Game()
 void Game::Init()
 {
     ResourceManager& resourceManager = ResourceManager::GetInstance();
-    resourceManager.LoadShader("Rendering/Shaders/BasicSprite.vert", 
-        "Rendering/Shaders/BasicSprite.frag", 
+    resourceManager.LoadShader("D:/Projects/Soul/Source/hpp/Rendering/Shaders/BasicSprite.vert", 
+        "D:/Projects/Soul/Source/hpp/Rendering/Shaders/BasicSprite.frag", 
         nullptr, "sprite");
     
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(window_width_), 
         static_cast<float>(window_height_), 0.0f, -1.0f, 1.0f);
     
-    resourceManager.GetShader("sprite").Use();
-    resourceManager.GetShader("sprite").SetUniformInteger("image", 0);
+    resourceManager.GetShader("sprite").Use().SetUniformInteger("image", 0);
     resourceManager.GetShader("sprite").SetUniformMatrix4("projection", projection);
     
-    sprite_renderer_ = new SpriteRenderer(resourceManager.GetShader("sprite"));
-    resourceManager.LoadTexture2D("Assets/Textures/awesomeface.png", true, "face");
+    sprite_renderer_ = new SpriteRenderer(resourceManager.GetShader("sprite"), ESpriteCentering::CENTER);
+    resourceManager.LoadTexture2D("D:/Projects/Soul/Assets/Textures/awesomeface.png", true, "face");
 }
 
 void Game::Update(float dt)
@@ -42,12 +41,13 @@ void Game::Update(float dt)
 
 void Game::Render(float dt)
 {
+    static float time = 0.0f;
     ResourceManager& resourceManager = ResourceManager::GetInstance();
     sprite_renderer_->DrawSprite(resourceManager.GetTexture2D("face"), 
-        glm::vec2(200.0f, 200.0f),
-        glm::vec2(300.0f, 400.0f),
-        45.0f, 
-        glm::vec3(0.0f, 0.0f, 0.0f));
+        glm::vec2(250.0f, 250.0f),
+        glm::vec2(400.0f, 400.0f),
+        glm::sin(time));
+    time += dt;
 }
 
 void Game::ProcessAudio(const float dt)
