@@ -18,11 +18,13 @@ public:
     
     Shader LoadShader(const char *vertexShaderFile, const char *fragmentShaderFile, const char *geometryShaderFile, const std::string& name);
     Shader GetShader(const std::string& name);
+    bool ContainsShader(const std::string& name) const;
     Texture2D LoadTexture2D(const char *filePath, bool alpha, const std::string& name);
     Texture2D GetTexture2D(const std::string& name);
+    bool ContainsTexture2D(const std::string& name) const;
     void Clear();
     
-    Settings LoadSettings();
+    void LoadSettings(Settings& settings);
     Settings GetSettings() const;
     
 private:

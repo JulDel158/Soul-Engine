@@ -49,6 +49,11 @@ Shader ResourceManager::GetShader(const std::string& name)
     return shaders_[name];
 }
 
+bool ResourceManager::ContainsShader(const std::string& name) const
+{
+    return shaders_.contains(name);
+}
+
 Texture2D ResourceManager::LoadTexture2D(const char* filePath, bool alpha, const std::string& name)
 {
     if (textures_.contains(name))
@@ -65,6 +70,11 @@ Texture2D ResourceManager::LoadTexture2D(const char* filePath, bool alpha, const
 Texture2D ResourceManager::GetTexture2D(const std::string& name)
 {
     return textures_[name];
+}
+
+bool ResourceManager::ContainsTexture2D(const std::string& name) const
+{
+    return textures_.contains(name);
 }
 
 void ResourceManager::Clear()
@@ -84,7 +94,7 @@ void ResourceManager::Clear()
     textures_.clear();
 }
 
-Settings ResourceManager::LoadSettings()
+void ResourceManager::LoadSettings(Settings& settings)
 {
     std::filesystem::path settingsPath = "Assets/Settings/Graphics.json";
     try
@@ -116,7 +126,7 @@ Settings ResourceManager::LoadSettings()
         std::cout << "ERROR::Settings: Failed to read Settings file" << e.what() << std::endl;
     }
     
-    return settings_;
+    settings = Settings(settings_);
 }
 
 Settings ResourceManager::GetSettings() const

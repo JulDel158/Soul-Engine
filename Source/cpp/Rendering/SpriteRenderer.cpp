@@ -1,9 +1,21 @@
 #include "Rendering/SpriteRenderer.hpp"
 
+#include <iostream>
+#include <ostream>
+
 #include "glad/gl.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-SpriteRenderer::SpriteRenderer(const Shader& shader, ESpriteCentering centering)
+#include "ResourceManagement/ResourceManager.hpp"
+
+SpriteRenderer::SpriteRenderer(ESpriteCentering centering) :
+centering_(centering)
+{
+    InitRenderData();
+}
+
+SpriteRenderer::SpriteRenderer(const Shader& shader, ESpriteCentering centering) :
+centering_(centering)
 {
     shader_ = shader;
     centering_ = centering;
@@ -12,7 +24,9 @@ SpriteRenderer::SpriteRenderer(const Shader& shader, ESpriteCentering centering)
 
 SpriteRenderer::~SpriteRenderer()
 {
+    std::cout << "SpriteRenderer::~SpriteRenderer() called" << std::endl;
     glDeleteVertexArrays(1, &vao_);
+    // Resource manager is in charge of clearing shaders
 }
 
 void SpriteRenderer::DrawSprite(const Texture2D& texture, const glm::vec2 position, const glm::vec2 size, 
@@ -37,6 +51,22 @@ void SpriteRenderer::DrawSprite(const Texture2D& texture, const glm::vec2 positi
     glBindVertexArray(vao_);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
+}
+
+bool SpriteRenderer::SwapShader(const std::string& name)
+{
+    ResourceManager& instance = ResourceManager::GetInstance();
+    const bool result = instance.ContainsShader(name);
+    if (result)
+    {
+        shader_ = instance.GetShader(name);
+    }
+    return result;
+}
+
+void SpriteRenderer::SwapShader(const Shader& shader)
+{
+    shader_ = shader;
 }
 
 void SpriteRenderer::InitRenderData()

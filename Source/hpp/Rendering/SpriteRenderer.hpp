@@ -6,23 +6,31 @@
 #include "glm/glm.hpp"
 #include "EngineDataStructures.hpp"
 
+#include <string>
+
 class SpriteRenderer
 {
 public:
-    
-    SpriteRenderer(const Shader & shader, ESpriteCentering centering = ESpriteCentering::CENTER);
+    SpriteRenderer()=delete;
+    SpriteRenderer(const SpriteRenderer&) = delete;
+    SpriteRenderer(SpriteRenderer&&) = delete;
+    SpriteRenderer& operator=(const SpriteRenderer&) = delete;
+    SpriteRenderer& operator=(SpriteRenderer&&) = delete;
+    explicit SpriteRenderer(ESpriteCentering centering = ESpriteCentering::CENTER);
+    explicit SpriteRenderer(const Shader& shader, ESpriteCentering centering = ESpriteCentering::CENTER);
     ~SpriteRenderer();
     
     void DrawSprite(const Texture2D& texture, const glm::vec2 position, const glm::vec2 size,
         const float rotation = 0.0f, const glm::vec3 color = glm::vec3(1.0f));
+    
+    bool SwapShader(const std::string& name);
+    void SwapShader(const Shader& shader);
     
 private:
     
     GLuint vao_;
     ESpriteCentering centering_;
     Shader shader_;
-    
-    SpriteRenderer()=delete;
     
     void InitRenderData();
 };

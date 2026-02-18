@@ -7,12 +7,11 @@
 
 #include <iostream>
 
-#include "glm/mat4x4.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 
 namespace 
 {
-    void Framebuffer_size_callback(GLFWwindow* window, int width, int height)
+    void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
     {
         // make sure the viewport matches the new window dimensions; note that width and 
         // height will be significantly larger than specified on retina displays.
@@ -27,13 +26,12 @@ namespace
 
 int main(int argc, char *argv[])
 {
-    ResourceManager& resourceManager = ResourceManager::GetInstance();
-    Settings settings = resourceManager.LoadSettings();
-    Game gameInstance = Game(settings);
-    InputManager& inputManager = InputManager::GetInstance();
-    inputManager.SetGameInstance(gameInstance);
-    
     glfwSetErrorCallback(ErrorCallback);
+    
+    ResourceManager& resourceManager = ResourceManager::GetInstance();
+    // Load and copy settings to initialize the rest of the program
+    Settings settings;
+    resourceManager.LoadSettings(settings);
     
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -58,15 +56,17 @@ int main(int argc, char *argv[])
     glfwSwapInterval(1);
     
     //glfwSetKeyCallback(window, &InputManager::GetInstance().KeyCallback);
-    glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(Framebuffer_size_callback));
+    glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(FramebufferSizeCallback));
     
     // OpenGL configuration
     glViewport(0, 0, settings.screen_width_, settings.screen_height_);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // initialize game
-    gameInstance.Init();
+    // Create and initialize game instance and input manager
+    Game gameInstance = Game(settings);
+    InputManager& inputManager = InputManager::GetInstance();
+    inputManager.SetGameInstance(gameInstance);
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))
@@ -77,11 +77,11 @@ int main(int argc, char *argv[])
         lastFrame = currentFrame;
         glfwPollEvents();
         
-        //gameInstance.ProcessInput(deltaTime);
+        gameInstance.ProcessInput(deltaTime);
 
         // update game state and audio
-        //gameInstance.Update(deltaTime);
-        //gameInstance.ProcessAudio(deltaTime);
+        gameInstance.Update(deltaTime);
+        gameInstance.ProcessAudio(deltaTime);
 
         // render
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);

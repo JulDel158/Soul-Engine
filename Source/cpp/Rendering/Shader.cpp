@@ -15,6 +15,24 @@ Shader::Shader(const char* vertexSource, const char* fragmentSource, const char*
     Compile(vertexSource, fragmentSource, geometrySource);
 }
 
+Shader::Shader(const Shader& shader)
+{
+    id_ = shader.GetId();
+    is_valid_ = shader.IsValid();
+}
+
+Shader& Shader::operator=(const Shader& shader)
+{
+    if (this == &shader)
+    {
+        return *this;
+    }
+    
+    id_ = shader.GetId();
+    is_valid_ = shader.IsValid();
+    return *this;
+}
+
 void Shader::Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
 {
     is_valid_ = true;
@@ -75,11 +93,6 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
     }
 }
 
-bool Shader::IsValid() const
-{
-    return is_valid_;
-}
-
 Shader& Shader::Use()
 {
     if (is_valid_)
@@ -88,12 +101,6 @@ Shader& Shader::Use()
     }
     return *this;
 }
-
-unsigned int Shader::GetId() const
-{
-    return id_;
-}
-
 void Shader::Clear()
 {
     if (is_valid_)
@@ -102,6 +109,16 @@ void Shader::Clear()
         id_ = -1;
         is_valid_ = false;
     }
+}
+
+unsigned int Shader::GetId() const
+{
+    return id_;
+}
+
+bool Shader::IsValid() const
+{
+    return is_valid_;
 }
 
 void Shader::SetUniformFloat(const char* name, const float value, const bool useShader)

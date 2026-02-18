@@ -14,14 +14,18 @@ private:
     bool is_valid_;
 
 public:
+    // When copying a shader we just want the id and validity
     Shader();
     // note: geometry source code is optional
     Shader(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);
     ~Shader()=default; // Resource Manager will be in charge of calling clear as destructor calls after going out of scope could lead to accidental clearing
     
+    Shader(const Shader& shader);
+    Shader& operator=(const Shader& shader);
+    
     Shader& Use();
-    unsigned int GetId() const;
     void Clear();
+    unsigned int GetId() const;
     bool IsValid() const;
     
     // functions for setting uniform on the shaders

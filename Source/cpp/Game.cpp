@@ -1,20 +1,25 @@
 #include "Game.hpp"
 
+#include <iostream>
+#include <ostream>
+
 #include "ResourceManagement/ResourceManager.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-Game::Game(Settings settings) :
+Game::Game(const Settings& settings) :
 window_width_(settings.screen_width_),
 window_height_(settings.screen_height_),
+sprite_renderer_(ESpriteCentering::CENTER),
 game_state_(EGameState::None),
 keys_(),
 keys_previous_()
 {
+    Init();
 }
 
 Game::~Game()
 {
-    delete sprite_renderer_;
+    std::cout<<"Game Destructor"<<std::endl;
 }
 
 void Game::Init()
@@ -31,7 +36,7 @@ void Game::Init()
     resourceManager.GetShader("sprite").Use().SetUniformInteger("image", 0);
     resourceManager.GetShader("sprite").SetUniformMatrix4("projection", projection);
     
-    sprite_renderer_ = new SpriteRenderer(resourceManager.GetShader("sprite"), ESpriteCentering::CENTER);
+    sprite_renderer_.SwapShader(resourceManager.GetShader("sprite"));
     resourceManager.LoadTexture2D("D:/Projects/Soul/Assets/Textures/awesomeface.png", true, "face");
 }
 
@@ -43,7 +48,7 @@ void Game::Render(float dt)
 {
     static float time = 0.0f;
     ResourceManager& resourceManager = ResourceManager::GetInstance();
-    sprite_renderer_->DrawSprite(resourceManager.GetTexture2D("face"), 
+    sprite_renderer_.DrawSprite(resourceManager.GetTexture2D("face"), 
         glm::vec2(250.0f, 250.0f),
         glm::vec2(400.0f, 400.0f),
         glm::sin(time));
