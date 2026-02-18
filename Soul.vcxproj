@@ -512,8 +512,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Source\Dependencies\include\glm\CMakeLists.txt" />
-    <Content Include="Source\hpp\Rendering\Shaders\BasicSprite.frag" />
-    <Content Include="Source\hpp\Rendering\Shaders\BasicSprite.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

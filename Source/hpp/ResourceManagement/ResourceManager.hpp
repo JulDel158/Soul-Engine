@@ -1,6 +1,7 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
 
+#include <filesystem>
 #include <map>
 #include <string>
 
@@ -32,9 +33,11 @@ private:
     ~ResourceManager();
     
     // loads and generates a shader from file
-    static Shader LoadShaderFromFile(const char *vertexShaderPath, const char *fragmentShaderPath, const char *geometryShaderPath = nullptr);
+    static Shader LoadShaderFromFile(const std::filesystem::path& vertexShaderFile, 
+    const std::filesystem::path& fragmentShaderFile,
+    const std::filesystem::path& geometryShaderFile = "", bool hasGeometryShader = false);
     // loads a single texture from file
-    static Texture2D LoadTextureFromFile(const char *file, bool alpha);
+    static Texture2D LoadTextureFromFile(const char* file, bool alpha);
     
     std::map<std::string, Shader> shaders_;
     std::map<std::string, Texture2D> textures_;

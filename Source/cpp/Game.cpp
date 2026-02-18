@@ -25,8 +25,8 @@ Game::~Game()
 void Game::Init()
 {
     ResourceManager& resourceManager = ResourceManager::GetInstance();
-    resourceManager.LoadShader("D:/Projects/Soul/Source/hpp/Rendering/Shaders/BasicSprite.vert", 
-        "D:/Projects/Soul/Source/hpp/Rendering/Shaders/BasicSprite.frag", 
+    resourceManager.LoadShader("Assets/Shaders/BasicSprite.vert", 
+        "Assets/Shaders/BasicSprite.frag", 
         nullptr, "sprite");
     
     // configure shaders

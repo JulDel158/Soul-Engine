@@ -40,7 +40,11 @@ const char* geometryShaderFile, const std::string& name)
         shaders_.erase(name);
     }
     
-    shaders_[name] = LoadShaderFromFile(vertexShaderFile, fragmentShaderFile, geometryShaderFile);
+    std::filesystem::path vertexPath = std::filesystem::path(vertexShaderFile);
+    std::filesystem::path fragmentPath = std::filesystem::path(fragmentShaderFile);
+    std::filesystem::path geometryPath = geometryShaderFile != nullptr ? std::filesystem::path(geometryShaderFile) : "";
+    
+    shaders_[name] = LoadShaderFromFile(vertexPath, fragmentPath, geometryPath, geometryShaderFile != nullptr);
     return shaders_[name];
 }
 
@@ -134,8 +138,9 @@ Settings ResourceManager::GetSettings() const
     return settings_;
 }
 
-Shader ResourceManager::LoadShaderFromFile(const char* vertexShaderPath, const char* fragmentShaderPath,
-                                           const char* geometryShaderPath)
+Shader ResourceManager::LoadShaderFromFile(const std::filesystem::path& vertexShaderPath, 
+    const std::filesystem::path& fragmentShaderPath,
+    const std::filesystem::path& geometryShaderPath, bool hasGeometryShader)
 {
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
@@ -157,7 +162,7 @@ Shader ResourceManager::LoadShaderFromFile(const char* vertexShaderPath, const c
         vertexCode = vertexShaderStream.str();
         fragmentCode = fragmentShaderStream.str();
         // if geometry shader path is present, also load a geometry shader
-        if (geometryShaderPath != nullptr)
+        if (hasGeometryShader)
         {
             std::ifstream geometryShaderFile(geometryShaderPath);
             std::stringstream geometryShaderStream;
@@ -174,7 +179,7 @@ Shader ResourceManager::LoadShaderFromFile(const char* vertexShaderPath, const c
     const char *fragmentShaderCode = fragmentCode.c_str();
     const char *geometryShaderCode = geometryCode.c_str();
     // 2. now create shader object from source code
-    Shader shader = Shader(vertexShaderCode, fragmentShaderCode, geometryShaderPath != nullptr ? geometryShaderCode : nullptr);
+    Shader shader = Shader(vertexShaderCode, fragmentShaderCode, hasGeometryShader ? geometryShaderCode : nullptr);
     return shader;
 }
 
