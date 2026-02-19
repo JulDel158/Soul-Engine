@@ -21,7 +21,7 @@ public:
     ~SpriteRenderer();
     
     void DrawSprite(const Texture2D& texture, const glm::vec2& position, const glm::vec2& size,
-        const float rotation = 0.0f, const glm::vec3& color = glm::vec3(1.0f));
+        const float rotation = 0.0f, const glm::vec3& color = glm::vec3(1.0f)) const;
     
     bool SwapShader(const std::string& name);
     void SwapShader(const Shader& shader);

@@ -17,9 +17,7 @@ game_state_(EGameState::None)
 }
 
 Game::~Game()
-{
-    std::cout<<"Game Destructor"<<std::endl;
-}
+{}
 
 void Game::Init()
 {

@@ -1,8 +1,5 @@
 #include "Rendering/SpriteRenderer.hpp"
 
-#include <iostream>
-#include <ostream>
-
 #include "glad/gl.h"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -24,13 +21,12 @@ centering_(centering)
 
 SpriteRenderer::~SpriteRenderer()
 {
-    std::cout << "SpriteRenderer::~SpriteRenderer() called" << std::endl;
     glDeleteVertexArrays(1, &vao_);
     // Resource manager is in charge of clearing shaders
 }
 
 void SpriteRenderer::DrawSprite(const Texture2D& texture, const glm::vec2& position, const glm::vec2& size, 
-    const float rotation, const glm::vec3& color)
+    const float rotation, const glm::vec3& color) const
 {
     shader_.Use();
     glm::mat4 model = glm::mat4(1.0f);
