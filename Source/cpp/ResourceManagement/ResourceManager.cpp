@@ -10,8 +10,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "rapidjson/document.h"
+#include "PathGlobals.hpp"
 
-ResourceManager& ResourceManager::GetInstance()
+ResourceManager& ResourceManager::Instance()
 {
     static ResourceManager instance = ResourceManager();
     return instance;
@@ -34,7 +35,6 @@ const char* geometryShaderFile, const std::string& name)
 {
     if (shaders_.contains(name))
     {
-        // Warning, overriding existing shader
         std::cout << "Warning: Overriding existing shader: " << name << std::endl;   // NOLINT(performance-avoid-endl)
         shaders_[name].Clear();
         shaders_.erase(name);
@@ -100,7 +100,7 @@ void ResourceManager::Clear()
 
 void ResourceManager::LoadSettings(Settings& settings)
 {
-    std::filesystem::path settingsPath = "Assets/Settings/Graphics.json";
+    std::filesystem::path settingsPath = std::filesystem::path(GRAPHIC_SETTINGS.data());
     try
     {
         std::ifstream settingsFile(settingsPath);
@@ -115,14 +115,19 @@ void ResourceManager::LoadSettings(Settings& settings)
             std::cout << "ERROR:Failed to parse settings: " << settingsJson.GetParseError() << std::endl;
         }
         
-        if (settingsJson.HasMember("screenWidth"))
+        if (settingsJson.HasMember(SCREEN_WIDTH.data())) // NOLINT
         {
-            settings_.screen_width_ = settingsJson["screenWidth"].GetInt();
+            settings_.screen_width_ = settingsJson[SCREEN_WIDTH.data()].GetInt();
         }
         
-        if (settingsJson.HasMember("screenHeight"))
+        if (settingsJson.HasMember(SCREEN_HEIGHT.data())) // NOLINT
         {
-            settings_.screen_height_ = settingsJson["screenHeight"].GetInt();
+            settings_.screen_height_ = settingsJson[SCREEN_HEIGHT.data()].GetInt();
+        }
+        
+        if (settingsJson.HasMember(VSYNC.data())) // NOLINT
+        {
+            settings_.vsync_ = settingsJson[VSYNC.data()].GetBool();
         }
     }
     catch (std::exception& e)

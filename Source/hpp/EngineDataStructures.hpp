@@ -6,15 +6,16 @@ struct Settings
 public:
     int screen_width_;
     int screen_height_;
+    bool vsync_;
 };
 
 enum class ESpriteCentering : unsigned char
 {
-    CENTER = 0,
-    TOP_LEFT = 1,
-    BOTTOM_LEFT = 2,
-    TOP_RIGHT = 3,
-    BOTTOM_RIGHT = 4,
+    Center = 0,
+    Top_Left = 1,
+    Bottom_Left = 2,
+    Top_Right = 3,
+    Bottom_Right = 4,
 };
 
 enum class EGameState : unsigned char

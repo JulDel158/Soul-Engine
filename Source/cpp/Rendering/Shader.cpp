@@ -93,13 +93,12 @@ void Shader::Compile(const char* vertexSource, const char* fragmentSource, const
     }
 }
 
-Shader& Shader::Use()
+void Shader::Use() const
 {
     if (is_valid_)
     {
         glUseProgram(id_);
     }
-    return *this;
 }
 void Shader::Clear()
 {
@@ -121,7 +120,7 @@ bool Shader::IsValid() const
     return is_valid_;
 }
 
-void Shader::SetUniformFloat(const char* name, const float value, const bool useShader)
+void Shader::SetUniformFloat(const char* name, const float value, const bool useShader) const
 {
     if (useShader == true)
     {
@@ -130,7 +129,7 @@ void Shader::SetUniformFloat(const char* name, const float value, const bool use
     glUniform1f(glGetUniformLocation(id_, name), value);
 }
 
-void Shader::SetUniformInteger(const char* name, const int value, const bool useShader)
+void Shader::SetUniformInteger(const char* name, const int value, const bool useShader) const
 {
     if (useShader == true)
     {
@@ -139,7 +138,7 @@ void Shader::SetUniformInteger(const char* name, const int value, const bool use
     glUniform1i(glGetUniformLocation(id_, name), value);
 }
 
-void Shader::SetUniformVector2f(const char* name, const float x, const float y, const bool useShader)
+void Shader::SetUniformVector2f(const char* name, const float x, const float y, const bool useShader) const
 {
     if (useShader == true)
     {
@@ -148,7 +147,7 @@ void Shader::SetUniformVector2f(const char* name, const float x, const float y, 
     glUniform2f(glGetUniformLocation(id_, name), x, y);
 }
 
-void Shader::SetUniformVector2f(const char* name, const glm::vec2& value, const bool useShader)
+void Shader::SetUniformVector2f(const char* name, const glm::vec2& value, const bool useShader) const
 {
     if (useShader == true)
     {
@@ -157,7 +156,7 @@ void Shader::SetUniformVector2f(const char* name, const glm::vec2& value, const 
     glUniform2f(glGetUniformLocation(id_, name), value.x, value.y);
 }
 
-void Shader::SetUniformVector3f(const char* name, const float x, const float y, const float z, const bool useShader)
+void Shader::SetUniformVector3f(const char* name, const float x, const float y, const float z, const bool useShader) const
 {
     if (useShader == true)
     {
@@ -166,7 +165,7 @@ void Shader::SetUniformVector3f(const char* name, const float x, const float y, 
     glUniform3f(glGetUniformLocation(id_, name), x, y, z);
 }
 
-void Shader::SetUniformVector3f(const char* name, const glm::vec3& value, bool useShader)
+void Shader::SetUniformVector3f(const char* name, const glm::vec3& value, bool useShader) const
 {
     if (useShader == true)
     {
@@ -175,7 +174,7 @@ void Shader::SetUniformVector3f(const char* name, const glm::vec3& value, bool u
     glUniform3f(glGetUniformLocation(id_, name), value.x, value.y, value.z);
 }
 
-void Shader::SetUniformVector4f(const char* name, const float x, const float y, const float z, const float w, const bool useShader)
+void Shader::SetUniformVector4f(const char* name, const float x, const float y, const float z, const float w, const bool useShader) const
 {
     if (useShader == true)
     {
@@ -184,7 +183,7 @@ void Shader::SetUniformVector4f(const char* name, const float x, const float y, 
     glUniform4f(glGetUniformLocation(id_, name), x, y, z, w);
 }
 
-void Shader::SetUniformVector4f(const char* name, const glm::vec4& value, const bool useShader)
+void Shader::SetUniformVector4f(const char* name, const glm::vec4& value, const bool useShader) const
 {
     if (useShader == true)
     {
@@ -193,7 +192,7 @@ void Shader::SetUniformVector4f(const char* name, const glm::vec4& value, const 
     glUniform4f(glGetUniformLocation(id_, name), value.x, value.y, value.z, value.w);
 }
 
-void Shader::SetUniformMatrix4(const char* name, const glm::mat4& matrix, const bool useShader)
+void Shader::SetUniformMatrix4(const char* name, const glm::mat4& matrix, const bool useShader) const
 {
     if (useShader == true)
     {

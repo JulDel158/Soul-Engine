@@ -15,9 +15,10 @@ public:
     ResourceManager(const ResourceManager&) = delete;
     ResourceManager& operator=(const ResourceManager&) = delete;
     
-    static ResourceManager& GetInstance();
+    static ResourceManager& Instance();
     
-    Shader LoadShader(const char *vertexShaderFile, const char *fragmentShaderFile, const char *geometryShaderFile, const std::string& name);
+    Shader LoadShader(const char *vertexShaderFile, const char *fragmentShaderFile, 
+        const char *geometryShaderFile, const std::string& name);
     Shader GetShader(const std::string& name);
     bool ContainsShader(const std::string& name) const;
     Texture2D LoadTexture2D(const char *filePath, bool alpha, const std::string& name);
@@ -32,11 +33,10 @@ private:
     ResourceManager();
     ~ResourceManager();
     
-    // loads and generates a shader from file
-    static Shader LoadShaderFromFile(const std::filesystem::path& vertexShaderFile, 
-    const std::filesystem::path& fragmentShaderFile,
-    const std::filesystem::path& geometryShaderFile = "", bool hasGeometryShader = false);
-    // loads a single texture from file
+    static Shader LoadShaderFromFile(const std::filesystem::path& vertexShaderPath, 
+        const std::filesystem::path& fragmentShaderPath, const std::filesystem::path& geometryShaderPath = "", 
+        bool hasGeometryShader = false);
+    
     static Texture2D LoadTextureFromFile(const char* file, bool alpha);
     
     std::map<std::string, Shader> shaders_;

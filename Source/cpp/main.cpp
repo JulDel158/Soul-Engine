@@ -7,8 +7,6 @@
 
 #include <iostream>
 
-#include "glm/ext/matrix_clip_space.hpp"
-
 namespace 
 {
     void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -28,7 +26,7 @@ int main(int argc, char *argv[])
 {
     glfwSetErrorCallback(ErrorCallback);
     
-    ResourceManager& resourceManager = ResourceManager::GetInstance();
+    ResourceManager& resourceManager = ResourceManager::Instance();
     // Load and copy settings to initialize the rest of the program
     Settings settings;
     resourceManager.LoadSettings(settings);
@@ -53,8 +51,12 @@ int main(int argc, char *argv[])
         return -1;
     }
     
-    glfwSwapInterval(1);
+    if (settings.vsync_)
+    {
+        glfwSwapInterval(1);
+    }
     
+    // TODO: set keycallback
     //glfwSetKeyCallback(window, &InputManager::GetInstance().KeyCallback);
     glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(FramebufferSizeCallback));
     
@@ -72,8 +74,8 @@ int main(int argc, char *argv[])
     while (!glfwWindowShouldClose(window))
     {
         // calculate delta time
-        float currentFrame = static_cast<float>(glfwGetTime());
-        float deltaTime = currentFrame - lastFrame;
+        const float currentFrame = static_cast<float>(glfwGetTime());
+        const float deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         glfwPollEvents();
         

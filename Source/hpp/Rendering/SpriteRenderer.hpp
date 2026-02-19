@@ -16,21 +16,21 @@ public:
     SpriteRenderer(SpriteRenderer&&) = delete;
     SpriteRenderer& operator=(const SpriteRenderer&) = delete;
     SpriteRenderer& operator=(SpriteRenderer&&) = delete;
-    explicit SpriteRenderer(ESpriteCentering centering = ESpriteCentering::CENTER);
-    explicit SpriteRenderer(const Shader& shader, ESpriteCentering centering = ESpriteCentering::CENTER);
+    explicit SpriteRenderer(ESpriteCentering centering = ESpriteCentering::Center);
+    explicit SpriteRenderer(const Shader& shader, ESpriteCentering centering = ESpriteCentering::Center);
     ~SpriteRenderer();
     
-    void DrawSprite(const Texture2D& texture, const glm::vec2 position, const glm::vec2 size,
-        const float rotation = 0.0f, const glm::vec3 color = glm::vec3(1.0f));
+    void DrawSprite(const Texture2D& texture, const glm::vec2& position, const glm::vec2& size,
+        const float rotation = 0.0f, const glm::vec3& color = glm::vec3(1.0f));
     
     bool SwapShader(const std::string& name);
     void SwapShader(const Shader& shader);
     
 private:
     
+    Shader shader_;
     GLuint vao_;
     ESpriteCentering centering_;
-    Shader shader_;
     
     void InitRenderData();
 };

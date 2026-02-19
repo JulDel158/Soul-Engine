@@ -10,12 +10,10 @@
 class Game
 {
 private:
+    SpriteRenderer sprite_renderer_;
     unsigned int window_width_;
     unsigned int window_height_;
-    SpriteRenderer sprite_renderer_;
     EGameState game_state_;
-    bool keys_[KEYS_COUNT];
-    bool keys_previous_[KEYS_COUNT];
     
     void Init();
     

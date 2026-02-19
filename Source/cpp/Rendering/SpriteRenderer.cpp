@@ -29,17 +29,13 @@ SpriteRenderer::~SpriteRenderer()
     // Resource manager is in charge of clearing shaders
 }
 
-void SpriteRenderer::DrawSprite(const Texture2D& texture, const glm::vec2 position, const glm::vec2 size, 
-    const float rotation, const glm::vec3 color)
+void SpriteRenderer::DrawSprite(const Texture2D& texture, const glm::vec2& position, const glm::vec2& size, 
+    const float rotation, const glm::vec3& color)
 {
     shader_.Use();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(position, 0.0f));
-    
-    //model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
     model = glm::rotate(model, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-    //model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
-    
     model = glm::scale(model, glm::vec3(size, 1.0f));
     
     shader_.SetUniformMatrix4("model", model);
@@ -55,7 +51,7 @@ void SpriteRenderer::DrawSprite(const Texture2D& texture, const glm::vec2 positi
 
 bool SpriteRenderer::SwapShader(const std::string& name)
 {
-    ResourceManager& instance = ResourceManager::GetInstance();
+    ResourceManager& instance = ResourceManager::Instance();
     const bool result = instance.ContainsShader(name);
     if (result)
     {
@@ -76,31 +72,31 @@ void SpriteRenderer::InitRenderData()
     glm::vec2 topLeft, bottomLeft, bottomRight, topRight;
     switch (centering_)
     {
-        case ESpriteCentering::TOP_LEFT:
+        case ESpriteCentering::Top_Left:
         topLeft = glm::vec2(0.0f, 0.0f);
         bottomLeft = glm::vec2(0.0f, 1.0f);
         topRight = glm::vec2(1.0f, 0.0f);
         bottomRight = glm::vec2(1.0f, 1.0f);
         break;
-        case ESpriteCentering::TOP_RIGHT:
+        case ESpriteCentering::Top_Right:
         topLeft = glm::vec2(-1.0f, 0.0f);
         bottomLeft = glm::vec2(-1.0f, 1.0f);
         topRight = glm::vec2(0.0f, 0.0f);
         bottomRight = glm::vec2(0.0f, 1.0f);
         break;
-        case ESpriteCentering::BOTTOM_LEFT:
+        case ESpriteCentering::Bottom_Left:
         topLeft = glm::vec2(0.0f, -1.0f);
         bottomLeft = glm::vec2(0.0f, 0.0f);
         topRight = glm::vec2(1.0f, -1.0f);
         bottomRight = glm::vec2(1.0f, 0.0f);
         break;
-        case ESpriteCentering::BOTTOM_RIGHT:
+        case ESpriteCentering::Bottom_Right:
         topLeft = glm::vec2(-1.0f, -1.0f);
         bottomLeft = glm::vec2(-1.0f, 0.0f);
         topRight = glm::vec2(0.0f, -1.0f);
         bottomRight = glm::vec2(0.0f, 0.0f);
         break;
-    case ESpriteCentering::CENTER:
+    case ESpriteCentering::Center:
         topLeft = glm::vec2(-0.5f, -0.5f);
         bottomLeft = glm::vec2(-0.5f, 0.5f);
         topRight = glm::vec2(0.5f, -0.5f);
