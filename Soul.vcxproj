@@ -505,6 +505,7 @@
     <ClInclude Include="Source\hpp\EngineDataStructures.hpp" />
     <ClInclude Include="Source\hpp\Game.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
+    <ClInclude Include="Source\hpp\PathGlobals.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />
     <ClInclude Include="Source\hpp\Rendering\SpriteRenderer.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Texture2D.hpp" />
@@ -611,7 +612,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Source\Dependencies\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\Dependencies\lib;</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>/NODEFAULTLIB:library</IgnoreSpecificDefaultLibraries>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -655,7 +656,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Source\Dependencies\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\Dependencies\lib;</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
