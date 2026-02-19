@@ -503,6 +503,9 @@
     <ClInclude Include="Source\Dependencies\include\rapidjson\writer.h" />
     <ClInclude Include="Source\Dependencies\include\stb_image.h" />
     <ClInclude Include="Source\hpp\EngineDataStructures.hpp" />
+    <ClInclude Include="Source\hpp\freetype\config\ftconfig.h" />
+    <ClInclude Include="Source\hpp\freetype\config\ftoption.h" />
+    <ClInclude Include="Source\hpp\ft2build.h" />
     <ClInclude Include="Source\hpp\Game.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
     <ClInclude Include="Source\hpp\PathGlobals.hpp" />
@@ -613,7 +616,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Dependencies\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;freetype.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
@@ -657,7 +660,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Dependencies\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;freetype.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
