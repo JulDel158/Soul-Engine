@@ -82,6 +82,12 @@ Texture2D ResourceManager::GetTexture2D(const std::string& name)
 
 void ResourceManager::LoadFont(const char* filePath, const unsigned int fontSize, const std::string& name)
 {
+    if (!is_ft_open_)
+    {
+        std::cout << "WARNING::LoadFont: FT Library was not open  " << std::endl;
+        return;
+    }
+    
     // load font as face
     FT_Face face;
     if (FT_New_Face(free_type_library_, filePath, 0, &face))
@@ -231,7 +237,12 @@ void ResourceManager::Clear()
 
 void ResourceManager::OpenFreeTypeLibrary()
 {
-    if (auto error = FT_Init_FreeType(&free_type_library_); error)
+    if (is_ft_open_)
+    {
+        return;
+    }
+    
+    if (const auto error = FT_Init_FreeType(&free_type_library_); error)
     {
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
         return;
@@ -241,7 +252,12 @@ void ResourceManager::OpenFreeTypeLibrary()
 
 void ResourceManager::CloseFreeTypeLibrary()
 {
-    if (auto error = FT_Done_FreeType(free_type_library_); error)
+    if (!is_ft_open_)
+    {
+        return;
+    }
+    
+    if (const auto error = FT_Done_FreeType(free_type_library_); error)
     {
         std::cout << "ERROR::FREETYPE: Could not close FreeType Library" << std::endl;
         return;

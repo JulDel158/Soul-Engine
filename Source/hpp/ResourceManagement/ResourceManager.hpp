@@ -42,7 +42,6 @@ public:
     bool ContainsShader(const std::string& name) const;
     bool ContainsTexture2D(const std::string& name) const;
     bool ContainsFont(const std::string& name) const;
-    void Clear();
     
     // call before loading fonts. Note: this is called on construction
     void OpenFreeTypeLibrary();
@@ -55,6 +54,8 @@ private:
     ResourceManager();
     ~ResourceManager();
     
+    void Clear();
+    
     static Shader LoadShaderFromFile(const std::filesystem::path& vertexShaderPath, 
         const std::filesystem::path& fragmentShaderPath, const std::filesystem::path& geometryShaderPath = "", 
         bool hasGeometryShader = false);
@@ -65,7 +66,7 @@ private:
     std::unordered_map<std::string, Texture2D> textures_;
     OuterMap fonts_;
     Settings settings_;
-    FT_Library free_type_library_;
     bool is_ft_open_;
+    FT_Library free_type_library_;
 };
 #endif

@@ -3,7 +3,7 @@
 
 #include "Game.hpp"
 #include "ResourceManagement/ResourceManager.hpp"
-#include "Input/InputManager.hpp"
+//#include "Input/InputManager.hpp"
 
 #include <iostream>
 
@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
     if (gladLoadGL(glfwGetProcAddress) == 0)
     {
         std::cout << "Failed to initialize OpenGL context\n" << std::endl;
-        resourceManager.Clear();
         glfwTerminate();
         return -1;
     }
@@ -56,7 +55,7 @@ int main(int argc, char *argv[])
         glfwSwapInterval(1);
     }
     
-    // TODO: set keycallback
+    // TODO: set key callback
     //glfwSetKeyCallback(window, &InputManager::GetInstance().KeyCallback);
     glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(FramebufferSizeCallback));
     
@@ -67,8 +66,8 @@ int main(int argc, char *argv[])
 
     // Create and initialize game instance and input manager
     Game gameInstance = Game(settings);
-    InputManager& inputManager = InputManager::GetInstance();
-    inputManager.SetGameInstance(gameInstance);
+    //InputManager& inputManager = InputManager::GetInstance();
+    //inputManager.SetGameInstance(gameInstance);
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))
@@ -79,22 +78,20 @@ int main(int argc, char *argv[])
         lastFrame = currentFrame;
         glfwPollEvents();
         
-        gameInstance.ProcessInput(deltaTime);
-
+        //gameInstance.ProcessInput(deltaTime);
+        
         // update game state and audio
         gameInstance.Update(deltaTime);
-        gameInstance.ProcessAudio(deltaTime);
-
+        //gameInstance.ProcessAudio(deltaTime);
+        
         // render
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         gameInstance.Render(deltaTime);
-
-        glfwSwapBuffers(window);
+        
+         glfwSwapBuffers(window);
     }
     
-    resourceManager.Clear();
-    gameInstance.End();
     glfwTerminate();
     return 0;
 }

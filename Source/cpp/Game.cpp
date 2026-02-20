@@ -40,7 +40,10 @@ void Game::Init()
     textShader.SetUniformInteger(TEXT_UNIFORM.data(), 0);
     
     // load fonts
+    resourceManager.OpenFreeTypeLibrary();
     resourceManager.LoadFont(FONT_ARIAL_PATH.data(), 24,FONT_ARIAL.data());
+    //close ft library once we are done loading fonts
+    resourceManager.CloseFreeTypeLibrary();
     
     // load textures
     resourceManager.LoadTexture2D(TEXTURE1.data(), true, TEXTURE1_KEY.data());
