@@ -7,7 +7,6 @@
 #include "StringGlobals.hpp"
 
 SpriteRenderer::SpriteRenderer(const ESpriteCentering centering) :
-shader_(ResourceManager::Instance().GetShader("")),
 centering_(centering)
 {
     InitRenderData();

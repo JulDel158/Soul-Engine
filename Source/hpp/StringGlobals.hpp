@@ -18,12 +18,18 @@ constexpr std::string_view F_TEXT_SHADER_BASE = "Assets/Shaders/BasicText.frag\0
 // textures paths
 constexpr std::string_view TEXTURE1 = "D:/Projects/Soul/Assets/Textures/awesomeface.png\0";
 
+// font paths
+constexpr std::string_view FONT_ARIAL_PATH = "Assets/Fonts/arial.ttf\0";
+
 // shader keys
 constexpr std::string_view SPRITE_RENDERER_PROGRAM1 = "SPRITE\0";
 constexpr std::string_view FONT_RENDERER_PROGRAM1 = "FONT\0";
 
 // texture keys
 constexpr std::string_view TEXTURE1_KEY = "FACE\0";
+
+// font keys
+constexpr std::string_view FONT_ARIAL = "arial\0";
 
 // uniforms
 constexpr std::string_view IMAGE_UNIFORM = "image\0";

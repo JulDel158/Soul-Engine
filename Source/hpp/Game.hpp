@@ -5,12 +5,14 @@
 
 #include "EngineDataStructures.hpp"
 #include "Rendering/SpriteRenderer.hpp"
+#include "Rendering/TextRenderer.hpp"
 
 // Class in charge of game's core. From here we will perform updates to the game state, physics, rendering, audio, and more.
 class Game
 {
 private:
     SpriteRenderer sprite_renderer_;
+    TextRenderer text_renderer_;
     unsigned int window_width_;
     unsigned int window_height_;
     EGameState game_state_;

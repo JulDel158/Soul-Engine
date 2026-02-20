@@ -19,6 +19,8 @@ Game::~Game()
 void Game::Init()
 {
     ResourceManager& resourceManager = ResourceManager::Instance();
+    
+    // load shaders
     const Shader spriteShader = resourceManager.LoadShader(
         V_SPRITE_SHADER_BASE.data(), F_SPRITE_SHADER_BASE.data(),
         nullptr, SPRITE_RENDERER_PROGRAM1.data()); 
@@ -37,9 +39,15 @@ void Game::Init()
     textShader.SetUniformMatrix4(PROJECTION_UNIFORM.data(), projection, true);
     textShader.SetUniformInteger(TEXT_UNIFORM.data(), 0);
     
-    // Must set a shader on the sprite renderer
-    sprite_renderer_.SwapShader(resourceManager.GetShader(SPRITE_RENDERER_PROGRAM1.data()));
+    // load fonts
+    resourceManager.LoadFont(FONT_ARIAL_PATH.data(), 24,FONT_ARIAL.data());
+    
+    // load textures
     resourceManager.LoadTexture2D(TEXTURE1.data(), true, TEXTURE1_KEY.data());
+    
+    // set base shaders on renderers
+    sprite_renderer_.SwapShader(spriteShader);
+    text_renderer_.SwapShader(textShader);
 }
 
 void Game::Update(const float dt)
@@ -55,6 +63,10 @@ void Game::Render(const float dt)
         glm::vec2(250.0f, 250.0f),
         glm::vec2(400.0f, 400.0f),
         glm::sin(time));
+    
+    
+    text_renderer_.RenderText("Ella is a DONUT!", 100.0f, 450.0f, 1.0f, glm::vec3(0.f, 1.f, 0.f));
+    
     time += dt;
 }
 

@@ -1,17 +1,15 @@
 #include "Rendering/TextRenderer.hpp"
 
 #include <iostream>
-#include <utility>
+#include <unordered_map>
 
 #include "glad/gl.h"
 #include "glm/ext/matrix_clip_space.hpp"
 
 #include "ResourceManagement/ResourceManager.hpp"
-#include "StringGlobals.hpp"
 
 
-TextRenderer::TextRenderer() : 
-shader_(ResourceManager::Instance().GetShader(FONT_RENDERER_PROGRAM1.data()))
+TextRenderer::TextRenderer()
 {
     InitRenderData();
 }
@@ -19,11 +17,20 @@ shader_(ResourceManager::Instance().GetShader(FONT_RENDERER_PROGRAM1.data()))
 TextRenderer::~TextRenderer()
 {
     // Since we move data to this object we are safe to clear it
-    font_.clear();
 }
 
-void TextRenderer::RenderText(const std::string& text, float x, float y, const float scale, const glm::vec3 color)
+void TextRenderer::RenderText(const std::string& text, float x, float y, const float scale, const glm::vec3 color, const std::string& font)
 {
+    // get font
+    auto& resourceManager = ResourceManager::Instance();
+    if (!resourceManager.ContainsFont(font))
+    {
+        std::cout << "WARNING::RenderText: Font: " << font << " not found! " << std::endl;
+        return;
+    }
+    
+    auto& fontMap = resourceManager.GetFont(font);
+    
     // activate corresponding render state	
     shader_.Use();
     shader_.SetUniformVector3f(TEXT_COLOR_UNIFORM.data(), color);
@@ -33,10 +40,10 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, const f
     // iterate through all characters
     for (char character : text)
     {
-        TextCharacter textCharacter = font_[character];
+        TextCharacter textCharacter = fontMap[character];
 
         float xPos = x + static_cast<float>(textCharacter.bearing_.x) * scale;
-        float yPos = y + static_cast<float>(font_['H'].bearing_.y - textCharacter.bearing_.y) * scale;
+        float yPos = y + static_cast<float>(fontMap['H'].bearing_.y - textCharacter.bearing_.y) * scale;
 
         float w = static_cast<float>(textCharacter.size_.x) * scale;
         float h = static_cast<float>(textCharacter.size_.y) * scale;
@@ -64,32 +71,6 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, const f
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void TextRenderer::SwapFont(const std::string& name)
-{
-    if (name.empty())
-    {
-        std::cout << "WARNING::SwapFont: Empty name passed! " << std::endl;
-        return;
-    }
-    
-    auto& resourceManager = ResourceManager::Instance();
-    
-    if (!resourceManager.ContainsFont(name))
-    {
-        std::cout << "WARNING::SwapFont: Font: " << name <<" not found! " << std::endl;
-        return;
-    }
-    
-    // return font back to resource manager
-    if (!font_key_.empty())
-    {
-        resourceManager.ReclaimFontMemory(font_, font_key_);
-    }
-    
-    font_ = std::move(resourceManager.GetFont(name));
-    font_key_ = name;
 }
 
 void TextRenderer::SwapShader(const std::string& name)
