@@ -25,6 +25,7 @@
     <ClCompile Include="Source\cpp\main.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
     <ClCompile Include="Source\cpp\Rendering\SpriteRenderer.cpp" />
+    <ClCompile Include="Source\cpp\Rendering\TextRenderer.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Texture2D.cpp" />
     <ClCompile Include="Source\cpp\ResourceManagement\ResourceManager.cpp" />
     <ClCompile Include="Source\Dependencies\include\glm\detail\glm.cpp" />
@@ -511,6 +512,7 @@
     <ClInclude Include="Source\hpp\PathGlobals.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />
     <ClInclude Include="Source\hpp\Rendering\SpriteRenderer.hpp" />
+    <ClInclude Include="Source\hpp\Rendering\TextRenderer.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Texture2D.hpp" />
     <ClInclude Include="Source\hpp\ResourceManagement\ResourceManager.hpp" />
   </ItemGroup>

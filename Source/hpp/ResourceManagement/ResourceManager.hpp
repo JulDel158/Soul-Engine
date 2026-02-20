@@ -2,8 +2,11 @@
 #define RESOURCE_MANAGER_H
 
 #include <filesystem>
-#include <map>
+#include <unordered_map>
 #include <string>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include "Rendering/Shader.hpp"
 #include "Rendering/Texture2D.hpp"
@@ -11,23 +14,42 @@
 
 class ResourceManager
 {
+    using InnerMap = std::unordered_map<char, TextCharacter>;
+    using OuterMap = std::unordered_map<std::string, InnerMap>;
+    
 public:
     ResourceManager(const ResourceManager&) = delete;
     ResourceManager& operator=(const ResourceManager&) = delete;
     
     static ResourceManager& Instance();
     
-    Shader LoadShader(const char *vertexShaderFile, const char *fragmentShaderFile, 
-        const char *geometryShaderFile, const std::string& name);
+    Shader LoadShader(const char *vertexShaderFile, const char *fragmentShaderFile, const char *geometryShaderFile, const std::string& name);
     Shader GetShader(const std::string& name);
-    bool ContainsShader(const std::string& name) const;
+    
     Texture2D LoadTexture2D(const char *filePath, bool alpha, const std::string& name);
     Texture2D GetTexture2D(const std::string& name);
-    bool ContainsTexture2D(const std::string& name) const;
-    void Clear();
+    
+    void LoadFont(const char* filePath, const unsigned int fontSize, const std::string& name);
+    InnerMap& GetFont(const std::string& name);
     
     void LoadSettings(Settings& settings);
     Settings GetSettings() const;
+
+    // Text renderer moves memory back and forth when using a font.
+    // This function returns the memory to the resource manager
+    void ReclaimFontMemory(InnerMap& font, const std::string& name);
+    
+    bool ContainsShader(const std::string& name) const;
+    bool ContainsTexture2D(const std::string& name) const;
+    bool ContainsFont(const std::string& name) const;
+    void Clear();
+    
+    // call before loading fonts. Note: this is called on construction
+    void OpenFreeTypeLibrary();
+    
+    // call after we finish loading fonts
+    void CloseFreeTypeLibrary();
+
     
 private:
     ResourceManager();
@@ -39,8 +61,11 @@ private:
     
     static Texture2D LoadTextureFromFile(const char* file, bool alpha);
     
-    std::map<std::string, Shader> shaders_;
-    std::map<std::string, Texture2D> textures_;
+    std::unordered_map<std::string, Shader> shaders_;
+    std::unordered_map<std::string, Texture2D> textures_;
+    OuterMap fonts_;
     Settings settings_;
+    FT_Library free_type_library_;
+    bool is_ft_open_;
 };
 #endif

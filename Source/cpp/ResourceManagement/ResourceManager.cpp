@@ -1,15 +1,17 @@
 #include "ResourceManagement/ResourceManager.hpp"
 
-#include <glad/gl.h>
+#include "glad/gl.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#include "rapidjson/document.h"
 
 #include <iostream>
 #include <filesystem>
 #include <sstream>
 #include <fstream>
+#include <utility>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include "rapidjson/document.h"
 #include "PathGlobals.hpp"
 
 ResourceManager& ResourceManager::Instance()
@@ -20,9 +22,11 @@ ResourceManager& ResourceManager::Instance()
 
 ResourceManager::ResourceManager()
 {
-    shaders_ = std::map<std::string, Shader>();
-    textures_ = std::map<std::string, Texture2D>();
+    shaders_ = std::unordered_map<std::string, Shader>();
+    textures_ = std::unordered_map<std::string, Texture2D>();
     settings_ = Settings();
+    
+    OpenFreeTypeLibrary();
 }
 
 ResourceManager::~ResourceManager()
@@ -76,26 +80,68 @@ Texture2D ResourceManager::GetTexture2D(const std::string& name)
     return textures_[name];
 }
 
-bool ResourceManager::ContainsTexture2D(const std::string& name) const
+void ResourceManager::LoadFont(const char* filePath, const unsigned int fontSize, const std::string& name)
 {
-    return textures_.contains(name);
+    // load font as face
+    FT_Face face;
+    if (FT_New_Face(free_type_library_, filePath, 0, &face))
+    {
+        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+    }
+    
+    // set size to load glyphs as
+    FT_Set_Pixel_Sizes(face, 0, fontSize);
+    // disable byte-alignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
+    // then for the first 128 ASCII characters, preload/compile their characters and store them
+    for (GLubyte i = 0; i < 128; ++i) 
+    {
+        // load character glyph 
+        if (FT_Load_Char(face, i, FT_LOAD_RENDER))
+        {
+            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+            continue;
+        }
+        // generate texture
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RED,
+            static_cast<GLint>(face->glyph->bitmap.width),
+            static_cast<GLint>(face->glyph->bitmap.rows),
+            0,
+            GL_RED,
+            GL_UNSIGNED_BYTE,
+            face->glyph->bitmap.buffer
+            );
+        
+        // set texture options
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+       
+        // now store character for later use
+        auto character = TextCharacter(
+            texture,
+            glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+            static_cast<unsigned int>(face->glyph->advance.x)
+        );
+        fonts_[name].insert(std::pair<char, TextCharacter>(i, character));
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    // clear generated face once done, not closing FT until we are done loading fonts into memory
+    FT_Done_Face(face);
 }
 
-void ResourceManager::Clear()
+std::unordered_map<char, TextCharacter>& ResourceManager::GetFont(const std::string& name)
 {
-    // release these resources from openGL
-    for (auto& pair : shaders_) // NOLINT
-    {
-        pair.second.Clear();
-    }
-    
-    for (auto& pair : textures_) // NOLINT
-    {
-        pair.second.Clear();
-    }
-    
-    shaders_.clear();
-    textures_.clear();
+    return fonts_[name];
 }
 
 void ResourceManager::LoadSettings(Settings& settings)
@@ -141,6 +187,66 @@ void ResourceManager::LoadSettings(Settings& settings)
 Settings ResourceManager::GetSettings() const
 {
     return settings_;
+}
+
+void ResourceManager::ReclaimFontMemory(InnerMap& font, const std::string& name)
+{
+    fonts_[name] = std::move(font);
+}
+
+bool ResourceManager::ContainsTexture2D(const std::string& name) const
+{
+    return textures_.contains(name);
+}
+
+bool ResourceManager::ContainsFont(const std::string& name) const
+{
+    return fonts_.contains(name);
+}
+
+void ResourceManager::Clear()
+{
+    // release these resources from openGL
+    for (auto& pair : shaders_) // NOLINT
+    {
+        pair.second.Clear();
+    }
+    
+    for (auto& pair : textures_) // NOLINT
+    {
+        pair.second.Clear();
+    }
+    
+    for (auto& pair : fonts_) // NOLINT
+    {
+        pair.second.clear();
+    }
+    
+    shaders_.clear();
+    textures_.clear();
+    fonts_.clear();
+    
+    CloseFreeTypeLibrary();
+}
+
+void ResourceManager::OpenFreeTypeLibrary()
+{
+    if (auto error = FT_Init_FreeType(&free_type_library_); error)
+    {
+        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+        return;
+    }
+    is_ft_open_ = true;
+}
+
+void ResourceManager::CloseFreeTypeLibrary()
+{
+    if (auto error = FT_Done_FreeType(free_type_library_); error)
+    {
+        std::cout << "ERROR::FREETYPE: Could not close FreeType Library" << std::endl;
+        return;
+    }
+    is_ft_open_ = false;
 }
 
 Shader ResourceManager::LoadShaderFromFile(const std::filesystem::path& vertexShaderPath, 

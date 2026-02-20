@@ -5,13 +5,13 @@
 
 #include "ResourceManagement/ResourceManager.hpp"
 
-SpriteRenderer::SpriteRenderer(ESpriteCentering centering) :
+SpriteRenderer::SpriteRenderer(const ESpriteCentering centering) :
 centering_(centering)
 {
     InitRenderData();
 }
 
-SpriteRenderer::SpriteRenderer(const Shader& shader, ESpriteCentering centering) :
+SpriteRenderer::SpriteRenderer(const Shader& shader, const ESpriteCentering centering) :
 centering_(centering)
 {
     shader_ = shader;
@@ -64,7 +64,6 @@ void SpriteRenderer::SwapShader(const Shader& shader)
 void SpriteRenderer::InitRenderData()
 {
     // configure VAO/VBO
-    unsigned int vbo;
     glm::vec2 topLeft, bottomLeft, bottomRight, topRight;
     switch (centering_)
     {
@@ -111,9 +110,9 @@ void SpriteRenderer::InitRenderData()
     };
     
     glGenVertexArrays(1, &vao_);
-    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &vbo_);
     
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     
     glBindVertexArray(vao_);

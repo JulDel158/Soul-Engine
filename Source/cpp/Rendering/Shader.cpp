@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "glad/gl.h"
 #include "glm/gtc/type_ptr.hpp"
 
 Shader::Shader():
@@ -262,7 +263,7 @@ void Shader::SetUniformMatrix4(const char* name, const glm::mat4& matrix, const 
     glUniformMatrix4fv(glGetUniformLocation(*id_, name), 1, false, glm::value_ptr(matrix));
 }
 
-bool Shader::CheckCompileErrors(const GLuint object, const std::string& type)
+bool Shader::CheckCompileErrors(const unsigned int object, const std::string& type)
 {
     GLint success;
     char infoLog[1024];

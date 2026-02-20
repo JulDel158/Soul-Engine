@@ -1,6 +1,8 @@
 #ifndef ENGINE_DATA_STRUCTURES_H
 #define ENGINE_DATA_STRUCTURES_H
 
+#include "glm/vec2.hpp"
+
 struct Settings
 {
 public:
@@ -29,6 +31,28 @@ enum class EGameState : unsigned char
     InGame_Loading = 5,
     
     Exiting = 6
+};
+
+struct TextCharacter
+{
+    unsigned int id_; // ID handle of the glyph texture
+    glm::ivec2 size_; // size of glyph
+    glm::ivec2 bearing_; // offset from baseline to left/top of glyph
+    unsigned int advance_; // horizontal offset to advance to next glyph
+    
+    inline TextCharacter(const unsigned int id, const glm::ivec2 size, const glm::ivec2 bearing, const unsigned int advance) : 
+    id_(id), 
+    size_(size),
+    bearing_(bearing),
+    advance_(advance)
+    {}
+    
+    inline TextCharacter() : 
+    id_(0), 
+    size_(0, 0), 
+    bearing_(0), 
+    advance_(0)
+    {}
 };
 
 #endif

@@ -4,14 +4,13 @@
 #include <string>
 #include <optional>
 
-#include "glad/gl.h"
 #include "glm/glm.hpp"
 
 class Shader
 {
 private:
     // ID of program where shaders will be linked
-    std::optional<GLuint> id_;
+    std::optional<unsigned int> id_;
 
 public:
     // When copying a shader we just want the id and validity
@@ -45,7 +44,7 @@ private:
     void Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);
     
     // checks if shader compilation or program linking failed
-    bool CheckCompileErrors(const GLuint object, const std::string& type); 
+    bool CheckCompileErrors(const unsigned int object, const std::string& type); 
 };
 
 #endif

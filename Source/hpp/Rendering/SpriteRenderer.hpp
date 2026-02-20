@@ -16,8 +16,8 @@ public:
     SpriteRenderer(SpriteRenderer&&) = delete;
     SpriteRenderer& operator=(const SpriteRenderer&) = delete;
     SpriteRenderer& operator=(SpriteRenderer&&) = delete;
-    explicit SpriteRenderer(ESpriteCentering centering = ESpriteCentering::Center);
-    explicit SpriteRenderer(const Shader& shader, ESpriteCentering centering = ESpriteCentering::Center);
+    explicit SpriteRenderer(const ESpriteCentering centering = ESpriteCentering::Center);
+    explicit SpriteRenderer(const Shader& shader, const ESpriteCentering centering = ESpriteCentering::Center);
     ~SpriteRenderer();
     
     void DrawSprite(const Texture2D& texture, const glm::vec2& position, const glm::vec2& size,
@@ -30,6 +30,7 @@ private:
     
     Shader shader_;
     GLuint vao_;
+    GLuint vbo_;
     ESpriteCentering centering_;
     
     void InitRenderData();
