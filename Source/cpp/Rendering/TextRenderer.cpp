@@ -7,10 +7,11 @@
 #include "glm/ext/matrix_clip_space.hpp"
 
 #include "ResourceManagement/ResourceManager.hpp"
+#include "StringGlobals.hpp"
 
 
 TextRenderer::TextRenderer() : 
-shader_(ResourceManager::Instance().GetShader("FONT")) // todo: replace with global string
+shader_(ResourceManager::Instance().GetShader(FONT_RENDERER_PROGRAM1.data()))
 {
     InitRenderData();
 }
@@ -25,7 +26,7 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, const f
 {
     // activate corresponding render state	
     shader_.Use();
-    shader_.SetUniformVector3f("textColor", color);
+    shader_.SetUniformVector3f(TEXT_COLOR_UNIFORM.data(), color);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(vao_);
 
@@ -103,12 +104,10 @@ void TextRenderer::SwapShader(const std::string& name)
     
     // load and configure shader
     shader_ = resourceManager.GetShader(name);
-    // TODO: change strings for global constants
-    shader_.SetUniformMatrix4("projection", 
-        glm::ortho(0.0f, static_cast<float>(settings.screen_width_), static_cast<float>(settings.screen_height_), 
-            0.0f), 
-            true);
-    shader_.SetUniformInteger("text", 0);
+    shader_.SetUniformMatrix4(PROJECTION_UNIFORM.data(), 
+        glm::ortho(0.0f, static_cast<float>(settings.screen_width_), static_cast<float>(settings.screen_height_), 0.0f), 
+        true);
+    shader_.SetUniformInteger(TEXT_UNIFORM.data(), 0);
 }
 
 void TextRenderer::SwapShader(const Shader& shader)
@@ -117,12 +116,10 @@ void TextRenderer::SwapShader(const Shader& shader)
     
     // load and configure shader
     shader_ = shader;
-    // TODO: change strings for global constants
-    shader_.SetUniformMatrix4("projection", 
-        glm::ortho(0.0f, static_cast<float>(settings.screen_width_), static_cast<float>(settings.screen_height_), 
-            0.0f), 
-            true);
-    shader_.SetUniformInteger("text", 0);
+    shader_.SetUniformMatrix4(PROJECTION_UNIFORM.data(), 
+        glm::ortho(0.0f, static_cast<float>(settings.screen_width_), static_cast<float>(settings.screen_height_), 0.0f), 
+        true);
+    shader_.SetUniformInteger(TEXT_UNIFORM.data(), 0);
 }
 
 void TextRenderer::InitRenderData()

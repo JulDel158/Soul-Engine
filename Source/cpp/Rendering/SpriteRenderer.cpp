@@ -4,8 +4,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "ResourceManagement/ResourceManager.hpp"
+#include "StringGlobals.hpp"
 
 SpriteRenderer::SpriteRenderer(const ESpriteCentering centering) :
+shader_(ResourceManager::Instance().GetShader("")),
 centering_(centering)
 {
     InitRenderData();
@@ -34,8 +36,8 @@ void SpriteRenderer::DrawSprite(const Texture2D& texture, const glm::vec2& posit
     model = glm::rotate(model, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
     model = glm::scale(model, glm::vec3(size, 1.0f));
     
-    shader_.SetUniformMatrix4("model", model);
-    shader_.SetUniformVector3f("spriteColor", color);
+    shader_.SetUniformMatrix4(MODEL_UNIFORM.data(), model);
+    shader_.SetUniformVector3f(SPRITE_COLOR_UNIFORM.data(), color);
     
     glActiveTexture(GL_TEXTURE0);
     texture.Bind();

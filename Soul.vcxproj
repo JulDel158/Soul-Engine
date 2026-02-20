@@ -509,7 +509,7 @@
     <ClInclude Include="Source\hpp\ft2build.h" />
     <ClInclude Include="Source\hpp\Game.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
-    <ClInclude Include="Source\hpp\PathGlobals.hpp" />
+    <ClInclude Include="Source\hpp\StringGlobals.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />
     <ClInclude Include="Source\hpp\Rendering\SpriteRenderer.hpp" />
     <ClInclude Include="Source\hpp\Rendering\TextRenderer.hpp" />

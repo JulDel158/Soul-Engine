@@ -1,11 +1,8 @@
 #include "Game.hpp"
 
-#include <iostream>
-#include <ostream>
-
 #include "ResourceManagement/ResourceManager.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "PathGlobals.hpp"
+#include "StringGlobals.hpp"
 
 Game::Game(const Settings& settings) :
 sprite_renderer_(ESpriteCentering::Center),
@@ -22,21 +19,27 @@ Game::~Game()
 void Game::Init()
 {
     ResourceManager& resourceManager = ResourceManager::Instance();
-    Shader shader = resourceManager.LoadShader(
-        VERTEX_SHADER1.data(), FRAGMENT_SHADER1.data(), // NOLINT (String contains null terminator)
-        nullptr, "sprite"); 
+    const Shader spriteShader = resourceManager.LoadShader(
+        V_SPRITE_SHADER_BASE.data(), F_SPRITE_SHADER_BASE.data(),
+        nullptr, SPRITE_RENDERER_PROGRAM1.data()); 
+    
+    const Shader textShader = resourceManager.LoadShader(V_TEXT_SHADER_BASE.data(),  
+        F_TEXT_SHADER_BASE.data(), nullptr, FONT_RENDERER_PROGRAM1.data());
     
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(window_width_), 
         static_cast<float>(window_height_), 0.0f, -1.0f, 1.0f);
     
-    shader.Use();
-    shader.SetUniformInteger("image", 0);
-    shader.SetUniformMatrix4("projection", projection);
+    spriteShader.SetUniformInteger(IMAGE_UNIFORM.data(), 0, true);
+    spriteShader.SetUniformMatrix4(PROJECTION_UNIFORM.data(), projection);
+    
+    projection = glm::ortho(0.0f, static_cast<float>(window_width_), static_cast<float>(window_height_), 0.0f);
+    textShader.SetUniformMatrix4(PROJECTION_UNIFORM.data(), projection, true);
+    textShader.SetUniformInteger(TEXT_UNIFORM.data(), 0);
     
     // Must set a shader on the sprite renderer
-    sprite_renderer_.SwapShader(resourceManager.GetShader("sprite"));
-    resourceManager.LoadTexture2D(TEXTURE1.data(), true, "face"); // NOLINT (string contains nullterminator)
+    sprite_renderer_.SwapShader(resourceManager.GetShader(SPRITE_RENDERER_PROGRAM1.data()));
+    resourceManager.LoadTexture2D(TEXTURE1.data(), true, TEXTURE1_KEY.data());
 }
 
 void Game::Update(const float dt)
@@ -48,7 +51,7 @@ void Game::Render(const float dt)
 {
     static float time = 0.0f;
     ResourceManager& resourceManager = ResourceManager::Instance();
-    sprite_renderer_.DrawSprite(resourceManager.GetTexture2D("face"), 
+    sprite_renderer_.DrawSprite(resourceManager.GetTexture2D(TEXTURE1_KEY.data()), 
         glm::vec2(250.0f, 250.0f),
         glm::vec2(400.0f, 400.0f),
         glm::sin(time));

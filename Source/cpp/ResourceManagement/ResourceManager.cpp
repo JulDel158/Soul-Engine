@@ -12,7 +12,7 @@
 #include <fstream>
 #include <utility>
 
-#include "PathGlobals.hpp"
+#include "StringGlobals.hpp"
 
 ResourceManager& ResourceManager::Instance()
 {
