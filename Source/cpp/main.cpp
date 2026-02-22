@@ -3,7 +3,7 @@
 
 #include "Game.hpp"
 #include "ResourceManagement/ResourceManager.hpp"
-//#include "Input/InputManager.hpp"
+#include "Input/InputManager.hpp"
 
 #include <iostream>
 
@@ -64,10 +64,12 @@ int main(int argc, char *argv[])
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    //glfwSetKeyCallback(window, reinterpret_cast<GLFWkeyfun>(KeyCallback));
+    
     // Create and initialize game instance and input manager
     Game gameInstance = Game(settings);
-    //InputManager& inputManager = InputManager::GetInstance();
-    //inputManager.SetGameInstance(gameInstance);
+    InputManager& inputManager = InputManager::Instance();
+    InputManager::SetKeyCallback(window);
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))
@@ -78,7 +80,7 @@ int main(int argc, char *argv[])
         lastFrame = currentFrame;
         glfwPollEvents();
         
-        //gameInstance.ProcessInput(deltaTime);
+        gameInstance.ProcessInput(deltaTime);
         
         // update game state and audio
         gameInstance.Update(deltaTime);
@@ -89,7 +91,7 @@ int main(int argc, char *argv[])
         glClear(GL_COLOR_BUFFER_BIT);
         gameInstance.Render(deltaTime);
         
-         glfwSwapBuffers(window);
+        glfwSwapBuffers(window);
     }
     
     glfwTerminate();

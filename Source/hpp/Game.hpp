@@ -6,6 +6,7 @@
 #include "EngineDataStructures.hpp"
 #include "Rendering/SpriteRenderer.hpp"
 #include "Rendering/TextRenderer.hpp"
+#include "Input/InputAction.hpp"
 
 // Class in charge of game's core. From here we will perform updates to the game state, physics, rendering, audio, and more.
 class Game
@@ -16,6 +17,7 @@ private:
     unsigned int window_width_;
     unsigned int window_height_;
     EGameState game_state_;
+    InputAction temp_input_action_;
     
     void Init();
     
@@ -37,6 +39,10 @@ public:
     EGameState GetGameState() const;
     bool IsGameRunning() const;
     bool IsGamePaused() const;
+    
+    void TempInputActionPressedTest(const UInputData& data);
+    void TempInputActionReleasedTest();
+    void TempInputActionUpdateTest(const UInputData& data, const float deltaTime);
 };
 
 

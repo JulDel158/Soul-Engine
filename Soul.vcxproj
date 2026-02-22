@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Source\cpp\Game.cpp" />
     <ClCompile Include="Source\cpp\gl.c" />
+    <ClCompile Include="Source\cpp\Input\InputAction.cpp" />
     <ClCompile Include="Source\cpp\Input\InputManager.cpp" />
     <ClCompile Include="Source\cpp\main.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
@@ -508,6 +509,7 @@
     <ClInclude Include="Source\hpp\freetype\config\ftoption.h" />
     <ClInclude Include="Source\hpp\ft2build.h" />
     <ClInclude Include="Source\hpp\Game.hpp" />
+    <ClInclude Include="Source\hpp\Input\InputAction.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
     <ClInclude Include="Source\hpp\StringGlobals.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />

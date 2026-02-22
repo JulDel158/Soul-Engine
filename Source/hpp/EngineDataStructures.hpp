@@ -55,4 +55,11 @@ struct TextCharacter
     {}
 };
 
+union UInputData
+{
+    glm::vec2 vec2;
+    float alpha;
+    bool flag;
+};
+
 #endif

@@ -1,8 +1,11 @@
 #include "Game.hpp"
 
+#include <iostream>
+
 #include "ResourceManagement/ResourceManager.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "StringGlobals.hpp"
+#include "Input/InputManager.hpp"
 
 Game::Game(const Settings& settings) :
 sprite_renderer_(ESpriteCentering::Center),
@@ -51,6 +54,12 @@ void Game::Init()
     // set base shaders on renderers
     sprite_renderer_.SwapShader(spriteShader);
     text_renderer_.SwapShader(textShader);
+    
+    InputManager::Instance().BindInputAction(glfwGetKeyScancode(GLFW_KEY_K), &temp_input_action_);
+    temp_input_action_.BindPressed([this](const UInputData& data){ this->TempInputActionPressedTest(data);});
+    temp_input_action_.BindReleased([this](){ this->TempInputActionReleasedTest();});
+    temp_input_action_.BindUpdated([this](const UInputData& data, const float deltaTime){ this->TempInputActionUpdateTest(data, deltaTime);});
+    temp_input_action_.SetCanUpdate(true);
 }
 
 void Game::Update(const float dt)
@@ -80,7 +89,7 @@ void Game::ProcessAudio(const float dt)
 
 void Game::ProcessInput(const float dt)
 {
-    // TODO: Process input here
+    InputManager::Instance().InputUpdate(dt);
 }
 
 void Game::End()
@@ -100,4 +109,20 @@ bool Game::IsGameRunning() const
 bool Game::IsGamePaused() const
 {
     return game_state_ == EGameState::InGame_Paused;
+}
+
+void Game::TempInputActionPressedTest(const UInputData& data)
+{
+    std::cout << "GAME::TempInputActionPressedTest called!!!!!" << std::endl;
+}
+
+void Game::TempInputActionReleasedTest()
+{
+    std::cout << "\nGAME::TempInputActionReleasedTest called!!!!!" << std::endl;
+}
+
+void Game::TempInputActionUpdateTest(const UInputData& data, const float deltaTime)
+{
+    std::cout << ".";
+    
 }

@@ -3,13 +3,20 @@
 
 #include "Shader.hpp"
 #include "Texture2D.hpp"
-#include "glm/glm.hpp"
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 #include "EngineDataStructures.hpp"
 
 #include <string>
 
 class SpriteRenderer
 {
+private:
+    Shader shader_;
+    unsigned int vao_;
+    unsigned int vbo_;
+    ESpriteCentering centering_;
+    
 public:
     SpriteRenderer()=delete;
     SpriteRenderer(const SpriteRenderer&) = delete;
@@ -27,11 +34,6 @@ public:
     void SwapShader(const Shader& shader);
     
 private:
-    
-    Shader shader_;
-    GLuint vao_;
-    GLuint vbo_;
-    ESpriteCentering centering_;
     
     void InitRenderData();
 };
