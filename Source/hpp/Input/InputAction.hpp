@@ -3,16 +3,17 @@
 
 #include "EngineDataStructures.hpp"
 
-#include <string>
 #include <functional>
+
+#include "glm/vec2.hpp"
 
 class InputAction
 {
 public:
-    UInputData data_;
+    glm::vec2 data_;
     
     InputAction();
-    explicit InputAction(std::string name);
+    explicit InputAction(const EInputActionType type = EInputActionType::None, const ECursorDataMode cursorMode = ECursorDataMode::Position, const float clampMax = 100.0f, bool canUpdate = false);
     ~InputAction();
     
     // TODO: Receive event
@@ -21,22 +22,32 @@ public:
     void Released();
     void Update(const float deltaTime) const; // Updates only happen while pressed
     
-    void BindPressed(const std::function<void(const UInputData&)>& lambda);
+    void BindPressed(const std::function<void(const glm::vec2&)>& lambda);
     void BindReleased(const std::function<void()>& lambda);
-    void BindUpdated(const std::function<void(const UInputData&, const float& deltaTime)>& lambda);
-    
+    void BindUpdated(const std::function<void(const glm::vec2&, const float& deltaTime)>& lambda);
     void Unbind();
-    void SetCanUpdate(const bool shouldUpdate);
-    bool CanUpdate() const;
+    
+    void SetClampMax(const float value);
+    void SetType(const EInputActionType type);
+    void SetCursorDataMode(const ECursorDataMode mode);
+    void SetCanUpdate(const bool flag);
+    
+    float               GetClampMax() const;
+    EInputActionType    GetType() const;
+    ECursorDataMode     GetCursorDataMode() const;
+    bool                IsPressed() const;
+    bool                CanUpdate() const;
 
 private:
     
-    std::function<void(const UInputData&)> pressed_;
+    std::function<void(const glm::vec2&)> pressed_;
     std::function<void()> released_;
-    std::function<void(const UInputData&, const float& deltaTime)> update_;
-    std::string name_;
+    std::function<void(const glm::vec2&, const float& deltaTime)> update_;
+    float clamp_max_;
+    EInputActionType type_;
+    ECursorDataMode cursor_data_mode_;
     bool is_pressed_;
-    bool should_update_;
+    bool can_update_;
 };
 
 

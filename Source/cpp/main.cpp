@@ -68,8 +68,10 @@ int main(int argc, char *argv[])
     
     // Create and initialize game instance and input manager
     Game gameInstance = Game(settings);
+    gameInstance.SetWindowPointer(window);
     InputManager& inputManager = InputManager::Instance();
     InputManager::SetKeyCallback(window);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))

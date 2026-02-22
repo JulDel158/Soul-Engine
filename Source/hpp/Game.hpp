@@ -3,6 +3,8 @@
 
 #define KEYS_COUNT 1024
 
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
 #include "EngineDataStructures.hpp"
 #include "Rendering/SpriteRenderer.hpp"
 #include "Rendering/TextRenderer.hpp"
@@ -18,6 +20,8 @@ private:
     unsigned int window_height_;
     EGameState game_state_;
     InputAction temp_input_action_;
+    GLFWwindow* window_;
+    
     
     void Init();
     
@@ -40,9 +44,11 @@ public:
     bool IsGameRunning() const;
     bool IsGamePaused() const;
     
-    void TempInputActionPressedTest(const UInputData& data);
+    void SetWindowPointer(GLFWwindow* window);
+    
+    void TempInputActionPressedTest(const glm::vec2& data);
     void TempInputActionReleasedTest();
-    void TempInputActionUpdateTest(const UInputData& data, const float deltaTime);
+    void TempInputActionUpdateTest(const glm::vec2& data, const float deltaTime);
 };
 
 

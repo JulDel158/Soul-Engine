@@ -13,22 +13,22 @@ public:
 
 enum class ESpriteCentering : unsigned char
 {
-    Center = 0,
-    Top_Left = 1,
-    Bottom_Left = 2,
-    Top_Right = 3,
-    Bottom_Right = 4,
+    Center =        0,
+    Top_Left =      1,
+    Bottom_Left =   2,
+    Top_Right =     3,
+    Bottom_Right =  4,
 };
 
 enum class EGameState : unsigned char
 {
-    None = 0,
-    MainMenu = 1,
-    Settings = 2,
+    None =              0,
+    MainMenu =          1,
+    Settings =          2,
     
-    InGame_Running = 3,
-    InGame_Paused = 4,
-    InGame_Loading = 5,
+    InGame_Running =    3,
+    InGame_Paused =     4,
+    InGame_Loading =    5,
     
     Exiting = 6
 };
@@ -55,11 +55,22 @@ struct TextCharacter
     {}
 };
 
-union UInputData
+enum class EInputActionType : unsigned char
 {
-    glm::vec2 vec2;
-    float alpha;
-    bool flag;
+    None = 0,
+    Keyboard = 1,
+    Mouse_Cursor = 2,
+    Mouse_Button = 3,
+    Mouse_Wheel = 4,
+    Gamepad = 5
 };
+
+enum class ECursorDataMode : unsigned char
+{
+    Position =          0, // cursor value can continue on any axis infinitely
+    Direction =         1, // value will be a normalized vector of the difference of the cursor position between previous and current frames
+    Clamped_Additive =  2, // value is clamped between 0 and InputAction.clamp_max_
+};
+
 
 #endif

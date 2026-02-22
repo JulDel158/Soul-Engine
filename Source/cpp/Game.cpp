@@ -11,7 +11,9 @@ Game::Game(const Settings& settings) :
 sprite_renderer_(ESpriteCentering::Center),
 window_width_(settings.screen_width_),
 window_height_(settings.screen_height_),
-game_state_(EGameState::None)
+game_state_(EGameState::None),
+temp_input_action_(InputAction(EInputActionType::Keyboard, ECursorDataMode::Position, 0.f, true)),
+window_(nullptr)
 {
     Init();
 }
@@ -55,11 +57,10 @@ void Game::Init()
     sprite_renderer_.SwapShader(spriteShader);
     text_renderer_.SwapShader(textShader);
     
-    InputManager::Instance().BindInputAction(glfwGetKeyScancode(GLFW_KEY_K), &temp_input_action_);
-    temp_input_action_.BindPressed([this](const UInputData& data){ this->TempInputActionPressedTest(data);});
+    InputManager::Instance().BindInputAction(&temp_input_action_, glfwGetKeyScancode(GLFW_KEY_ESCAPE));
+    temp_input_action_.BindPressed([this](const glm::vec2& data){ this->TempInputActionPressedTest(data);});
     temp_input_action_.BindReleased([this](){ this->TempInputActionReleasedTest();});
-    temp_input_action_.BindUpdated([this](const UInputData& data, const float deltaTime){ this->TempInputActionUpdateTest(data, deltaTime);});
-    temp_input_action_.SetCanUpdate(true);
+    temp_input_action_.BindUpdated([this](const glm::vec2& data, const float deltaTime){ this->TempInputActionUpdateTest(data, deltaTime);});
 }
 
 void Game::Update(const float dt)
@@ -111,9 +112,15 @@ bool Game::IsGamePaused() const
     return game_state_ == EGameState::InGame_Paused;
 }
 
-void Game::TempInputActionPressedTest(const UInputData& data)
+void Game::SetWindowPointer(GLFWwindow* window)
+{
+    window_ = window;
+}
+
+void Game::TempInputActionPressedTest(const glm::vec2& data)
 {
     std::cout << "GAME::TempInputActionPressedTest called!!!!!" << std::endl;
+    glfwSetWindowShouldClose(window_, true);
 }
 
 void Game::TempInputActionReleasedTest()
@@ -121,7 +128,7 @@ void Game::TempInputActionReleasedTest()
     std::cout << "\nGAME::TempInputActionReleasedTest called!!!!!" << std::endl;
 }
 
-void Game::TempInputActionUpdateTest(const UInputData& data, const float deltaTime)
+void Game::TempInputActionUpdateTest(const glm::vec2& data, const float deltaTime)
 {
     std::cout << ".";
     
