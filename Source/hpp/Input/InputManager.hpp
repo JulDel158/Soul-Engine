@@ -43,6 +43,8 @@ public:
     static void MouseButtonEventCallback(GLFWwindow* window, int button, int action, int mods);
     static void ScrollWheelEventCallback(GLFWwindow* window, double xOffset, double yOffset);
     
+    // For the gamepad, we must poll state changes instead
+    void RetrieveGamepadState();
     
     void InputUpdate(const float dt) const;
     
