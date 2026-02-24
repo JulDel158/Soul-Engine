@@ -12,7 +12,7 @@ sprite_renderer_(ESpriteCentering::Center),
 window_width_(settings.screen_width_),
 window_height_(settings.screen_height_),
 game_state_(EGameState::None),
-temp_input_action_(InputAction(EInputActionType::Keyboard, ECursorDataMode::Position, 0.f, true)),
+temp_input_action_(InputAction(EInputActionType::Keyboard, ECursorDataMode::Additive, 0.f, true)),
 window_(nullptr)
 {
     Init();
@@ -130,6 +130,5 @@ void Game::TempInputActionReleasedTest()
 
 void Game::TempInputActionUpdateTest(const glm::vec2& data, const float deltaTime)
 {
-    std::cout << ".";
-    
+    std::cout << "Test Update: data.x: " << data.x << " data.y: " << data.y << std::endl;
 }

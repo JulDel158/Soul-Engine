@@ -67,10 +67,11 @@ enum class EInputActionType : unsigned char
 
 enum class ECursorDataMode : unsigned char
 {
-    Position =          0, // cursor value can continue on any axis infinitely
-    Direction =         1, // value will be a normalized vector of the difference of the cursor position between previous and current frames
-    Clamped_Additive =  2, // value is clamped between 0 and InputAction.clamp_max_
+    Position =          0, // value is the cursor position as provided by the callback.
+    Direction =         1, // Value will be either -1.0, 0.0, or 1.0 for each axis.
+    Normalized =        2, // value will be a normalized vector of the difference of the cursor position between previous and current frames.
+    Additive =          3, // value will be the current stored value + the difference of the previous and current frames, value is uncapped.
+    Additive_Clamped =  4  // value is the same as additive, but it gets clamped between 0 and InputAction.clamp_max_.
 };
-
 
 #endif

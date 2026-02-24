@@ -5,9 +5,9 @@
 
 InputAction::InputAction(): 
 data_(glm::vec2(0.f)),
-pressed_(nullptr),
-released_(nullptr),
-update_(nullptr),
+function_pressed_(nullptr),
+function_released_(nullptr),
+function_update_(nullptr),
 clamp_max_(0.f),
 type_(EInputActionType::None),
 cursor_data_mode_(ECursorDataMode::Position),
@@ -17,9 +17,9 @@ can_update_(false)
 
 InputAction::InputAction(const EInputActionType type, const ECursorDataMode cursorMode, const float clampMax, bool canUpdate) :
 data_(glm::vec2(0.f)),
-pressed_(nullptr),
-released_(nullptr),
-update_(nullptr),
+function_pressed_(nullptr),
+function_released_(nullptr),
+function_update_(nullptr),
 clamp_max_(clampMax),
 type_(type),
 cursor_data_mode_(cursorMode),
@@ -35,9 +35,9 @@ InputAction::~InputAction()
 
 void InputAction::Pressed()
 {
-    if (pressed_ != nullptr)
+    if (function_pressed_ != nullptr)
     {
-        pressed_(data_);
+        function_pressed_(data_);
     }
     is_pressed_ = true;
 }
@@ -45,41 +45,65 @@ void InputAction::Pressed()
 void InputAction::Released()
 {
     data_ = glm::vec2(0.f);
-    if (released_ != nullptr)
+    if (function_released_ != nullptr)
     {
-        released_();
+        function_released_();
     }
     is_pressed_ = false;
 }
 
 void InputAction::Update(const float deltaTime) const
 {
-    if (is_pressed_ && can_update_ && update_ != nullptr)
+    switch (type_)
     {
-        update_(data_, deltaTime);
+        // for button types we want to ensure they are being pressed, no point on updating buttons when they aren't being used
+    case EInputActionType::Keyboard:
+    case EInputActionType::Mouse_Button:
+    case EInputActionType::Gamepad:
+        {
+            if ((is_pressed_) && can_update_ && function_update_ != nullptr)
+            {
+                function_update_(data_, deltaTime);
+            }
+            break;
+        }
+    case EInputActionType::Mouse_Wheel:
+    case EInputActionType::Mouse_Cursor:
+        {
+            if (can_update_ && function_update_ != nullptr)
+            {
+                function_update_(data_, deltaTime);
+            }
+            break;
+        }
+    case EInputActionType::None:
+        {
+            break;
+        }
     }
+    
 }
 
 void InputAction::BindPressed(const std::function<void(const glm::vec2&)>& lambda)
 {
-    pressed_ = lambda;
+    function_pressed_ = lambda;
 }
 
 void InputAction::BindReleased(const std::function<void()>& lambda)
 {
-    released_ = lambda;
+    function_released_ = lambda;
 }
 
 void InputAction::BindUpdated(const std::function<void(const glm::vec2&, const float& deltaTime)>& lambda)
 {
-    update_ = lambda;
+    function_update_ = lambda;
 }
 
 void InputAction::Unbind()
 {
-    pressed_ = nullptr;
-    released_ = nullptr;
-    update_ = nullptr;
+    function_pressed_ = nullptr;
+    function_released_ = nullptr;
+    function_update_ = nullptr;
 }
 
 void InputAction::SetCanUpdate(const bool flag)
@@ -109,7 +133,7 @@ bool InputAction::IsPressed() const
 
 bool InputAction::CanUpdate() const
 {
-    return can_update_ && update_ != nullptr;
+    return can_update_ && function_update_ != nullptr;
 }
 
 float InputAction::GetClampMax() const

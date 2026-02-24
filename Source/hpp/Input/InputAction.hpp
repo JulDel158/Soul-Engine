@@ -40,9 +40,9 @@ public:
 
 private:
     
-    std::function<void(const glm::vec2&)> pressed_;
-    std::function<void()> released_;
-    std::function<void(const glm::vec2&, const float& deltaTime)> update_;
+    std::function<void(const glm::vec2&)> function_pressed_;
+    std::function<void()> function_released_;
+    std::function<void(const glm::vec2&, const float& deltaTime)> function_update_;
     float clamp_max_;
     EInputActionType type_;
     ECursorDataMode cursor_data_mode_;

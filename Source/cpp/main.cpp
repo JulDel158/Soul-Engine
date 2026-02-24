@@ -70,8 +70,8 @@ int main(int argc, char *argv[])
     Game gameInstance = Game(settings);
     gameInstance.SetWindowPointer(window);
     InputManager& inputManager = InputManager::Instance();
-    InputManager::SetKeyCallback(window);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    InputManager::InitializeInputManager(window);
+    
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window))
