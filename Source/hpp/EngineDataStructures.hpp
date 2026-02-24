@@ -62,7 +62,8 @@ enum class EInputActionType : unsigned char
     Mouse_Cursor = 2,
     Mouse_Button = 3,
     Mouse_Wheel = 4,
-    Gamepad = 5
+    Gamepad_Button = 5,
+    Gamepad_Axes = 6
 };
 
 enum class ECursorDataMode : unsigned char

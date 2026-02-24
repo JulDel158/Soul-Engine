@@ -55,16 +55,12 @@ int main(int argc, char *argv[])
         glfwSwapInterval(1);
     }
     
-    // TODO: set key callback
-    //glfwSetKeyCallback(window, &InputManager::GetInstance().KeyCallback);
     glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(FramebufferSizeCallback));
     
     // OpenGL configuration
     glViewport(0, 0, settings.screen_width_, settings.screen_height_);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    //glfwSetKeyCallback(window, reinterpret_cast<GLFWkeyfun>(KeyCallback));
     
     // Create and initialize game instance and input manager
     Game gameInstance = Game(settings);
@@ -81,6 +77,7 @@ int main(int argc, char *argv[])
         const float deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         glfwPollEvents();
+        inputManager.RetrieveGamepadState();
         
         gameInstance.ProcessInput(deltaTime);
         

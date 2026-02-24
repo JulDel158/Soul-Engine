@@ -12,7 +12,7 @@ sprite_renderer_(ESpriteCentering::Center),
 window_width_(settings.screen_width_),
 window_height_(settings.screen_height_),
 game_state_(EGameState::None),
-temp_input_action_(InputAction(EInputActionType::Keyboard, ECursorDataMode::Additive, 0.f, true)),
+temp_input_action_(InputAction(EInputActionType::Keyboard, ECursorDataMode::Additive, 0.f, true, 0.25f)),
 window_(nullptr)
 {
     Init();
@@ -58,6 +58,7 @@ void Game::Init()
     text_renderer_.SwapShader(textShader);
     
     InputManager::Instance().BindInputAction(&temp_input_action_, glfwGetKeyScancode(GLFW_KEY_ESCAPE));
+    //InputManager::Instance().BindInputAction(&temp_input_action_, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, GLFW_JOYSTICK_1);
     temp_input_action_.BindPressed([this](const glm::vec2& data){ this->TempInputActionPressedTest(data);});
     temp_input_action_.BindReleased([this](){ this->TempInputActionReleasedTest();});
     temp_input_action_.BindUpdated([this](const glm::vec2& data, const float deltaTime){ this->TempInputActionUpdateTest(data, deltaTime);});

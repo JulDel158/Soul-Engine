@@ -3,15 +3,16 @@
 #include <iostream>
 
 InputManager::InputManager() :
+current_gamepad_states_{},
+previous_gamepad_states_{},
 previous_cursor_position_(glm::vec2(0.0f))
 {
     cursor_position_input_actions_.reserve(2);
-    // TODO: Init data
 }
 
 InputManager::~InputManager()
 {
-    // TODO: Clear data
+    UnbindInputActions();
 }
 
 InputManager& InputManager::Instance()
@@ -26,7 +27,6 @@ void InputManager::InitializeInputManager(GLFWwindow* window)
     glfwSetCursorPosCallback(window, &InputManager::CursorPositionEventCallback);
     glfwSetMouseButtonCallback(window, &InputManager::MouseButtonEventCallback);
     glfwSetScrollCallback(window, &InputManager::ScrollWheelEventCallback);
-    //TODO: set gamepad callback
     
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // This could cause discrepancies in some devices, but preferred for control
@@ -56,7 +56,71 @@ void InputManager::ScrollWheelEventCallback(GLFWwindow* window, double xOffset, 
     Instance().ProcessScrollWheelEvent(window, xOffset, yOffset);
 }
 
-// TODO: Add gamepad event callback
+void InputManager::RetrieveGamepadState()
+{
+    for (int gamepadId = 0; gamepadId < GLFW_JOYSTICK_LAST + 1; ++gamepadId)
+    {
+        GLFWgamepadstate state;
+        if (glfwJoystickPresent(gamepadId) == GLFW_TRUE && glfwGetGamepadState(gamepadId, &state))
+        {
+            previous_gamepad_states_[gamepadId] = current_gamepad_states_[gamepadId]; 
+            current_gamepad_states_[gamepadId] = state;
+            
+            // Button event handling
+            for (int gamepadButton = 0; gamepadButton < GLFW_GAMEPAD_BUTTON_LAST + 1; ++gamepadButton)
+            {
+                const bool pressed = previous_gamepad_states_[gamepadId].buttons[gamepadButton] == GLFW_RELEASE && state.buttons[gamepadButton] == GLFW_PRESS;
+                const bool released = previous_gamepad_states_[gamepadId].buttons[gamepadButton] == GLFW_PRESS && state.buttons[gamepadButton] == GLFW_RELEASE;
+                
+                for (auto& inputAction : gamepad_button_input_actions_[gamepadId][gamepadButton])
+                {
+                    if (pressed)
+                    {
+                        constexpr auto data = glm::vec2(1.0f);
+                        inputAction->data_ = data;
+                        inputAction->Pressed();
+                    }
+                    else if (released)
+                    {
+                        constexpr auto data = glm::vec2(0.0f);
+                        inputAction->data_ = data;
+                        inputAction->Released();
+                    }
+                }
+            }
+            
+            // Axes event handling
+            for (int gamepadAxes = 0; gamepadAxes < GLFW_GAMEPAD_AXIS_LAST + 1; ++gamepadAxes)
+            {
+                for (auto& inputAction : gamepad_axes_input_actions_[gamepadId][gamepadAxes])
+                {
+                    const float data = (glm::abs(state.axes[gamepadAxes]) >= inputAction->GetDeadZone()) ? state.axes[gamepadAxes] : 0.f;
+                    const float triggerState = (state.axes[gamepadAxes] + 1.0f) / 2.0f; // state goes from -1 to 1, so we add 1 (0 to 2) and then divide it by 2 to make the range go from 0 to 1 instead
+                    const float triggerData = triggerState >= inputAction->GetDeadZone() ? triggerState : 0.0f;
+                    bool canUpdate = static_cast<bool>(data);
+                    if (gamepadAxes == GLFW_GAMEPAD_AXIS_LEFT_Y || gamepadAxes == GLFW_GAMEPAD_AXIS_RIGHT_Y)
+                    {
+                        // place data on y
+                        inputAction->data_.y = data;
+                    }
+                    else if (gamepadAxes == GLFW_GAMEPAD_AXIS_LEFT_TRIGGER || gamepadAxes == GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER)
+                    {
+                        // place data on x
+                        inputAction->data_.x = triggerData;
+                        canUpdate = static_cast<bool>(triggerData);
+                    }
+                    else
+                    {
+                        // place data on x
+                        inputAction->data_.x = data;
+                    }
+                    
+                    inputAction->SetCanUpdate(canUpdate);
+                }
+            }
+        }
+    }
+}
 
 void InputManager::InputUpdate(const float dt) const
 {
@@ -88,10 +152,31 @@ void InputManager::InputUpdate(const float dt) const
         inputAction->SetCanUpdate(false);
     }
     
-    // TODO: Update gamepad input actions
+    for (auto& map : gamepad_button_input_actions_)
+    {
+        for (auto& pair : map)
+        {
+            for (auto& inputAction : pair.second)
+            {
+                inputAction->Update(dt);
+            }
+        }
+    }
+    
+    for (auto& map : gamepad_axes_input_actions_)
+    {
+        for (auto& pair : map)
+        {
+            for (auto& inputAction : pair.second)
+            {
+                inputAction->Update(dt);
+                inputAction->SetCanUpdate(false);
+            }
+        }
+    }
 }
 
-void InputManager::BindInputAction(InputAction* const action, int scancode)
+void InputManager::BindInputAction(InputAction* const action, const int scancode, const int controller)
 {
     if (action == nullptr)
     {
@@ -124,15 +209,26 @@ void InputManager::BindInputAction(InputAction* const action, int scancode)
             scroll_wheel_input_action_.insert(action);
             break;
         }
-    case EInputActionType::Gamepad:
+    case EInputActionType::Gamepad_Button:
         {
-            //TODO: store pointer to this type of input action
+            if (scancode >= 0 && scancode <= GLFW_GAMEPAD_BUTTON_LAST && controller >= GLFW_JOYSTICK_1 && controller <= GLFW_JOYSTICK_LAST)
+            {
+                gamepad_button_input_actions_[controller][scancode].insert(action);
+            }
+            break;
+        }
+    case EInputActionType::Gamepad_Axes:
+        {
+            if (scancode >= 0 && scancode <= GLFW_GAMEPAD_AXIS_LAST && controller >= GLFW_JOYSTICK_1 && controller <= GLFW_JOYSTICK_LAST)
+            {
+                gamepad_axes_input_actions_[controller][scancode].insert(action);
+            }
             break;
         }
     }
 }
 
-void InputManager::UnbindInputAction(InputAction* const action, const int scancode)
+void InputManager::UnbindInputAction(InputAction* const action, const int scancode, const int controller)
 {
     if (action == nullptr)
     {
@@ -172,9 +268,20 @@ void InputManager::UnbindInputAction(InputAction* const action, const int scanco
             scroll_wheel_input_action_.erase(action);
             break;
         }
-    case EInputActionType::Gamepad:
+    case EInputActionType::Gamepad_Button:
         {
-            //TODO: unbind this input action
+            if (scancode >= 0 && scancode <= GLFW_GAMEPAD_BUTTON_LAST && controller >= GLFW_JOYSTICK_1 && controller <= GLFW_JOYSTICK_LAST)
+            {
+                gamepad_button_input_actions_[controller][scancode].erase(action);
+            }
+            break;
+        }
+    case EInputActionType::Gamepad_Axes:
+        {
+            if (scancode >= 0 && scancode <= GLFW_GAMEPAD_AXIS_LAST && controller >= GLFW_JOYSTICK_1 && controller <= GLFW_JOYSTICK_LAST)
+            {
+                gamepad_axes_input_actions_[controller][scancode].erase(action);
+            }
             break;
         }
     }
@@ -186,7 +293,16 @@ void InputManager::UnbindInputActions()
     cursor_position_input_actions_.clear();
     mouse_button_input_actions_.clear();
     scroll_wheel_input_action_.clear();
-    //TODO: clear gamepad input actions
+    
+    for (auto& map : gamepad_button_input_actions_)
+    {
+        map.clear();
+    }
+    
+    for (auto& map : gamepad_axes_input_actions_)
+    {
+        map.clear();
+    }
 }
 
 void InputManager::ProcessKeyboardButtonEvent(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -264,7 +380,6 @@ void InputManager::ProcessCursorEvent(const GLFWwindow* const window, const doub
         inputAction->SetCanUpdate(true);
     }
     
-    //std::cout << "X: " << x << " Y: " << y << std::endl;
     previous_cursor_position_ = position;
 }
 
@@ -308,5 +423,3 @@ void InputManager::ProcessScrollWheelEvent(GLFWwindow* window, double xOffset, d
         inputAction->SetCanUpdate(true);
     }
 }
-
-// TODO: Define gamepad process event function

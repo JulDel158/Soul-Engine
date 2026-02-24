@@ -10,10 +10,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-//TODO: Handle keyboard input
-//TODO: Handle mouse input
-//TODO: Handle controller input
-
 class InputManager
 {
 private:
@@ -25,6 +21,13 @@ private:
     // NOTE: The map's key is the mouse button as defined in glfw3.h. Ex: GLFW_MOUSE_BUTTON_(1-8)
     std::unordered_map<int, std::unordered_set<InputAction*>> mouse_button_input_actions_;
     std::unordered_set<InputAction*> scroll_wheel_input_action_;
+    // We will store a map for each gamepad/joystick supported
+    std::unordered_map<int, std::unordered_set<InputAction*>> gamepad_button_input_actions_[GLFW_JOYSTICK_LAST+1];
+    std::unordered_map<int, std::unordered_set<InputAction*>> gamepad_axes_input_actions_[GLFW_JOYSTICK_LAST+1];
+    // For gamepads, we will have to poll the state, and manually send Pressed, Release events by comparing states
+    GLFWgamepadstate current_gamepad_states_[GLFW_JOYSTICK_LAST+1];
+    GLFWgamepadstate previous_gamepad_states_[GLFW_JOYSTICK_LAST+1];
+    
     glm::vec2 previous_cursor_position_;
     
 public:
@@ -39,13 +42,13 @@ public:
     static void CursorPositionEventCallback(GLFWwindow* window, double xPos, double yPos);
     static void MouseButtonEventCallback(GLFWwindow* window, int button, int action, int mods);
     static void ScrollWheelEventCallback(GLFWwindow* window, double xOffset, double yOffset);
-    // TODO: add required callback for handling gamepad
+    
     
     void InputUpdate(const float dt) const;
     
     // ---- Binding functions ----
-    void BindInputAction(InputAction* const action, const int scancode = glfwGetKeyScancode(GLFW_KEY_UNKNOWN));
-    void UnbindInputAction(InputAction* const action, const int scancode = glfwGetKeyScancode(GLFW_KEY_UNKNOWN));
+    void BindInputAction(InputAction* const action, const int scancode = glfwGetKeyScancode(GLFW_KEY_UNKNOWN), const int controller = GLFW_JOYSTICK_1);
+    void UnbindInputAction(InputAction* const action, const int scancode = glfwGetKeyScancode(GLFW_KEY_UNKNOWN), const int controller = GLFW_JOYSTICK_1);
     void UnbindInputActions();
     
 private:
@@ -57,7 +60,6 @@ private:
     void ProcessCursorEvent(const GLFWwindow* const window, double xPos, double yPos);
     void ProcessMouseButtonEvent(GLFWwindow* window, const int button, const int action, const int mods);
     void ProcessScrollWheelEvent(GLFWwindow* window, double xOffset, double yOffset) const;
-    // TODO: add function to process gamepad events
 };
 
 #endif
