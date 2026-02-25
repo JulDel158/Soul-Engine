@@ -16,7 +16,9 @@ constexpr std::string_view F_TEXT_SHADER_BASE = "Assets/Shaders/BasicText.frag\0
 // geometry shader paths
 
 // textures paths
-constexpr std::string_view TEXTURE1 = "D:/Projects/Soul/Assets/Textures/awesomeface.png\0";
+constexpr std::string_view TEXTURE1 = "Assets/Textures/awesomeface.png\0";
+constexpr std::string_view TEXTURE2 = "Assets/Textures/numtwo.png\0";
+constexpr std::string_view TEXTURE3 = "Assets/Textures/moai.jpg\0";
 
 // font paths
 constexpr std::string_view FONT_ARIAL_PATH = "Assets/Fonts/arial.ttf\0";
@@ -27,6 +29,8 @@ constexpr std::string_view FONT_RENDERER_PROGRAM1 = "FONT\0";
 
 // texture keys
 constexpr std::string_view TEXTURE1_KEY = "FACE\0";
+constexpr std::string_view TEXTURE2_KEY = "TWO\0";
+constexpr std::string_view TEXTURE3_KEY = "MOAI\0";
 
 // font keys
 constexpr std::string_view FONT_ARIAL = "arial\0";

@@ -66,13 +66,17 @@ void Game::Render(const float dt)
 {
     static float time = 0.0f;
     ResourceManager& resourceManager = ResourceManager::Instance();
+    
     sprite_renderer_.DrawSprite(resourceManager.GetTexture2D(TEXTURE1_KEY.data()), 
-        glm::vec2(250.0f, 250.0f),
+        glm::vec2(600.0f + glm::sin(time) * 400.0f, 500.0f),
         glm::vec2(400.0f, 400.0f),
-        glm::sin(time));
+        (glm::cos(time) + std::sin(time)));
     
     
-    text_renderer_.RenderText("Ella is a DONUT!", 100.0f, 450.0f, 1.0f, glm::vec3(0.f, 1.f, 0.f));
+    text_renderer_.RenderText("Sample Text", 200.0f, 100.0f, 3.0f, glm::vec3(
+        0.1f, 
+        glm::clamp(glm::cos(time), 0.f, 1.f), 
+         glm::clamp(glm::sin(time), 0.f, 1.f)));
     
     time += dt;
 }
