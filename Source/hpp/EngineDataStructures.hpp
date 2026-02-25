@@ -6,9 +6,21 @@
 struct Settings
 {
 public:
-    int screen_width_;
-    int screen_height_;
-    bool vsync_;
+    int screen_width_ = 0;
+    int screen_height_ = 0;
+    float general_volume_ = 0.f;
+    float music_volume_ = 0.f;
+    float effects_volume_ = 0.f;
+    float dialogue_volume_ = 0.f;
+    bool vsync_ = false;
+};
+
+enum class ESoundType : unsigned char
+{
+    General = 0,
+    Music = 1,
+    Effect = 2,
+    Dialogue = 3,
 };
 
 enum class ESpriteCentering : unsigned char

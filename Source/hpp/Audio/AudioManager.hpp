@@ -1,0 +1,39 @@
+#ifndef AUDIO_MANAGER_H
+#define AUDIO_MANAGER_H
+
+#include "miniaudio/miniaudio.h"
+
+#include <vector>
+#include <string>
+#include <unordered_map>
+
+#include "EngineDataStructures.hpp"
+
+class AudioManager
+{
+    ma_engine* audio_engine_;
+    std::vector<ma_sound*> sounds_;
+    std::unordered_map<ESoundType, ma_sound_group*> sound_groups_;
+    
+    AudioManager();
+    ~AudioManager();
+    
+public:
+    AudioManager(const AudioManager&) = delete;
+    AudioManager& operator=(const AudioManager&) = delete;
+    
+    static AudioManager& Instance();
+    
+    void Initialize();
+    
+    int LoadSound(const std::string& filename, const ESoundType soundType);
+    void PlaySound(const unsigned int index) const;
+    void StopSound(const unsigned int index, const bool rewind = true) const;
+    
+    void ApplyVolumeChange();
+    
+};
+
+
+
+#endif
