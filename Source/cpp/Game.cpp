@@ -1,7 +1,5 @@
 #include "Game.hpp"
 
-#include <iostream>
-
 #include "ResourceManagement/ResourceManager.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "StringGlobals.hpp"
@@ -12,14 +10,15 @@ sprite_renderer_(ESpriteCentering::Center),
 window_width_(settings.screen_width_),
 window_height_(settings.screen_height_),
 game_state_(EGameState::None),
-temp_input_action_(InputAction(EInputActionType::Keyboard, ECursorDataMode::Additive, 0.f, true, 0.25f)),
 window_(nullptr)
 {
     Init();
 }
 
 Game::~Game()
-{}
+{
+    End();
+}
 
 void Game::Init()
 {
@@ -56,12 +55,6 @@ void Game::Init()
     // set base shaders on renderers
     sprite_renderer_.SwapShader(spriteShader);
     text_renderer_.SwapShader(textShader);
-    
-    InputManager::Instance().BindInputAction(&temp_input_action_, glfwGetKeyScancode(GLFW_KEY_ESCAPE));
-    //InputManager::Instance().BindInputAction(&temp_input_action_, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, GLFW_JOYSTICK_1);
-    temp_input_action_.BindPressed([this](const glm::vec2& data){ this->TempInputActionPressedTest(data);});
-    temp_input_action_.BindReleased([this](){ this->TempInputActionReleasedTest();});
-    temp_input_action_.BindUpdated([this](const glm::vec2& data, const float deltaTime){ this->TempInputActionUpdateTest(data, deltaTime);});
 }
 
 void Game::Update(const float dt)
@@ -116,20 +109,4 @@ bool Game::IsGamePaused() const
 void Game::SetWindowPointer(GLFWwindow* window)
 {
     window_ = window;
-}
-
-void Game::TempInputActionPressedTest(const glm::vec2& data)
-{
-    std::cout << "GAME::TempInputActionPressedTest called!!!!!" << std::endl;
-    glfwSetWindowShouldClose(window_, true);
-}
-
-void Game::TempInputActionReleasedTest()
-{
-    std::cout << "\nGAME::TempInputActionReleasedTest called!!!!!" << std::endl;
-}
-
-void Game::TempInputActionUpdateTest(const glm::vec2& data, const float deltaTime)
-{
-    std::cout << "Test Update: data.x: " << data.x << " data.y: " << data.y << std::endl;
 }

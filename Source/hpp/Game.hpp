@@ -1,14 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define KEYS_COUNT 1024
-
-#include <glad/gl.h>
+#include <glad/gl.h> // NOLINT
 #include <GLFW/glfw3.h>
 #include "EngineDataStructures.hpp"
 #include "Rendering/SpriteRenderer.hpp"
 #include "Rendering/TextRenderer.hpp"
-#include "Input/InputAction.hpp"
 
 // Class in charge of game's core. From here we will perform updates to the game state, physics, rendering, audio, and more.
 class Game
@@ -19,16 +16,14 @@ private:
     unsigned int window_width_;
     unsigned int window_height_;
     EGameState game_state_;
-    InputAction temp_input_action_;
     GLFWwindow* window_;
-    
     
     void Init();
     
 public:
     
     Game()=delete;
-    Game(const Settings& settings);
+    explicit Game(const Settings& settings);
     ~Game();
     
     Game(const Game&) = delete;
@@ -45,10 +40,6 @@ public:
     bool IsGamePaused() const;
     
     void SetWindowPointer(GLFWwindow* window);
-    
-    void TempInputActionPressedTest(const glm::vec2& data);
-    void TempInputActionReleasedTest();
-    void TempInputActionUpdateTest(const glm::vec2& data, const float deltaTime);
 };
 
 

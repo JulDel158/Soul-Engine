@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
         const float deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         glfwPollEvents();
-        inputManager.RetrieveGamepadState();
+        inputManager.RetrieveAndProcessGamepadState();
         
         gameInstance.ProcessInput(deltaTime);
         

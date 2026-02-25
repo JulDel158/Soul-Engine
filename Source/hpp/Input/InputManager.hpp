@@ -3,7 +3,7 @@
 
 #include "glad/gl.h" // NOLINT
 #include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
+#include "glm/ext/vector_float2.hpp"
 
 #include "InputAction.hpp"
 
@@ -22,13 +22,16 @@ private:
     std::unordered_map<int, std::unordered_set<InputAction*>> mouse_button_input_actions_;
     std::unordered_set<InputAction*> scroll_wheel_input_action_;
     // We will store a map for each gamepad/joystick supported
-    std::unordered_map<int, std::unordered_set<InputAction*>> gamepad_button_input_actions_[GLFW_JOYSTICK_LAST+1];
-    std::unordered_map<int, std::unordered_set<InputAction*>> gamepad_axes_input_actions_[GLFW_JOYSTICK_LAST+1];
+    std::unordered_map<int, std::unordered_set<InputAction*>> gamepad_button_input_actions_[GLFW_JOYSTICK_MAX_COUNT];
+    std::unordered_map<int, std::unordered_set<InputAction*>> gamepad_axes_input_actions_[GLFW_JOYSTICK_MAX_COUNT];
     // For gamepads, we will have to poll the state, and manually send Pressed, Release events by comparing states
-    GLFWgamepadstate current_gamepad_states_[GLFW_JOYSTICK_LAST+1];
-    GLFWgamepadstate previous_gamepad_states_[GLFW_JOYSTICK_LAST+1];
-    
+    GLFWgamepadstate current_gamepad_states_[GLFW_JOYSTICK_MAX_COUNT];
+    GLFWgamepadstate previous_gamepad_states_[GLFW_JOYSTICK_MAX_COUNT];
     glm::vec2 previous_cursor_position_;
+    GLFWwindow* window_;
+    
+    InputManager();
+    ~InputManager();
     
 public:
     InputManager(const InputManager&) = delete;
@@ -44,7 +47,7 @@ public:
     static void ScrollWheelEventCallback(GLFWwindow* window, double xOffset, double yOffset);
     
     // For the gamepad, we must poll state changes instead
-    void RetrieveGamepadState();
+    void RetrieveAndProcessGamepadState();
     
     void InputUpdate(const float dt) const;
     
@@ -53,15 +56,17 @@ public:
     void UnbindInputAction(InputAction* const action, const int scancode = glfwGetKeyScancode(GLFW_KEY_UNKNOWN), const int controller = GLFW_JOYSTICK_1);
     void UnbindInputActions();
     
+    // ---- Configurations ----
+    void ChangeCursorMode(const int mode) const;
+    void SetRawMouseMotion(const bool mode) const;
+    
 private:
-    InputManager();
-    ~InputManager();
     
     // ---- Event processing ----
-    void ProcessKeyboardButtonEvent(GLFWwindow* window, int key, int scancode, int action, int mods);
-    void ProcessCursorEvent(const GLFWwindow* const window, double xPos, double yPos);
-    void ProcessMouseButtonEvent(GLFWwindow* window, const int button, const int action, const int mods);
-    void ProcessScrollWheelEvent(GLFWwindow* window, double xOffset, double yOffset) const;
+    void ProcessKeyboardButtonEvent(const int key, const int scancode, const int action, const int mods);
+    void ProcessCursorEvent(const double xPos, const double yPos);
+    void ProcessMouseButtonEvent(const int button, const int action, const int mods);
+    void ProcessScrollWheelEvent(const double xOffset, const double yOffset) const;
 };
 
 #endif

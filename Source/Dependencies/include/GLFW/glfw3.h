@@ -608,6 +608,7 @@ extern "C" {
 #define GLFW_JOYSTICK_15            14
 #define GLFW_JOYSTICK_16            15
 #define GLFW_JOYSTICK_LAST          GLFW_JOYSTICK_16
+#define GLFW_JOYSTICK_MAX_COUNT     GLFW_JOYSTICK_LAST + 1
 /*! @} */
 
 /*! @defgroup gamepad_buttons Gamepad buttons
@@ -633,6 +634,7 @@ extern "C" {
 #define GLFW_GAMEPAD_BUTTON_DPAD_DOWN       13
 #define GLFW_GAMEPAD_BUTTON_DPAD_LEFT       14
 #define GLFW_GAMEPAD_BUTTON_LAST            GLFW_GAMEPAD_BUTTON_DPAD_LEFT
+#define GLFW_GAMEPAD_BUTTON_MAX_COUNT       GLFW_GAMEPAD_BUTTON_LAST + 1
 
 #define GLFW_GAMEPAD_BUTTON_CROSS       GLFW_GAMEPAD_BUTTON_A
 #define GLFW_GAMEPAD_BUTTON_CIRCLE      GLFW_GAMEPAD_BUTTON_B
@@ -654,6 +656,7 @@ extern "C" {
 #define GLFW_GAMEPAD_AXIS_LEFT_TRIGGER  4
 #define GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER 5
 #define GLFW_GAMEPAD_AXIS_LAST          GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER
+#define GLFW_GAMEPAD_AXIS_MAX_COUNT     GLFW_GAMEPAD_AXIS_LAST + 1
 /*! @} */
 
 /*! @defgroup errors Error codes
