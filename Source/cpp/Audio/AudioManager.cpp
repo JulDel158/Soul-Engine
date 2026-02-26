@@ -116,6 +116,7 @@ void AudioManager::PlaySound(const unsigned int index,  const bool rewind) const
         }
         
         if (rewind)
+        {
             ma_sound_seek_to_pcm_frame(sounds_[index], 0);
         }
     
