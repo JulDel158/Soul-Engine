@@ -33,6 +33,7 @@ public:
     InnerMap& GetFont(const std::string& name);
     
     void LoadSettings(Settings& settings);
+    void SaveSettings(const Settings& settings);
     Settings GetSettings() const;
 
     // Text renderer moves memory back and forth when using a font.

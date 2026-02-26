@@ -47,7 +47,7 @@ constexpr std::string_view TEXT_COLOR_UNIFORM = "textColor\0";
 constexpr std::string_view TEXT_UNIFORM = "text\0";
 
 // Settings/Configs
-constexpr std::string_view GRAPHIC_SETTINGS = "Assets/Settings/Settings.json\0";
+constexpr std::string_view SETTINGS_PATH = "Assets/Settings/Settings.json\0";
 constexpr std::string_view SCREEN_WIDTH = "screenWidth\0";
 constexpr std::string_view SCREEN_HEIGHT = "screenHeight\0";
 constexpr std::string_view GENERAL_VOLUME = "generalVolume\0";

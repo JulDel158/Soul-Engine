@@ -70,7 +70,6 @@ int main(int argc, char *argv[])
     InputManager::InitializeInputManager(window);
     AudioManager& audioManager = AudioManager::Instance();
     
-    
     float lastFrame = 0.0f;
     bool tempAudioFlag = true;
 

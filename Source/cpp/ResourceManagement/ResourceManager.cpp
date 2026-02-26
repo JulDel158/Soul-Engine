@@ -5,6 +5,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "rapidjson/document.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/writer.h"
+
+#include "StringGlobals.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -12,7 +16,7 @@
 #include <fstream>
 #include <utility>
 
-#include "StringGlobals.hpp"
+
 
 ResourceManager& ResourceManager::Instance()
 {
@@ -152,7 +156,7 @@ std::unordered_map<char, TextCharacter>& ResourceManager::GetFont(const std::str
 
 void ResourceManager::LoadSettings(Settings& settings)
 {
-    std::filesystem::path settingsPath = std::filesystem::path(GRAPHIC_SETTINGS.data());
+    std::filesystem::path settingsPath = std::filesystem::path(SETTINGS_PATH.data());
     try
     {
         std::ifstream settingsFile(settingsPath);
@@ -211,6 +215,54 @@ void ResourceManager::LoadSettings(Settings& settings)
     }
     
     settings = Settings(settings_);
+}
+
+void ResourceManager::SaveSettings(const Settings& settings)
+{
+    constexpr unsigned int BUFFER_SIZE = 65536;
+    
+    settings_ = Settings(settings_);
+    //using namespace rapidjson;
+    // TODO: Open settings file and write to it
+    rapidjson::Document document;
+    document.SetObject();
+
+    // Set members with settings values
+    document.AddMember(static_cast<rapidjson::GenericValue<rapidjson::UTF8<>>::StringRefType>(SCREEN_WIDTH.data()), 
+        settings.screen_width_, document.GetAllocator());
+    document.AddMember(static_cast<rapidjson::GenericValue<rapidjson::UTF8<>>::StringRefType>(SCREEN_HEIGHT.data()), 
+        settings.screen_height_, document.GetAllocator());
+    document.AddMember(static_cast<rapidjson::GenericValue<rapidjson::UTF8<>>::StringRefType>(VSYNC.data()), 
+        settings.vsync_, document.GetAllocator());
+    document.AddMember(static_cast<rapidjson::GenericValue<rapidjson::UTF8<>>::StringRefType>(GENERAL_VOLUME.data()), 
+        settings.general_volume_, document.GetAllocator());
+    document.AddMember(static_cast<rapidjson::GenericValue<rapidjson::UTF8<>>::StringRefType>(MUSIC_VOLUME.data()), 
+        settings.music_volume_, document.GetAllocator());
+    document.AddMember(static_cast<rapidjson::GenericValue<rapidjson::UTF8<>>::StringRefType>(EFFECTS_VOLUME.data()), 
+        settings.effects_volume_, document.GetAllocator());
+    document.AddMember(static_cast<rapidjson::GenericValue<rapidjson::UTF8<>>::StringRefType>(DIALOGUE_VOLUME.data()), 
+        settings.dialogue_volume_, document.GetAllocator());
+    
+
+    FILE* file;
+    std::string mode = "w";
+#ifdef _WIN32
+    mode = "wb";
+#endif
+    
+    if (fopen_s(&file,SETTINGS_PATH.data(), mode.c_str()) != 0)
+    {
+        std::cout << "ERROR::SaveSettings: Failed to open file" << std::endl;
+        return;
+    }
+    if (!file) return;
+
+    char buffer[BUFFER_SIZE];
+
+    rapidjson::FileWriteStream writeStream(file, buffer, sizeof(buffer));
+    rapidjson::Writer<rapidjson::FileWriteStream> writer(writeStream);
+    document.Accept(writer);
+    static_cast<void>(fclose(file));
 }
 
 Settings ResourceManager::GetSettings() const
