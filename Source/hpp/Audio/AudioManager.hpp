@@ -27,11 +27,10 @@ public:
     void Initialize();
     
     int LoadSound(const std::string& filename, const ESoundType soundType);
-    void PlaySound(const unsigned int index) const;
+    void PlaySound(const unsigned int index, const bool rewind = true) const;
     void StopSound(const unsigned int index, const bool rewind = true) const;
     
     void ApplyVolumeChange();
-    
 };
 
 

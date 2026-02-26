@@ -4,6 +4,7 @@
 #include "Game.hpp"
 #include "ResourceManagement/ResourceManager.hpp"
 #include "Input/InputManager.hpp"
+#include "Audio/AudioManager.hpp"
 
 #include <iostream>
 
@@ -67,8 +68,11 @@ int main(int argc, char *argv[])
     gameInstance.SetWindowPointer(window);
     InputManager& inputManager = InputManager::Instance();
     InputManager::InitializeInputManager(window);
+    AudioManager& audioManager = AudioManager::Instance();
+    
     
     float lastFrame = 0.0f;
+    bool tempAudioFlag = true;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -84,6 +88,11 @@ int main(int argc, char *argv[])
         // update game state and audio
         gameInstance.Update(deltaTime);
         //gameInstance.ProcessAudio(deltaTime);
+        if (tempAudioFlag)
+        {
+            audioManager.PlaySound(0);
+            tempAudioFlag = false;
+        }
         
         // render
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);

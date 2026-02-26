@@ -167,6 +167,7 @@ void ResourceManager::LoadSettings(Settings& settings)
             std::cout << "ERROR:Failed to parse settings: " << settingsJson.GetParseError() << std::endl;
         }
         
+        // graphics
         if (settingsJson.HasMember(SCREEN_WIDTH.data())) // NOLINT
         {
             settings_.screen_width_ = settingsJson[SCREEN_WIDTH.data()].GetInt();
@@ -181,6 +182,28 @@ void ResourceManager::LoadSettings(Settings& settings)
         {
             settings_.vsync_ = settingsJson[VSYNC.data()].GetBool();
         }
+        
+        // Sound
+        if (settingsJson.HasMember(GENERAL_VOLUME.data())) // NOLINT
+        {
+            settings_.general_volume_ = settingsJson[GENERAL_VOLUME.data()].GetFloat();
+        }
+        
+        if (settingsJson.HasMember(MUSIC_VOLUME.data())) // NOLINT
+        {
+            settings_.music_volume_ = settingsJson[MUSIC_VOLUME.data()].GetFloat();
+        }
+        
+        if (settingsJson.HasMember(EFFECTS_VOLUME.data())) // NOLINT
+        {
+            settings_.effects_volume_ = settingsJson[EFFECTS_VOLUME.data()].GetFloat();
+        }
+        
+        if (settingsJson.HasMember(DIALOGUE_VOLUME.data())) // NOLINT
+        {
+            settings_.dialogue_volume_ = settingsJson[DIALOGUE_VOLUME.data()].GetFloat();
+        }
+        
     }
     catch (std::exception& e)
     {
