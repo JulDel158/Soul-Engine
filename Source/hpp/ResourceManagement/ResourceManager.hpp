@@ -17,6 +17,13 @@ class ResourceManager
     using InnerMap = std::unordered_map<char, TextCharacter>;
     using OuterMap = std::unordered_map<std::string, InnerMap>;
     
+    std::unordered_map<std::string, Shader> shaders_;
+    std::unordered_map<std::string, Texture2D> textures_;
+    OuterMap fonts_;
+    FT_Library free_type_library_;
+    Settings settings_;
+    bool is_ft_open_;
+    
 public:
     ResourceManager(const ResourceManager&) = delete;
     ResourceManager& operator=(const ResourceManager&) = delete;
@@ -62,12 +69,5 @@ private:
         bool hasGeometryShader = false);
     
     static Texture2D LoadTextureFromFile(const char* file, bool alpha);
-    
-    std::unordered_map<std::string, Shader> shaders_;
-    std::unordered_map<std::string, Texture2D> textures_;
-    OuterMap fonts_;
-    Settings settings_;
-    bool is_ft_open_;
-    FT_Library free_type_library_;
 };
 #endif

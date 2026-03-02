@@ -87,4 +87,12 @@ enum class ECursorDataMode : unsigned char
     Additive_Clamped =  4  // value is the same as additive, but it gets clamped between 0 and InputAction.clamp_max_.
 };
 
+enum class ELogLevel : unsigned char
+{
+    Info = 0,
+    Warning = 1,
+    Error = 2,
+    Debug = 3
+};
+
 #endif
