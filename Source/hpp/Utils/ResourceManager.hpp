@@ -56,7 +56,6 @@ public:
     
     // call after we finish loading fonts
     void CloseFreeTypeLibrary();
-
     
 private:
     ResourceManager();

@@ -1,4 +1,4 @@
-#include "Game.hpp"
+#include "Game/Game.hpp"
 
 #include "Utils/ResourceManager.hpp"
 #include "glm/gtc/matrix_transform.hpp"

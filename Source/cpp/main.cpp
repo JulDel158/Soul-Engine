@@ -1,7 +1,7 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#include "Game.hpp"
+#include "Game/Game.hpp"
 #include "Utils/ResourceManager.hpp"
 #include "Input/InputManager.hpp"
 #include "Audio/AudioManager.hpp"
