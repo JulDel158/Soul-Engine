@@ -1,9 +1,10 @@
 #include "Rendering/Shader.hpp"
 
-#include <iostream>
-
 #include "glad/gl.h"
 #include "glm/gtc/type_ptr.hpp"
+
+#include "Utils/Logger.hpp"
+#include "StringGlobals.hpp"
 
 Shader::Shader():
 id_(std::nullopt)
@@ -267,15 +268,15 @@ bool Shader::CheckCompileErrors(const unsigned int object, const std::string& ty
 {
     GLint success;
     char infoLog[1024];
+	auto logger = Logger(LOG_PATH.data());
     if (type != "PROGRAM")
     {
         glGetShaderiv(object, GL_COMPILE_STATUS, &success);
         if (!success)
         {
             glGetShaderInfoLog(object, 1024, nullptr, infoLog);
-            std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
-                << infoLog << "\n -- --------------------------------------------------- -- "
-                << std::endl;
+			logger.Log(ELogLevel::Error,"Shader: Compile-time error: Type: " + type + "\n"
+                + infoLog);
             Clear();
         }
     }
@@ -285,9 +286,8 @@ bool Shader::CheckCompileErrors(const unsigned int object, const std::string& ty
         if (!success)
         {
             glGetProgramInfoLog(object, 1024, nullptr, infoLog);
-            std::cout << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
-                << infoLog << "\n -- --------------------------------------------------- -- "
-                << std::endl;
+            logger.Log(ELogLevel::Error, "| ERROR::Shader: Link-time error: Type: " + type + "\n"
+                + infoLog);
         }
     }
     

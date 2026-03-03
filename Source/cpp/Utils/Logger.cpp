@@ -73,7 +73,7 @@ void Logger::Log(const ELogLevel level, const std::string& message)
 {
 	if (level < min_level_ || !log_file_.is_open())
 	{
-		return; // Skip messages below min level
+		return;
 	}
 
     std::lock_guard<std::mutex> lock(log_mutex_);  // NOLINT (modernize-use-scoped-lock contains unnecessary overhead for use case)
@@ -87,7 +87,7 @@ void Logger::Log(const ELogLevel level, const std::string& message)
 	log_file_.flush();
 
 	// Also print to console for ERROR and WARNING
-	if (level == ELogLevel::Error || level == ELogLevel::Warning) 
+	if (level == ELogLevel::Error || level == ELogLevel::Warning)
 	{
 		std::cerr << logEntry.str();
 	}

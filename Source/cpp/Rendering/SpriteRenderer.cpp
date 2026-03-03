@@ -3,7 +3,7 @@
 #include "glad/gl.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "ResourceManagement/ResourceManager.hpp"
+#include "Utils/ResourceManager.hpp"
 #include "StringGlobals.hpp"
 
 SpriteRenderer::SpriteRenderer(const ESpriteCentering centering) :

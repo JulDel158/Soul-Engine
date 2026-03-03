@@ -1,12 +1,13 @@
 #include "Rendering/TextRenderer.hpp"
 
-#include <iostream>
 #include <unordered_map>
 
 #include "glad/gl.h"
 #include "glm/ext/matrix_clip_space.hpp"
 
-#include "ResourceManagement/ResourceManager.hpp"
+#include "Utils/ResourceManager.hpp"
+#include "StringGlobals.hpp"
+#include "Utils/Logger.hpp"
 
 
 TextRenderer::TextRenderer()
@@ -14,18 +15,14 @@ TextRenderer::TextRenderer()
     InitRenderData();
 }
 
-TextRenderer::~TextRenderer()
-{
-    // Since we move data to this object we are safe to clear it
-}
-
-void TextRenderer::RenderText(const std::string& text, float x, float y, const float scale, const glm::vec3 color, const std::string& font)
+void TextRenderer::RenderText(const std::string& text, float x, float y, const float scale, const glm::vec3 color, const std::string& font) const
 {
     // get font
     auto& resourceManager = ResourceManager::Instance();
     if (!resourceManager.ContainsFont(font))
     {
-        std::cout << "WARNING::RenderText: Font: " << font << " not found! " << std::endl;
+    	auto logger = Logger(LOG_PATH.data());
+		logger.Log(ELogLevel::Warning ,"TextRenderer:RenderText: Font: " + font + " not found! ");
         return;
     }
     

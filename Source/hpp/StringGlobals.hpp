@@ -56,4 +56,7 @@ constexpr std::string_view EFFECTS_VOLUME = "effectsVolume\0";
 constexpr std::string_view DIALOGUE_VOLUME = "dialogueVolume\0";
 constexpr std::string_view VSYNC = "vsync\0";
 
+// Log
+constexpr std::string_view LOG_PATH = "Assets/Log/Soul.log\0";
+
 #endif

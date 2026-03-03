@@ -1,9 +1,10 @@
 #include "Input/InputManager.hpp"
 
+#include "StringGlobals.hpp"
 #include "glm/ext/vector_common.hpp"
 #include "glm/ext/quaternion_geometric.hpp"
 
-#include <iostream>
+#include "Utils/Logger.hpp"
 
 namespace {
     constexpr auto ZERO_VECTOR = glm::vec2(0.0f);
@@ -191,7 +192,8 @@ void InputManager::BindInputAction(InputAction* const action, const int scancode
     {
     case EInputActionType::None:
         {
-            std::cout << "WARNING::BindInputAction: The input action had no type!!!!" << std::endl;
+    		auto logger = Logger(LOG_PATH.data(), ELogLevel::Error);
+            logger.Log(ELogLevel::Warning,"InputManager::BindInputAction: The input action had no type!!!!");
             break;
         }
     case EInputActionType::Keyboard:
@@ -244,7 +246,8 @@ void InputManager::UnbindInputAction(InputAction* const action, const int scanco
     {
     case EInputActionType::None:
         {
-            std::cout << "WARNING::UnbindInputAction: The input action had no type!!!!" << std::endl;
+    		auto logger = Logger(LOG_PATH.data(), ELogLevel::Error);
+    		logger.Log(ELogLevel::Warning,"InputManager::UnbindInputAction: The input action had no type!!!!");
             break;
         }
     case EInputActionType::Keyboard:

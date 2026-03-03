@@ -1,4 +1,4 @@
-#include "ResourceManagement/ResourceManager.hpp"
+#include "Utils/ResourceManager.hpp"
 
 #include "glad/gl.h"
 
@@ -9,8 +9,8 @@
 #include "rapidjson/writer.h"
 
 #include "StringGlobals.hpp"
+#include "Utils/Logger.hpp"
 
-#include <iostream>
 #include <filesystem>
 #include <sstream>
 #include <fstream>
@@ -43,7 +43,8 @@ const char* geometryShaderFile, const std::string& name)
 {
     if (shaders_.contains(name))
     {
-        std::cout << "Warning: Overriding existing shader: " << name << std::endl;   // NOLINT(performance-avoid-endl)
+    	auto logger = Logger(LOG_PATH.data());
+		logger.Log(ELogLevel::Warning,"ResourceManager::LoadShader Overriding existing shader: " + name);
         shaders_[name].Clear();
         shaders_.erase(name);
     }
@@ -70,7 +71,8 @@ Texture2D ResourceManager::LoadTexture2D(const char* filePath, bool alpha, const
 {
     if (textures_.contains(name))
     {
-        std::cout << "Warning: Overriding existing texture: " << name << std::endl;
+    	auto logger = Logger(LOG_PATH.data());
+        logger.Log(ELogLevel::Warning,"ResourceManager::LoadTexture2D: Overriding existing texture: " + name);
         textures_[name].Clear();
         textures_.erase(name);
     }
@@ -86,9 +88,10 @@ Texture2D ResourceManager::GetTexture2D(const std::string& name)
 
 void ResourceManager::LoadFont(const char* filePath, const unsigned int fontSize, const std::string& name)
 {
+	auto logger = Logger(LOG_PATH.data());
     if (!is_ft_open_)
     {
-        std::cout << "WARNING::LoadFont: FT Library was not open  " << std::endl;
+    	logger.Log(ELogLevel::Warning, "ResourceManager::LoadFont: FT Library was not open ");
         return;
     }
     
@@ -96,7 +99,8 @@ void ResourceManager::LoadFont(const char* filePath, const unsigned int fontSize
     FT_Face face;
     if (FT_New_Face(free_type_library_, filePath, 0, &face))
     {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+    	logger.Log(ELogLevel::Error,"ResourceManager::LoadFont::FREETYPE: Failed to load font");
+    	return;
     }
     
     // set size to load glyphs as
@@ -104,12 +108,13 @@ void ResourceManager::LoadFont(const char* filePath, const unsigned int fontSize
     // disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
     // then for the first 128 ASCII characters, preload/compile their characters and store them
+	
     for (GLubyte i = 0; i < 128; ++i) 
     {
         // load character glyph 
         if (FT_Load_Char(face, i, FT_LOAD_RENDER))
         {
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+        	logger.Log(ELogLevel::Error,"ResourceManager::LoadFont:FREETYPE: Failed to load Glyph!");
             continue;
         }
         // generate texture
@@ -168,7 +173,9 @@ void ResourceManager::LoadSettings(Settings& settings)
         
         if (settingsJson.HasParseError())
         {
-            std::cout << "ERROR:Failed to parse settings: " << settingsJson.GetParseError() << std::endl;
+        	auto logger = Logger(LOG_PATH.data());
+            logger.Log(ELogLevel::Error, "ResourceManager::LoadSettings: Failed to parse settings: " +
+                       std::to_string(static_cast<int>(settingsJson.GetParseError())));
         }
         
         // graphics
@@ -211,7 +218,8 @@ void ResourceManager::LoadSettings(Settings& settings)
     }
     catch (std::exception& e)
     {
-        std::cout << "ERROR::Settings: Failed to read Settings file" << e.what() << std::endl;
+    	auto logger = Logger(LOG_PATH.data());
+    	logger.Log(ELogLevel::Error, "ResourceManager::LoadSettings: Failed to read Settings file " + std::string(e.what()));
     }
     
     settings = Settings(settings_);
@@ -222,8 +230,6 @@ void ResourceManager::SaveSettings(const Settings& settings)
     constexpr unsigned int BUFFER_SIZE = 65536;
     
     settings_ = Settings(settings_);
-    //using namespace rapidjson;
-    // TODO: Open settings file and write to it
     rapidjson::Document document;
     document.SetObject();
 
@@ -242,17 +248,19 @@ void ResourceManager::SaveSettings(const Settings& settings)
         settings.effects_volume_, document.GetAllocator());
     document.AddMember(static_cast<rapidjson::GenericValue<rapidjson::UTF8<>>::StringRefType>(DIALOGUE_VOLUME.data()), 
         settings.dialogue_volume_, document.GetAllocator());
-    
 
     FILE* file;
-    std::string mode = "w";
+    std::string mode;
 #ifdef _WIN32
     mode = "wb";
+#else 
+	mode  = = "w";	
 #endif
     
     if (fopen_s(&file,SETTINGS_PATH.data(), mode.c_str()) != 0)
     {
-        std::cout << "ERROR::SaveSettings: Failed to open file" << std::endl;
+    	auto logger = Logger(LOG_PATH.data());
+    	logger.Log(ELogLevel::Error, "ResourceManager::SaveSettings: Failed to open file: " + std::string(SETTINGS_PATH.data()));
         return;
     }
     if (!file) return;
@@ -319,7 +327,8 @@ void ResourceManager::OpenFreeTypeLibrary()
     
     if (const auto error = FT_Init_FreeType(&free_type_library_); error)
     {
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+    	auto logger = Logger(LOG_PATH.data());
+    	logger.Log(ELogLevel::Error, "ResourceManager::OpenFreeTypeLibrary:FREETYPE: Could not init FreeType Library!");
         return;
     }
     is_ft_open_ = true;
@@ -334,7 +343,8 @@ void ResourceManager::CloseFreeTypeLibrary()
     
     if (const auto error = FT_Done_FreeType(free_type_library_); error)
     {
-        std::cout << "ERROR::FREETYPE: Could not close FreeType Library" << std::endl;
+    	auto logger = Logger(LOG_PATH.data());
+    	logger.Log(ELogLevel::Error,"ResourceManager::CloseFreeTypeLibrary:FREETYPE: Could not close FreeType Library");
         return;
     }
     is_ft_open_ = false;
@@ -375,7 +385,8 @@ Shader ResourceManager::LoadShaderFromFile(const std::filesystem::path& vertexSh
     }
     catch (std::exception& e)
     {
-        std::cout << "ERROR::SHADER: Failed to read shader files" << e.what() << std::endl;
+    	auto logger = Logger(LOG_PATH.data());
+    	logger.Log(ELogLevel::Error, "ResourceManager::LoadShaderFromFile: Failed to read shader files" + std::string(e.what()));
     }
     const char *vertexShaderCode = vertexCode.c_str();
     const char *fragmentShaderCode = fragmentCode.c_str();

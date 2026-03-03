@@ -22,7 +22,7 @@ private:
 
 public:
 	Logger() = delete;
-    explicit Logger(const std::string& filename, const ELogLevel level = ELogLevel::Warning);
+    explicit Logger(const std::string& filename, const ELogLevel level = ELogLevel::Info);
 	
     ~Logger();
 	

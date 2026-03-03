@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-#include "ResourceManagement/ResourceManager.hpp"
+#include "Utils/ResourceManager.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "StringGlobals.hpp"
 #include "Input/InputManager.hpp"

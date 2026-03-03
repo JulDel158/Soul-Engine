@@ -1,10 +1,10 @@
 #include "Audio/AudioManager.hpp"
 
-#include <iostream>
 #include <ranges>
 
 #include "StringGlobals.hpp"
-#include "ResourceManagement/ResourceManager.hpp"
+#include "Utils/ResourceManager.hpp"
+#include "Utils/Logger.hpp"
 
 namespace
 {
@@ -14,7 +14,6 @@ namespace
 AudioManager::AudioManager() :
 audio_engine_(new ma_engine)
 {
-     
     sounds_.reserve(SOUNDS_ALLOCATION);
     
     sound_groups_[ESoundType::General] = new ma_sound_group();
@@ -55,40 +54,44 @@ AudioManager& AudioManager::Instance()
 
 void AudioManager::Initialize()
 {
+	auto logger = Logger(LOG_PATH.data(), ELogLevel::Info);
     if (const ma_result result = ma_engine_init(nullptr, audio_engine_); result != MA_SUCCESS) {
-        std::cout << "ERROR::AudioManager: Failed to initialize the engine: " << result << std::endl;
-        return;
+    	logger.Log(ELogLevel::Error,"AudioManager: Failed to initialize the sound engine. result: " + std::to_string(static_cast<int>(result)));
+    	return;
     }
     
     if (ma_sound_group_init(audio_engine_, 0 ,nullptr ,sound_groups_[ESoundType::General]) != MA_SUCCESS)
     {
-        std::cout << "ERROR::AudioManager: Failed to initialize the sound group: ESoundType::General" << std::endl;
+        logger.Log(ELogLevel::Error,"AudioManager: Failed to initialize the sound group: ESoundType::General");
     }
     
     if (ma_sound_group_init(audio_engine_, 0 ,sound_groups_[ESoundType::General] ,sound_groups_[ESoundType::Music]) != MA_SUCCESS)
     {
-        std::cout << "ERROR::AudioManager: Failed to initialize the sound group: ESoundType::Music" << std::endl;
+        logger.Log(ELogLevel::Error, "AudioManager: Failed to initialize the sound group: ESoundType::Music");
     }
     
     if (ma_sound_group_init(audio_engine_, 0 ,sound_groups_[ESoundType::General] ,sound_groups_[ESoundType::Effect]) != MA_SUCCESS)
     {
-        std::cout << "ERROR::AudioManager: Failed to initialize the sound group: ESoundType::Effect" << std::endl;
+       logger.Log(ELogLevel::Error, "AudioManager: Failed to initialize the sound group: ESoundType::Effect");
     }
     
     if (ma_sound_group_init(audio_engine_, 0 ,sound_groups_[ESoundType::General] ,sound_groups_[ESoundType::Dialogue]) != MA_SUCCESS)
     {
-        std::cout << "ERROR::AudioManager: Failed to initialize the sound group: ESoundType::Dialogue" << std::endl;
+        logger.Log(ELogLevel::Error, "AudioManager: Failed to initialize the sound group: ESoundType::Dialogue");
     }
     
     ApplyVolumeChange();
     
+	// TEMPORARY
     LoadSound(AUDIO_1.data(), ESoundType::Music);
 }
 
 int AudioManager::LoadSound(const std::string& filename, const ESoundType soundType)
 {
+	auto logger = Logger(LOG_PATH.data(), ELogLevel::Info);
     if (audio_engine_ == nullptr)
     {
+    	logger.Log(ELogLevel::Error, "AudioManager::LoadSound: No audio engine?!");
         return -1;
     }
     
@@ -97,12 +100,13 @@ int AudioManager::LoadSound(const std::string& filename, const ESoundType soundT
     if (ma_sound_init_from_file(audio_engine_, filename.c_str(), 
         0, sound_groups_[soundType], nullptr, sound) != MA_SUCCESS) 
     {
+    	logger.Log(ELogLevel::Error, "AudioManager::LoadSound: Failed to load sound from file: " + filename);
         return -1;
     }
 
     sounds_.push_back(sound);
     
-    // we return an int because if we fail to load a sound, we do not want to provide an invalid index
+    // return type is int
     return static_cast<int>(sounds_.size() - 1);
 }
 

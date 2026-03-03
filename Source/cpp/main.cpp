@@ -2,11 +2,10 @@
 #include <GLFW/glfw3.h>
 
 #include "Game.hpp"
-#include "ResourceManagement/ResourceManager.hpp"
+#include "Utils/ResourceManager.hpp"
 #include "Input/InputManager.hpp"
 #include "Audio/AudioManager.hpp"
-
-#include <iostream>
+#include "Utils/Logger.hpp"
 
 namespace 
 {
@@ -19,7 +18,8 @@ namespace
     
     auto ErrorCallback(int error, const char* description) -> void
     {
-        static_cast<void>(fprintf(stderr, "Error: %s\n", description));
+    	auto logger = Logger(LOG_PATH.data(), ELogLevel::Error);
+    	logger.Log(ELogLevel::Error, description);
     }
 }
 
@@ -46,7 +46,11 @@ int main(int argc, char *argv[])
     // load all OpenGL function pointers (glad)
     if (gladLoadGL(glfwGetProcAddress) == 0)
     {
-        std::cout << "Failed to initialize OpenGL context\n" << std::endl;
+// #if defined(_DEBUG) || !defined(NDEBUG)
+    	auto logger = Logger(LOG_PATH.data(), ELogLevel::Error);
+    	logger.Log(ELogLevel::Error, "Failed to initialize OpenGL logging library.");
+// #endif   
+ 
         glfwTerminate();
         return -1;
     }
