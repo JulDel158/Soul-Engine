@@ -20,11 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\cpp\Audio\AudioManager.cpp" />
+    <ClCompile Include="Source\cpp\Components\BaseComponent.cpp" />
+    <ClCompile Include="Source\cpp\Components\SpriteComponent.cpp" />
     <ClCompile Include="Source\cpp\Game\Game.cpp" />
     <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\Input\InputAction.cpp" />
     <ClCompile Include="Source\cpp\Input\InputManager.cpp" />
     <ClCompile Include="Source\cpp\main.cpp" />
+    <ClCompile Include="Source\cpp\Rendering\SpriteAnimation.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
     <ClCompile Include="Source\cpp\Rendering\SpriteRenderer.cpp" />
     <ClCompile Include="Source\cpp\Rendering\TextRenderer.cpp" />
@@ -509,6 +512,8 @@
     <ClInclude Include="Source\Dependencies\include\rapidjson\writer.h" />
     <ClInclude Include="Source\Dependencies\include\stb_image.h" />
     <ClInclude Include="Source\hpp\Audio\AudioManager.hpp" />
+    <ClInclude Include="Source\hpp\Components\BaseComponent.hpp" />
+    <ClInclude Include="Source\hpp\Components\SpriteComponent.hpp" />
     <ClInclude Include="Source\hpp\EngineDataStructures.hpp" />
     <ClInclude Include="Source\hpp\freetype\config\ftconfig.h" />
     <ClInclude Include="Source\hpp\freetype\config\ftoption.h" />
@@ -516,6 +521,7 @@
     <ClInclude Include="Source\hpp\Game\Game.hpp" />
     <ClInclude Include="Source\hpp\Input\InputAction.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
+    <ClInclude Include="Source\hpp\Rendering\SpriteAnimation.hpp" />
     <ClInclude Include="Source\hpp\StringGlobals.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />
     <ClInclude Include="Source\hpp\Rendering\SpriteRenderer.hpp" />
