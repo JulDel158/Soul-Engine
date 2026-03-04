@@ -23,6 +23,7 @@
     <ClCompile Include="Source\cpp\Components\BaseComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\SpriteComponent.cpp" />
     <ClCompile Include="Source\cpp\Game\Game.cpp" />
+    <ClCompile Include="Source\cpp\Game\GameObject.cpp" />
     <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\Input\InputAction.cpp" />
     <ClCompile Include="Source\cpp\Input\InputManager.cpp" />
@@ -519,6 +520,7 @@
     <ClInclude Include="Source\hpp\freetype\config\ftoption.h" />
     <ClInclude Include="Source\hpp\ft2build.h" />
     <ClInclude Include="Source\hpp\Game\Game.hpp" />
+    <ClInclude Include="Source\hpp\Game\GameObject.hpp" />
     <ClInclude Include="Source\hpp\Input\InputAction.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
     <ClInclude Include="Source\hpp\Rendering\SpriteAnimation.hpp" />

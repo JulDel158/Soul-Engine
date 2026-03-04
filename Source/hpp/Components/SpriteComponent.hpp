@@ -28,6 +28,4 @@ protected:
 	void Update(const float deltaTime) override;
 };
 
-
-
 #endif

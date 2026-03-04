@@ -6,6 +6,9 @@
 // Base class for all game components
 class BaseComponent
 {
+	friend class GameObject;
+	friend class Game;
+	
 protected:
 	glm::vec2 position_;
 	glm::vec2 size_;

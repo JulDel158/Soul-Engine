@@ -59,26 +59,50 @@ void Game::Init()
 
 void Game::Update(const float dt)
 {
-    //TODO: perform game updates here
+	for (const auto& gameObject : game_objects_)
+	{
+		if (!gameObject->IsActive())
+		{
+			continue;
+		}
+		
+		gameObject->Update(dt);
+	}
 }
 
-void Game::Render(const float dt)
+void Game::Render(const float dt) const
 {
-    static float time = 0.0f;
-    ResourceManager& resourceManager = ResourceManager::Instance();
+    static float runTime = 0.0f;
     
-    sprite_renderer_.DrawSprite(resourceManager.GetTexture2D(TEXTURE1_KEY.data()), 
-        glm::vec2(600.0f + glm::sin(time) * 400.0f, 500.0f),
-        glm::vec2(400.0f, 400.0f),
-        (glm::cos(time) + std::sin(time)));
+	{ // Temporary
+		ResourceManager& resourceManager = ResourceManager::Instance();
+		sprite_renderer_.DrawSprite(resourceManager.GetTexture2D(TEXTURE1_KEY.data()), 
+			glm::vec2(600.0f + glm::sin(runTime) * 400.0f, 500.0f),
+			glm::vec2(400.0f, 400.0f),
+			(glm::cos(runTime) + std::sin(runTime)));
     
     
-    text_renderer_.RenderText("Sample Text", 200.0f, 100.0f, 3.0f, glm::vec3(
-        0.1f, 
-        glm::clamp(glm::cos(time), 0.f, 1.f), 
-         glm::clamp(glm::sin(time), 0.f, 1.f)));
+    	text_renderer_.RenderText("Sample Text", 200.0f, 100.0f, 3.0f, glm::vec3(
+			0.1f, 
+			glm::clamp(glm::cos(runTime), 0.f, 1.f), 
+			 glm::clamp(glm::sin(runTime), 0.f, 1.f)));
+	}
+
+	// Drawing all targets within all game objects
+    for (const auto& gameObject : game_objects_)
+    {
+    	if (!gameObject->IsVisible())
+    	{
+    		continue;
+    	}
+    	
+    	for (const auto& renderTarget : gameObject->GetRenderList())
+    	{
+			sprite_renderer_.DrawSprite(std::get<0>(renderTarget), std::get<1>(renderTarget), std::get<2>(renderTarget), std::get<3>(renderTarget), std::get<4>(renderTarget));
+    	}
+    }
     
-    time += dt;
+    runTime += dt;
 }
 
 void Game::ProcessAudio(const float dt)
