@@ -40,8 +40,12 @@ SpriteAnimation::~SpriteAnimation()
 void SpriteAnimation::Update(float deltaTime)
 {
 	current_time_ += deltaTime;
-	current_time_ -= ((current_time_ > 1.0f) ? 1.0f : 0.0f);
+	if (textures_.empty())
+	{
+		return;
+	}
 	
+	current_frame_ = (static_cast<unsigned int>(current_time_) * frames_per_second_) % static_cast<unsigned int>(textures_.size());
 	//TODO: calculate index
 }
 
