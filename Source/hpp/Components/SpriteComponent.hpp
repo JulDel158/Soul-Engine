@@ -2,24 +2,26 @@
 #define SPRITE_COMPONENT_H
 
 #include "BaseComponent.hpp"
+#include "Rendering/SpriteAnimation.hpp"
 #include "Rendering/Texture2D.hpp"
 
-#include <string>
-#include <vector>
+#include <unordered_map>
 
 class SpriteComponent : public BaseComponent
 {
 protected:
-	std::vector<Texture2D> textures_;
-	std::vector<std::string> texture_names_;
+	std::unordered_map<int,SpriteAnimation> animations_;
+	Texture2D base_texture_;
+	int current_animation_;
 	
 public:
 	SpriteComponent()=default;
-	//explicit SpriteComponent(std::string textureName);
-	//explicit SpriteComponent(const Texture2D& texture, std::string textureName = "");
-	~SpriteComponent()override=default;
+	~SpriteComponent()override;
 	
+	void AddAnimation(const int id, const SpriteAnimation& animation);
+	void PlayAnimation(const int id);
 	
+	//TODO: provide way to supply game renderer with sprite
 	
 protected:
 	void Init() override;

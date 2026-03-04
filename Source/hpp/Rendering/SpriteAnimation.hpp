@@ -13,14 +13,18 @@ private:
 	float current_time_;
 	unsigned int current_frame_;
 	unsigned int frames_per_second_;
+	bool is_playing_;
+	bool play_once_;
+	
+	//TODO: We might want to add delegates, also we might want to add other flags to control how we play the animation
 	
 public:
 	SpriteAnimation();
-	SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond = 30);
+	explicit SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond = 30);
 	~SpriteAnimation();
 	
 	void Update(float deltaTime);
-	void StartAnimation(const bool restart = true);
+	void StartAnimation(const bool playOnce = false, const bool restart = true);
 	void StopAnimation(const bool restart = true);
 	
 	void SetAnimationSprites(const std::vector<std::string>& names);
@@ -28,6 +32,14 @@ public:
 	
 	inline unsigned int GetFramesPerSecond() const { return frames_per_second_; }
 	Texture2D GetCurrentFrameTexture() const; // Note: call after update to ensure the proper texture is provided this frame
+	bool IsPlaying() const { return is_playing_; }
+	
+private:
+	inline void Restart() 
+	{
+		current_frame_ = 0;
+		current_time_ = 0.0f;
+	};
 };
 
 

@@ -1,5 +1,7 @@
 #include "Rendering/Texture2D.hpp"
 
+#include "glad/gl.h"
+
 Texture2D::Texture2D():
 id_(-1),
 width_(0), 
@@ -14,8 +16,8 @@ is_valid_(false)
 {
 }
 
-Texture2D::Texture2D(GLsizei width, GLsizei height, GLint internalFormat, GLenum imageFormat, GLint wrapS,
-                     GLint wrapT, GLint filterMin, GLint filterMax, const unsigned char* data):
+Texture2D::Texture2D(const int width, const int height, const int internalFormat, const unsigned int imageFormat, 
+	const int wrapS, const int wrapT, const int filterMin, const int filterMax, const unsigned char* data):
 width_(width), 
 height_(height), 
 internal_format_(internalFormat), 

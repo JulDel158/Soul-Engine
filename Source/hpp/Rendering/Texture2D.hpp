@@ -1,29 +1,27 @@
 #ifndef TEXTURE_2D_H
 #define TEXTURE_2D_H
 
-#include "glad/gl.h"
-
 class Texture2D
 {
 private:
-    GLuint id_;
-
-    GLsizei width_, height_; // width and height of loaded image in pixels
+    unsigned int id_;
+	// width and height of loaded image in pixels
+    int width_;
+	int height_; 
     // texture Format
-    GLint internal_format_; // format of texture object
-    GLenum image_format_; // format of loaded image
+    int internal_format_; // format of texture object
+    unsigned int image_format_; // format of loaded image
     // texture configuration
-    GLint wrap_s_; // wrapping mode on S axis
-    GLint wrap_t_; // wrapping mode on T axis
-    GLint filter_min_; // filtering mode if texture pixels < screen pixels
-    GLint filter_max_; // filtering mode if texture pixels > screen pixels
-    
+    int wrap_s_; // wrapping mode on S axis
+    int wrap_t_; // wrapping mode on T axis
+    int filter_min_; // filtering mode if texture pixels < screen pixels
+    int filter_max_; // filtering mode if texture pixels > screen pixels
     bool is_valid_;
     
 public:
     Texture2D();
-    Texture2D(GLsizei width, GLsizei height, GLint internalFormat, GLenum imageFormat, 
-        GLint wrapS, GLint wrapT, GLint filterMin, GLint filterMax, const unsigned char* data);
+    Texture2D(const int width, const int height, const int internalFormat, const unsigned int imageFormat, 
+        const int wrapS, const int wrapT, const int filterMin, const int filterMax, const unsigned char* data);
     ~Texture2D()=default; // Resource Manager will be in charge of calling clear as destructor calls after going out of scope could lead to accidental clearing
     
     // binds the texture as the current active GL_TEXTURE_2D texture object
