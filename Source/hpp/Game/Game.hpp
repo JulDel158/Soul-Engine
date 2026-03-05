@@ -1,39 +1,34 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "glad/gl.h" // NOLINT
-#include "GLFW/glfw3.h"
-
 #include "EngineDataStructures.hpp"
-#include "Rendering/SpriteRenderer.hpp"
-#include "Rendering/TextRenderer.hpp"
-#include "GameObject.hpp"
 
 #include <vector>
 
-// Class in charge of game's core. From here we will perform updates to the game state, physics, rendering, audio, and more.
+struct GLFWwindow; //NOLINT
+class SpriteRenderer;
+class TextRenderer;
+class GameObject;
+
+// Class in charge of game's core. From here we will perform updates to the game state, physics, rendering, audio.
+// From here it is communicated what gets loaded and unloaded and the state of game objects
 class Game
 {
 private:
-    SpriteRenderer sprite_renderer_;
-    EGameState game_state_;
-    TextRenderer text_renderer_;
+    SpriteRenderer* sprite_renderer_;
+    TextRenderer* text_renderer_;
     unsigned int window_width_;
     unsigned int window_height_;
     GLFWwindow* window_;
 	std::vector<GameObject*> game_objects_;
-	SpriteComponent* tempSpriteComponent;
-	GameObject* tempGameObject;
-	
+    EGameState game_state_;
     
-    void Init();
+    void Init() const;
     
 public:
-    
-    Game()=delete;
     explicit Game(const Settings& settings);
     ~Game();
-    
+    Game()=delete;
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
     
@@ -43,9 +38,9 @@ public:
     void ProcessInput(const float dt);
     void End();
     
-    EGameState GetGameState() const;
-    bool IsGameRunning() const;
-    bool IsGamePaused() const;
+	inline EGameState	GetGameState() const	{ return game_state_; }
+    inline bool			IsGameRunning() const	{ return game_state_ == EGameState::InGame_Running; }
+    inline bool			IsGamePaused() const	{ return game_state_ == EGameState::InGame_Paused; }
     
     void SetWindowPointer(GLFWwindow* window);
 };

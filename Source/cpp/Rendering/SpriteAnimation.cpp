@@ -1,16 +1,14 @@
 #include "Rendering/SpriteAnimation.hpp"
 
-#include "glm/common.hpp"
 #include "Utils/ResourceManager.hpp"
 #include "StringGlobals.hpp"
 #include "EngineDataStructures.hpp"
 #include "Utils/Logger.hpp"
-#include <iostream>
 
 SpriteAnimation::SpriteAnimation() :
 current_time_(0.0f),
 current_frame_(0),
-frames_per_second_(30),
+frames_per_second_(20),
 is_playing_(false),
 play_once_(false)
 {
@@ -23,18 +21,7 @@ frames_per_second_(framesPerSecond),
 is_playing_(false),
 play_once_(false)
 {
-	auto& resourceManager = ResourceManager::Instance();
-	for (const auto& textureName : textureNames)
-	{
-		if (resourceManager.ContainsTexture2D(textureName))
-		{
-			textures_.push_back(resourceManager.GetTexture2D(textureName));
-		}
-		else
-		{
-			textures_.push_back(resourceManager.GetTexture2D(MISSING_TEXTURE.data()));
-		}
-	}
+	SetAnimationSprites(textureNames);
 }
 
 SpriteAnimation::~SpriteAnimation()
@@ -55,10 +42,8 @@ void SpriteAnimation::Update(const float deltaTime)
 	{
 		return;
 	}
+	
 	current_frame_ = static_cast<unsigned int>(current_time_ * static_cast<float>(frames_per_second_)) % static_cast<unsigned int>(textures_.size());
-		//static_cast<unsigned int>(glm::mod(current_time_ * static_cast<float>(frames_per_second_), static_cast<float>(textures_.size())));
-	//
-	std::cout << "SpriteAnimation::Update: current_frame_: [" << current_frame_ << "] current_time_: [" << current_time_ << "]" << std::endl;
 	
 	// once the final frame is reached the full animation has played, stop
 	if (play_once_ && current_frame_ == textures_.size() - 1)
@@ -90,7 +75,7 @@ void SpriteAnimation::StopAnimation(const bool restart)
 void SpriteAnimation::SetAnimationSprites(const std::vector<std::string>& names)
 {
 	auto& resourceManager = ResourceManager::Instance();
-	auto logger = Logger(LOG_PATH.data());
+	auto logger = Logger();
 	textures_.resize(names.size());
 	for (const auto& textureName : names)
 	{
@@ -114,7 +99,7 @@ Texture2D SpriteAnimation::GetCurrentFrameTexture() const
 {
 	if (textures_.empty() || current_frame_ >= textures_.size())
 	{
-		auto logger = Logger(LOG_PATH.data());
+		auto logger = Logger();
 		auto& resourceManager = ResourceManager::Instance();
 		logger.Log(ELogLevel::Error, "SpriteAnimation::GetCurrentFrameTexture: invalid texture! Is array empty: [" + 
 			std::to_string(textures_.empty()) + 

@@ -4,7 +4,6 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "Utils/Logger.hpp"
-#include "StringGlobals.hpp"
 
 Shader::Shader():
 id_(std::nullopt)
@@ -268,7 +267,7 @@ bool Shader::CheckCompileErrors(const unsigned int object, const std::string& ty
 {
     GLint success;
     char infoLog[1024];
-	auto logger = Logger(LOG_PATH.data());
+	auto logger = Logger();
     if (type != "PROGRAM")
     {
         glGetShaderiv(object, GL_COMPILE_STATUS, &success);

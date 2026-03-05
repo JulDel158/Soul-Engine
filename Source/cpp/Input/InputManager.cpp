@@ -1,6 +1,5 @@
 #include "Input/InputManager.hpp"
 
-#include "StringGlobals.hpp"
 #include "glm/ext/vector_common.hpp"
 #include "glm/ext/quaternion_geometric.hpp"
 
@@ -192,7 +191,7 @@ void InputManager::BindInputAction(InputAction* const action, const int scancode
     {
     case EInputActionType::None:
         {
-    		auto logger = Logger(LOG_PATH.data(), ELogLevel::Error);
+    		auto logger = Logger();
             logger.Log(ELogLevel::Warning,"InputManager::BindInputAction: The input action had no type!!!!");
             break;
         }
@@ -246,7 +245,7 @@ void InputManager::UnbindInputAction(InputAction* const action, const int scanco
     {
     case EInputActionType::None:
         {
-    		auto logger = Logger(LOG_PATH.data(), ELogLevel::Error);
+    		auto logger = Logger();
     		logger.Log(ELogLevel::Warning,"InputManager::UnbindInputAction: The input action had no type!!!!");
             break;
         }

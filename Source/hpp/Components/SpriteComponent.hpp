@@ -23,14 +23,18 @@ public:
 	SpriteComponent();
 	~SpriteComponent()override;
 	
-	void AddAnimation(const int id, const SpriteAnimation& animation);
-	void SetDefaultTexture(const Texture2D& texture) { base_texture_ = texture; }
-	void PlayAnimation(const int id, const bool playOnce = false, const bool restart = true);
-	void StopCurrentAnimation();
-	
 protected:
 	void Init() override;
 	void Update(const float deltaTime) override;
+	
+public:
+	void AddAnimation(const int id, const SpriteAnimation& animation);
+	void PlayAnimation(const int id, const bool playOnce = false, const bool restart = true);
+	void StopCurrentAnimation();
+	
+	inline void SetDefaultTexture(const Texture2D& texture) { base_texture_ = texture; }
+	
+	std::optional<RenderData> GetRenderData() override;
 	
 private:
 	Texture2D GetCurrentTexture();

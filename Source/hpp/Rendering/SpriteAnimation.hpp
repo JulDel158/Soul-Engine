@@ -27,12 +27,14 @@ public:
 	void StartAnimation(const bool playOnce = false, const bool restart = true);
 	void StopAnimation(const bool restart = true);
 	
-	void SetAnimationSprites(const std::vector<std::string>& names);
+	// Setters
+	void		SetAnimationSprites(const std::vector<std::string>& names);
 	inline void SetFramesPerSecond(const unsigned int framesPerSecond) { frames_per_second_ = framesPerSecond; }
 	
+	// Getters
 	inline unsigned int GetFramesPerSecond() const { return frames_per_second_; }
-	Texture2D GetCurrentFrameTexture() const; // Note: call after update to ensure the proper texture is provided this frame
-	bool IsPlaying() const { return is_playing_; }
+	Texture2D			GetCurrentFrameTexture() const; // Note: call after update to ensure the proper texture is provided this frame
+	inline bool			IsPlaying() const { return is_playing_; }
 	
 private:
 	inline void Restart() 

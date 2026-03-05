@@ -2,16 +2,23 @@
 #define BASE_COMPONENT_H
 
 #include "glm/ext/vector_float2.hpp"
+#include "glm/ext/vector_float3.hpp"
+
+#include "Rendering/Texture2D.hpp"
+
+#include <tuple>
+#include <optional>
 
 // Base class for all game components
 class BaseComponent
 {
+protected:
+	using RenderData = std::tuple<Texture2D, glm::vec2, glm::vec2, float, glm::vec3>;
 	friend class GameObject;
 	friend class Game;
 	
-protected:
 	glm::vec2 position_;
-	glm::vec2 size_;
+	glm::vec2 scale_;
 	float rotation_;
 	bool enabled_;
 	GameObject* owner_;
@@ -22,18 +29,26 @@ public:
 	virtual ~BaseComponent() = default;
 	
 protected:
-	virtual void Init();
-	virtual void Update(const float deltaTime);
+	virtual void Init(); // Called after a level is loaded
+	virtual void Update(const float deltaTime); // called each frame while game is running
+	virtual void End(); // called before destroy
 	
-	inline void SetPosition(const glm::vec2& position) { position_ = position; }
-	inline void SetSize(const glm::vec2& size) { size_ = size; }
-	inline void SetRotation(const float rotation) { rotation_ = rotation; }
-	inline void SetEnabled(const bool enabled) { enabled_ = enabled; }
+public:
+	// Setters
+	inline void SetPosition(const glm::vec2& position)	{ position_ = position; }
+	inline void SetScale(const glm::vec2& size)			{ scale_ = size; }
+	inline void SetRotation(const float rotation)		{ rotation_ = rotation; }
+	inline void SetEnabled(const bool enabled)			{ enabled_ = enabled; }
 	
-	inline glm::vec2 GetPosition() const { return position_; }
-	inline glm::vec2 GetSize() const { return size_; }
-	inline float GetRotation() const { return rotation_; }
-	inline bool GetEnabled() const { return enabled_; }
+	// Getters
+	inline glm::vec2	GetPosition() const	{ return position_; }
+	inline glm::vec2	GetScale() const	{ return scale_; }
+	inline float		GetRotation() const	{ return rotation_; }
+	inline bool			GetEnabled() const	{ return enabled_; }
+	inline bool			HasOwner() const	{ return owner_ != nullptr; }
+	inline bool			IsAttached() const	{ return parent_ != nullptr; }
+	
+	virtual std::optional<RenderData> GetRenderData(); 
 };
 
 #endif

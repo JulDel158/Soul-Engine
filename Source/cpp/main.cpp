@@ -1,5 +1,5 @@
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
+#include "glad/gl.h"
+#include "GLFW/glfw3.h"
 
 #include "Game/Game.hpp"
 #include "Utils/ResourceManager.hpp"
@@ -18,7 +18,7 @@ namespace
     
     auto ErrorCallback(int error, const char* description) -> void
     {
-    	auto logger = Logger(LOG_PATH.data(), ELogLevel::Error);
+    	auto logger = Logger();
     	logger.Log(ELogLevel::Error, description);
     }
 }
@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
     // load all OpenGL function pointers (glad)
     if (gladLoadGL(glfwGetProcAddress) == 0)
     {
-// #if defined(_DEBUG) || !defined(NDEBUG)
-    	auto logger = Logger(LOG_PATH.data(), ELogLevel::Error);
+#if defined(_DEBUG) || !defined(NDEBUG)
+    	auto logger = Logger();
     	logger.Log(ELogLevel::Error, "Failed to initialize OpenGL logging library.");
-// #endif   
+#endif   
  
         glfwTerminate();
         return -1;

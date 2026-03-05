@@ -2,10 +2,12 @@
 
 #include "Components/BaseComponent.hpp"
 
+#include <optional>
+
 namespace
 {
 	constexpr auto ZERO_VECTOR_2F = glm::vec2(0.0f);
-	constexpr auto ONE_HUNDRED_VECTOR_2F = glm::vec2(400.0f);
+	constexpr auto ONE_HUNDRED_VECTOR_2F = glm::vec2(100.0f);
 }
 
 GameObject::GameObject() :
@@ -41,16 +43,22 @@ void GameObject::Update(const float deltaTime)
 {
 	// we will flush the render list before updating components, that way components may repopulate it if necessary
 	render_list_.clear();
+	render_list_.reserve(components_.size());
 	
 	for (const auto& component : components_)
 	{
-		// Note: some components will repopulate the render list as it updates, the game loop processes rendering after updates
-		// therefore we will have the correct render data for this frame
 		component->Update(deltaTime);
+		if (auto renderData = component->GetRenderData(); renderData != std::nullopt)
+		{
+			render_list_.emplace_back(renderData.value());
+		}
 	}
 }
 
-void GameObject::AddToRenderList(const RenderData& data)
+void GameObject::End()
 {
-	render_list_.push_back(data);
+	for (const auto& component : components_)
+	{
+		component->End();
+	}
 }

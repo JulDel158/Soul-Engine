@@ -6,7 +6,6 @@
 #include "glm/ext/matrix_clip_space.hpp"
 
 #include "Utils/ResourceManager.hpp"
-#include "StringGlobals.hpp"
 #include "Utils/Logger.hpp"
 
 
@@ -15,13 +14,19 @@ TextRenderer::TextRenderer()
     InitRenderData();
 }
 
-void TextRenderer::RenderText(const std::string& text, float x, float y, const float scale, const glm::vec3 color, const std::string& font) const
+TextRenderer::~TextRenderer()
+{
+	glDeleteVertexArrays(1, &vao_);
+	glDeleteBuffers(1, &vbo_);
+}
+
+void TextRenderer::RenderText(const std::string& text, glm::vec2 position, const float scale, const glm::vec3 color, const std::string& font) const
 {
     // get font
     auto& resourceManager = ResourceManager::Instance();
     if (!resourceManager.ContainsFont(font))
     {
-    	auto logger = Logger(LOG_PATH.data());
+    	auto logger = Logger();
 		logger.Log(ELogLevel::Warning ,"TextRenderer:RenderText: Font: " + font + " not found! ");
         return;
     }
@@ -39,8 +44,8 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, const f
     {
         TextCharacter textCharacter = fontMap[character];
 
-        float xPos = x + static_cast<float>(textCharacter.bearing_.x) * scale;
-        float yPos = y + static_cast<float>(fontMap['H'].bearing_.y - textCharacter.bearing_.y) * scale;
+        float xPos = position.x + static_cast<float>(textCharacter.bearing_.x) * scale;
+        float yPos = position.y + static_cast<float>(fontMap['H'].bearing_.y - textCharacter.bearing_.y) * scale;
 
         float w = static_cast<float>(textCharacter.size_.x) * scale;
         float h = static_cast<float>(textCharacter.size_.y) * scale;
@@ -64,7 +69,7 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, const f
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // now advance cursors for next glyph
-        x += static_cast<float>(textCharacter.advance_ >> 6) * scale; // bitshift by 6 to get value in pixels (1/64th times 2^6 = 64)
+        position.x += static_cast<float>(textCharacter.advance_ >> 6) * scale; // bitshift by 6 to get value in pixels (1/64th times 2^6 = 64)
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);

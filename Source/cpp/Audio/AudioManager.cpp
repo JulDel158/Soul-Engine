@@ -1,10 +1,10 @@
 #include "Audio/AudioManager.hpp"
 
-#include <ranges>
-
 #include "StringGlobals.hpp"
 #include "Utils/ResourceManager.hpp"
 #include "Utils/Logger.hpp"
+
+#include <ranges>
 
 namespace
 {
@@ -54,7 +54,7 @@ AudioManager& AudioManager::Instance()
 
 void AudioManager::Initialize()
 {
-	auto logger = Logger(LOG_PATH.data(), ELogLevel::Info);
+	auto logger = Logger();
     if (const ma_result result = ma_engine_init(nullptr, audio_engine_); result != MA_SUCCESS) {
     	logger.Log(ELogLevel::Error,"AudioManager: Failed to initialize the sound engine. result: " + std::to_string(static_cast<int>(result)));
     	return;
@@ -88,7 +88,7 @@ void AudioManager::Initialize()
 
 int AudioManager::LoadSound(const std::string& filename, const ESoundType soundType)
 {
-	auto logger = Logger(LOG_PATH.data(), ELogLevel::Info);
+	auto logger = Logger();
     if (audio_engine_ == nullptr)
     {
     	logger.Log(ELogLevel::Error, "AudioManager::LoadSound: No audio engine?!");

@@ -1,12 +1,13 @@
 #ifndef TEXT_RENDERER_H
 #define TEXT_RENDERER_H
 
-#include <string>
-
-#include "glm/vec3.hpp"
+#include "glm/ext/vector_float3.hpp"
+#include "glm/ext/vector_float2.hpp"
 
 #include "Shader.hpp"
 #include "StringGlobals.hpp"
+
+#include <string>
 
 class TextRenderer
 {
@@ -17,9 +18,9 @@ private:
     
 public:
     TextRenderer();
-    ~TextRenderer() = default;
+    ~TextRenderer();
     
-    void RenderText(const std::string& text, float x, float y, const float scale, const glm::vec3 color = glm::vec3(1.0f), const std::string& font = FONT_ARIAL.data()) const;
+    void RenderText(const std::string& text, glm::vec2 position, const float scale, const glm::vec3 color = glm::vec3(1.0f), const std::string& font = FONT_ARIAL.data()) const;
     
     void SwapShader(const std::string& name);
     void SwapShader(const Shader& shader);
