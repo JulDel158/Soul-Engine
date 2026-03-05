@@ -23,7 +23,7 @@ public:
 	explicit SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond = 30);
 	~SpriteAnimation();
 	
-	void Update(float deltaTime);
+	void Update(const float deltaTime);
 	void StartAnimation(const bool playOnce = false, const bool restart = true);
 	void StopAnimation(const bool restart = true);
 	

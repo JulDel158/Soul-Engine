@@ -22,9 +22,8 @@ private:
     unsigned int window_height_;
     GLFWwindow* window_;
 	std::vector<GameObject*> game_objects_;
-	
-	// Texture, position, size, rotation, color
-	//std::vector<std::tuple<Texture2D, glm::vec2, glm::vec2, float, glm::vec3>> render_list_;
+	SpriteComponent* tempSpriteComponent;
+	GameObject* tempGameObject;
 	
     
     void Init();

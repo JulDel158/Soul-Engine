@@ -16,8 +16,6 @@
 #include <fstream>
 #include <utility>
 
-
-
 ResourceManager& ResourceManager::Instance()
 {
     static ResourceManager instance = ResourceManager();

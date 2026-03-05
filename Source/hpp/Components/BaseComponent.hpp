@@ -12,8 +12,10 @@ class BaseComponent
 protected:
 	glm::vec2 position_;
 	glm::vec2 size_;
-	glm::vec2 rotation_;
+	float rotation_;
 	bool enabled_;
+	GameObject* owner_;
+	BaseComponent* parent_;
 	
 public:
 	BaseComponent();
@@ -25,12 +27,12 @@ protected:
 	
 	inline void SetPosition(const glm::vec2& position) { position_ = position; }
 	inline void SetSize(const glm::vec2& size) { size_ = size; }
-	inline void SetRotation(const glm::vec2& rotation) { rotation_ = rotation; }
+	inline void SetRotation(const float rotation) { rotation_ = rotation; }
 	inline void SetEnabled(const bool enabled) { enabled_ = enabled; }
 	
 	inline glm::vec2 GetPosition() const { return position_; }
 	inline glm::vec2 GetSize() const { return size_; }
-	inline glm::vec2 GetRotation() const { return rotation_; }
+	inline float GetRotation() const { return rotation_; }
 	inline bool GetEnabled() const { return enabled_; }
 };
 

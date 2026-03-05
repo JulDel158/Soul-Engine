@@ -4,6 +4,18 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "StringGlobals.hpp"
 #include "Input/InputManager.hpp"
+#include "Components/SpriteComponent.hpp"
+#include "Rendering/SpriteAnimation.hpp"
+
+namespace
+{
+	constexpr unsigned int SHADER_T = 0;
+	constexpr unsigned int POSITION_T = 1;
+	constexpr unsigned int SIZE_T = 2;
+	constexpr unsigned int ROTATION_T = 3;
+	constexpr unsigned int COLOR_T = 4;
+	
+}
 
 Game::Game(const Settings& settings) :
 sprite_renderer_(ESpriteCentering::Center),
@@ -17,6 +29,8 @@ window_(nullptr)
 
 Game::~Game()
 {
+	delete tempGameObject;
+	delete tempSpriteComponent;
     End();
 }
 
@@ -51,10 +65,32 @@ void Game::Init()
     
     // load textures
     resourceManager.LoadTexture2D(TEXTURE1.data(), true, TEXTURE1_KEY.data());
+	resourceManager.LoadTexture2D(MISSING_TEXTURE.data(), true, MISSING_TEXTURE_KEY.data());
+	resourceManager.LoadTexture2D(PLACEHOLDER_TEXTURE.data(), true, PLACEHOLDER_TEXTURE_KEY.data());
+	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_1.data(), true, ANIM_KEY_1.data());
+	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_2.data(), true, ANIM_KEY_2.data());
+	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_3.data(), true, ANIM_KEY_3.data());
+	
     
     // set base shaders on renderers
     sprite_renderer_.SwapShader(spriteShader);
     text_renderer_.SwapShader(textShader);
+	
+	// TEMP
+	tempSpriteComponent = new SpriteComponent();
+	tempGameObject = new GameObject();
+	tempGameObject->AddComponent(tempSpriteComponent);
+	std::vector<std::string> animationNames;
+	animationNames.reserve(3);
+	animationNames.emplace_back(ANIM_KEY_1.data());
+	animationNames.emplace_back(ANIM_KEY_2.data());
+	animationNames.emplace_back(ANIM_KEY_3.data());
+	SpriteAnimation testAnimation = SpriteAnimation(animationNames, 3);
+	game_objects_.push_back(tempGameObject);
+	tempSpriteComponent->AddAnimation(1, testAnimation);
+	tempSpriteComponent->SetDefaultTexture(resourceManager.GetTexture2D(PLACEHOLDER_TEXTURE_KEY.data()));
+	
+	tempGameObject->SetPosition(glm::vec2(400.0f, 400.0f));
 }
 
 void Game::Update(const float dt)
@@ -68,19 +104,26 @@ void Game::Update(const float dt)
 		
 		gameObject->Update(dt);
 	}
+	
+	static bool triggered = false;
+	if (!triggered)
+	{
+		tempSpriteComponent->PlayAnimation(1);
+		triggered = true;
+	}
 }
 
 void Game::Render(const float dt) const
 {
     static float runTime = 0.0f;
     
+	if (false) 
 	{ // Temporary
 		ResourceManager& resourceManager = ResourceManager::Instance();
 		sprite_renderer_.DrawSprite(resourceManager.GetTexture2D(TEXTURE1_KEY.data()), 
 			glm::vec2(600.0f + glm::sin(runTime) * 400.0f, 500.0f),
 			glm::vec2(400.0f, 400.0f),
 			(glm::cos(runTime) + std::sin(runTime)));
-    
     
     	text_renderer_.RenderText("Sample Text", 200.0f, 100.0f, 3.0f, glm::vec3(
 			0.1f, 
@@ -98,7 +141,11 @@ void Game::Render(const float dt) const
     	
     	for (const auto& renderTarget : gameObject->GetRenderList())
     	{
-			sprite_renderer_.DrawSprite(std::get<0>(renderTarget), std::get<1>(renderTarget), std::get<2>(renderTarget), std::get<3>(renderTarget), std::get<4>(renderTarget));
+			sprite_renderer_.DrawSprite(std::get<SHADER_T>(renderTarget), 
+				std::get<POSITION_T>(renderTarget), 
+				std::get<SIZE_T>(renderTarget), 
+				std::get<ROTATION_T>(renderTarget), 
+				std::get<COLOR_T>(renderTarget));
     	}
     }
     

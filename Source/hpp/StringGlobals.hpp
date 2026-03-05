@@ -16,9 +16,12 @@ constexpr std::string_view F_TEXT_SHADER_BASE = "Assets/Shaders/BasicText.frag\0
 // geometry shader paths
 
 // textures paths
-constexpr std::string_view PLACE_HOLDER_TEXTURE = "Assets/Textures/place_holder.png\0";
+constexpr std::string_view PLACEHOLDER_TEXTURE = "Assets/Textures/place_holder.png\0";
 constexpr std::string_view MISSING_TEXTURE = "Assets/Textures/missing_texture.png\0";
 constexpr std::string_view TEXTURE1 = "Assets/Textures/awesomeface.png\0";
+constexpr std::string_view TEST_ANIM_FRAME_1 = "Assets/Textures/test_anim_1.png\0";
+constexpr std::string_view TEST_ANIM_FRAME_2 = "Assets/Textures/test_anim_2.png\0";
+constexpr std::string_view TEST_ANIM_FRAME_3 = "Assets/Textures/test_anim_3.png\0";
 
 // font paths
 constexpr std::string_view FONT_ARIAL_PATH = "Assets/Fonts/arial.ttf\0";
@@ -32,8 +35,12 @@ constexpr std::string_view FONT_RENDERER_PROGRAM1 = "FONT\0";
 
 // texture keys
 constexpr std::string_view TEXTURE1_KEY = "FACE\0";
-constexpr std::string_view TEXTURE2_KEY = "TWO\0";
-constexpr std::string_view TEXTURE3_KEY = "MOAI\0";
+constexpr std::string_view MISSING_TEXTURE_KEY = "MISSING TEXTURE\0";
+constexpr std::string_view PLACEHOLDER_TEXTURE_KEY = "PLACEHOLDER TEXTURE\0";
+constexpr std::string_view ANIM_KEY_1 = "FRAME 1\0";
+constexpr std::string_view ANIM_KEY_2 = "FRAME 2\0";
+constexpr std::string_view ANIM_KEY_3 = "FRAME 3\0";
+
 
 // font keys
 constexpr std::string_view FONT_ARIAL = "arial\0";

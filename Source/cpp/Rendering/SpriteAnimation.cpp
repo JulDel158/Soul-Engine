@@ -1,8 +1,11 @@
 #include "Rendering/SpriteAnimation.hpp"
+
+#include "glm/common.hpp"
 #include "Utils/ResourceManager.hpp"
 #include "StringGlobals.hpp"
 #include "EngineDataStructures.hpp"
 #include "Utils/Logger.hpp"
+#include <iostream>
 
 SpriteAnimation::SpriteAnimation() :
 current_time_(0.0f),
@@ -45,15 +48,17 @@ SpriteAnimation::~SpriteAnimation()
 	play_once_ = false;
 }
 
-void SpriteAnimation::Update(float deltaTime)
+void SpriteAnimation::Update(const float deltaTime)
 {
 	current_time_ += deltaTime;
 	if (textures_.empty())
 	{
 		return;
 	}
-	
-	current_frame_ = (static_cast<unsigned int>(current_time_) * frames_per_second_) % static_cast<unsigned int>(textures_.size());
+	current_frame_ = static_cast<unsigned int>(current_time_ * static_cast<float>(frames_per_second_)) % static_cast<unsigned int>(textures_.size());
+		//static_cast<unsigned int>(glm::mod(current_time_ * static_cast<float>(frames_per_second_), static_cast<float>(textures_.size())));
+	//
+	std::cout << "SpriteAnimation::Update: current_frame_: [" << current_frame_ << "] current_time_: [" << current_time_ << "]" << std::endl;
 	
 	// once the final frame is reached the full animation has played, stop
 	if (play_once_ && current_frame_ == textures_.size() - 1)
@@ -86,15 +91,16 @@ void SpriteAnimation::SetAnimationSprites(const std::vector<std::string>& names)
 {
 	auto& resourceManager = ResourceManager::Instance();
 	auto logger = Logger(LOG_PATH.data());
+	textures_.resize(names.size());
 	for (const auto& textureName : names)
 	{
 		if (resourceManager.ContainsTexture2D(textureName))
 		{
-			textures_.push_back(resourceManager.GetTexture2D(textureName));
+			textures_.emplace_back(resourceManager.GetTexture2D(textureName));
 		}
 		else
 		{
-			textures_.push_back(resourceManager.GetTexture2D(MISSING_TEXTURE.data()));
+			textures_.emplace_back(resourceManager.GetTexture2D(MISSING_TEXTURE.data()));
 			logger.Log(ELogLevel::Warning, "SpriteAnimation::SetAnimationSprites: Texture: [" 
 				+ textureName 
 				+ "] Missing!\nLoading MISSING_TEXTURE into frame: ["

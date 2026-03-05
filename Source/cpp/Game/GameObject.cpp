@@ -5,12 +5,15 @@
 namespace
 {
 	constexpr auto ZERO_VECTOR_2F = glm::vec2(0.0f);
+	constexpr auto ONE_HUNDRED_VECTOR_2F = glm::vec2(400.0f);
 }
 
 GameObject::GameObject() :
 position_(ZERO_VECTOR_2F),
-size_(ZERO_VECTOR_2F),
-rotation_(0.0f)
+size_(ONE_HUNDRED_VECTOR_2F),
+rotation_(0.0f),
+is_active_(true),
+is_visible_(true)
 {
 }
 
@@ -23,6 +26,7 @@ GameObject::~GameObject()
 void GameObject::AddComponent(BaseComponent* component)
 {
 	components_.push_back(component);
+	component->owner_ = this;
 }
 
 void GameObject::Init()
@@ -44,4 +48,9 @@ void GameObject::Update(const float deltaTime)
 		// therefore we will have the correct render data for this frame
 		component->Update(deltaTime);
 	}
+}
+
+void GameObject::AddToRenderList(const RenderData& data)
+{
+	render_list_.push_back(data);
 }

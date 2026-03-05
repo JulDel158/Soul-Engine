@@ -40,7 +40,7 @@ void InputManager::InitializeInputManager(GLFWwindow* window)
     glfwSetMouseButtonCallback(window, &InputManager::MouseButtonEventCallback);
     glfwSetScrollCallback(window, &InputManager::ScrollWheelEventCallback);
     
-    Instance().ChangeCursorMode(GLFW_CURSOR_DISABLED);
+    //Instance().ChangeCursorMode(GLFW_CURSOR_DISABLED);
     // This could cause discrepancies in some devices, but preferred for control
     Instance().SetRawMouseMotion(false);
 }
