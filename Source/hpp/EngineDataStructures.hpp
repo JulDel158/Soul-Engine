@@ -97,4 +97,13 @@ enum class ELogLevel : unsigned char
     Error = 3,
 };
 
+enum class EWidgetNeighbor : unsigned char
+{
+	Up = 0,
+	Down = 1,
+	Left = 2,
+	Right = 3,
+	Count = 4
+};
+
 #endif
