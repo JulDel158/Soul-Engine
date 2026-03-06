@@ -4,6 +4,7 @@
 #include "glm/ext/quaternion_geometric.hpp"
 
 #include "Utils/Logger.hpp"
+#include "EngineDataStructures.hpp"
 
 namespace {
     constexpr auto ZERO_VECTOR = glm::vec2(0.0f);

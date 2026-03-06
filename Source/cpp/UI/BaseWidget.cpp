@@ -12,7 +12,7 @@ BaseWidget::~BaseWidget()
 {
 	parent_ = nullptr;
 	children_.clear();
-	for (BaseWidget*& child : neighbors_)
+	for (auto& child : neighbors_)
 	{
 		child = nullptr;
 	}

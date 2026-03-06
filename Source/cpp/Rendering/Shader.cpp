@@ -4,6 +4,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "Utils/Logger.hpp"
+#include "EngineDataStructures.hpp"
 
 Shader::Shader():
 id_(std::nullopt)

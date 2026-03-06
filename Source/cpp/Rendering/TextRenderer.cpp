@@ -7,7 +7,7 @@
 
 #include "Utils/ResourceManager.hpp"
 #include "Utils/Logger.hpp"
-
+#include "EngineDataStructures.hpp"
 
 TextRenderer::TextRenderer()
 {

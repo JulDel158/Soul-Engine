@@ -10,7 +10,7 @@ class BaseWidget
 protected:
 	BaseWidget* parent_;
 	std::vector<BaseWidget*> children_;
-	BaseWidget* neighbors_[EWidgetNeighbor::Count];
+	BaseWidget* neighbors_[static_cast<unsigned int>(EWidgetNeighbor::Count)];
 	
 public:
 	BaseWidget();

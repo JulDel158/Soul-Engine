@@ -6,6 +6,7 @@
 #include "Input/InputManager.hpp"
 #include "Audio/AudioManager.hpp"
 #include "Utils/Logger.hpp"
+#include "EngineDataStructures.hpp"
 
 namespace 
 {
