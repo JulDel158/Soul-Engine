@@ -1,5 +1,5 @@
-#ifndef BASE_WIDGET_H
-#define BASE_WIDGET_H
+#ifndef WIDGET_H
+#define WIDGET_H
 
 #include "glm/ext/vector_float2.hpp"
 #include "glm/ext/vector_float3.hpp"
@@ -10,15 +10,15 @@
 #include <vector>
 #include <tuple>
 
-class BaseWidget
+class Widget
 {
 protected:
 	using RenderData = std::tuple<Texture2D, glm::vec2, glm::vec2, float, glm::vec3>;
 	using RenderList = std::vector<RenderData>;
 	
-	BaseWidget* parent_;
-	std::vector<BaseWidget*> children_;
-	BaseWidget* neighbors_[static_cast<unsigned int>(EWidgetNeighbor::Count)];
+	Widget* parent_;
+	std::vector<Widget*> children_;
+	Widget* neighbors_[static_cast<unsigned int>(EWidgetNeighbor::Count)];
 	
 	RenderList render_list_;
 	
@@ -34,8 +34,8 @@ protected:
 	bool can_refresh_;
 	
 public:
-	BaseWidget();
-	virtual ~BaseWidget();
+	Widget();
+	virtual ~Widget();
 	
 	virtual void Start();
 	virtual void Update(const float deltaTime);
@@ -50,9 +50,9 @@ public:
 	virtual void OnSelected(); // Event triggered when widget is focused and selected via input (ex. pressing enter on keyboard or 'A'/'Start' on controller
 	
 	// Setters
-	void SetParent(BaseWidget& parent);
-	void AddChild(BaseWidget& child);
-	void AddNeighbor(BaseWidget& neighbor, EWidgetNeighbor direction);
+	void SetParent(Widget& parent);
+	void AddChild(Widget& child);
+	void AddNeighbor(Widget& neighbor, EWidgetNeighbor direction);
 	
 	inline void SetPosition(const glm::vec2 position)	{ position_ = position; }
 	inline void SetSize(const glm::vec2 size)			{ size_ = size; }
@@ -65,9 +65,9 @@ public:
 	inline void SetRefresh(const bool refresh)			{ can_refresh_ = refresh; }
 	
 	// Getters
-	inline BaseWidget* GetParent() const							{ return parent_; }
-	inline std::vector<BaseWidget*> GetChildren() const				{ return children_; }
-	inline BaseWidget* GetNeighbor(EWidgetNeighbor direction) const { return neighbors_[static_cast<unsigned int>(direction)]; }
+	inline Widget* GetParent() const							{ return parent_; }
+	inline std::vector<Widget*> GetChildren() const				{ return children_; }
+	inline Widget* GetNeighbor(EWidgetNeighbor direction) const { return neighbors_[static_cast<unsigned int>(direction)]; }
 	
 	inline const RenderList& GetRenderList() const					{ return render_list_; }
 	

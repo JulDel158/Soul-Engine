@@ -1,4 +1,4 @@
-#include "UI/BaseWidget.hpp"
+#include "UI/Widget.hpp"
 
 #include "Utils/Logger.hpp"
 
@@ -8,7 +8,7 @@ namespace
 	constexpr auto HUNDRED_VECTOR_2_F = glm::vec2(100.0f);
 }
 
-BaseWidget::BaseWidget() :
+Widget::Widget() :
 	parent_(nullptr),
 	neighbors_{nullptr},
 	position_(ZERO_VECTOR_2_F),
@@ -23,7 +23,7 @@ BaseWidget::BaseWidget() :
 {
 }
 
-BaseWidget::~BaseWidget()
+Widget::~Widget()
 {
 	parent_ = nullptr;
 	children_.clear();
@@ -33,11 +33,11 @@ BaseWidget::~BaseWidget()
 	}
 }
 
-void BaseWidget::Start()
+void Widget::Start()
 {
 }
 
-void BaseWidget::Update(const float deltaTime)
+void Widget::Update(const float deltaTime)
 {
 	if (can_refresh_)
 	{
@@ -45,44 +45,44 @@ void BaseWidget::Update(const float deltaTime)
 	}
 }
 
-void BaseWidget::End()
+void Widget::End()
 {
 }
 
-void BaseWidget::OnMouseEnter()
-{
-	is_highlighted_ = true;
-}
-
-void BaseWidget::OnMouseLeave()
-{
-	is_highlighted_ = false;
-}
-
-void BaseWidget::OnFocused()
+void Widget::OnMouseEnter()
 {
 	is_highlighted_ = true;
 }
 
-void BaseWidget::OnUnfocused()
+void Widget::OnMouseLeave()
 {
 	is_highlighted_ = false;
 }
 
-void BaseWidget::OnClick()
+void Widget::OnFocused()
+{
+	is_highlighted_ = true;
+}
+
+void Widget::OnUnfocused()
+{
+	is_highlighted_ = false;
+}
+
+void Widget::OnClick()
 {
 }
 
-void BaseWidget::OnSelected()
+void Widget::OnSelected()
 {
 }
 
-void BaseWidget::SetParent(BaseWidget& parent)
+void Widget::SetParent(Widget& parent)
 {
 	parent_ = &parent;
 }
 
-void BaseWidget::AddChild(BaseWidget& child)
+void Widget::AddChild(Widget& child)
 {
 	int a = 1;
 	int* b = &a;
@@ -90,7 +90,7 @@ void BaseWidget::AddChild(BaseWidget& child)
 	child.SetParent(*this);
 }
 
-void BaseWidget::AddNeighbor(BaseWidget& neighbor, EWidgetNeighbor direction)
+void Widget::AddNeighbor(Widget& neighbor, EWidgetNeighbor direction)
 {
 	if (direction == EWidgetNeighbor::Count)
 	{
