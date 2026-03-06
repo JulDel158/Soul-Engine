@@ -1,5 +1,4 @@
-#ifndef INPUT_MANAGER_H
-#define INPUT_MANAGER_H
+#pragma once
 
 #include "glad/gl.h" // NOLINT
 #include "GLFW/glfw3.h"
@@ -68,5 +67,3 @@ private:
     void ProcessMouseButtonEvent(const int button, const int action, const int mods);
     void ProcessScrollWheelEvent(const double xOffset, const double yOffset) const;
 };
-
-#endif

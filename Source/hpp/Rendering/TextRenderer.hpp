@@ -1,5 +1,4 @@
-#ifndef TEXT_RENDERER_H
-#define TEXT_RENDERER_H
+#pragma once
 
 #include "glm/ext/vector_float3.hpp"
 #include "glm/ext/vector_float2.hpp"
@@ -28,4 +27,3 @@ public:
 private:
     void InitRenderData();
 };
-#endif

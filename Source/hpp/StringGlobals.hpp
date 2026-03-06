@@ -1,5 +1,4 @@
-#ifndef PATH_GLOBALS_H
-#define PATH_GLOBALS_H
+#pragma once
 
 #include <string_view>
 
@@ -65,5 +64,3 @@ constexpr std::string_view VSYNC = "vsync\0";
 
 // Log
 constexpr std::string_view LOG_PATH = "Assets/Log/Soul.log\0";
-
-#endif

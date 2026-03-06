@@ -1,5 +1,4 @@
-#ifndef SPRITE_ANIMATION_H
-#define SPRITE_ANIMATION_H
+#pragma once
 
 #include "Texture2D.hpp"
 
@@ -43,6 +42,3 @@ private:
 		current_time_ = 0.0f;
 	};
 };
-
-
-#endif

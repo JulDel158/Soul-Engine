@@ -1,5 +1,4 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
 
 #include "EngineDataStructures.hpp"
 
@@ -44,7 +43,3 @@ public:
     
     void SetWindowPointer(GLFWwindow* window);
 };
-
-
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
 
 #include "EngineDataStructures.hpp"
 
@@ -25,5 +24,3 @@ private:
     static std::string LevelToString(const ELogLevel level);
     static std::string GetTimestamp();
 };
-
-#endif

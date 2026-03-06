@@ -1,5 +1,4 @@
-#ifndef BASE_COMPONENT_H
-#define BASE_COMPONENT_H
+#pragma once
 
 #include "glm/ext/vector_float2.hpp"
 #include "glm/ext/vector_float3.hpp"
@@ -50,5 +49,3 @@ public:
 	
 	virtual std::optional<RenderData> GetRenderData(); 
 };
-
-#endif

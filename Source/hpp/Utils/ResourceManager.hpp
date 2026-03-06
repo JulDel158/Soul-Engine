@@ -1,5 +1,4 @@
-#ifndef RESOURCE_MANAGER_H
-#define RESOURCE_MANAGER_H
+#pragma once
 
 #include <filesystem>
 #include <unordered_map>
@@ -69,4 +68,3 @@ private:
     
     static Texture2D LoadTextureFromFile(const char* file, bool alpha);
 };
-#endif

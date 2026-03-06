@@ -1,5 +1,4 @@
-#ifndef ENGINE_DATA_STRUCTURES_H
-#define ENGINE_DATA_STRUCTURES_H
+#pragma once
 
 #include "glm/vec2.hpp"
 
@@ -105,5 +104,3 @@ enum class EWidgetNeighbor : unsigned char
 	Right = 3,
 	Count = 4
 };
-
-#endif

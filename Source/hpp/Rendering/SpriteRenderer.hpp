@@ -1,5 +1,4 @@
-#ifndef SPRITE_RENDERER_H
-#define SPRITE_RENDERER_H
+#pragma once
 
 #include "Shader.hpp"
 #include "Texture2D.hpp"
@@ -37,6 +36,3 @@ private:
     
     void InitRenderData();
 };
-
-
-#endif

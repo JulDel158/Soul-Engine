@@ -1,5 +1,4 @@
-#ifndef SPRITE_COMPONENT_H
-#define SPRITE_COMPONENT_H
+#pragma once
 
 #include "glm/ext/vector_float3.hpp"
 
@@ -39,5 +38,3 @@ public:
 private:
 	Texture2D GetCurrentTexture();
 };
-
-#endif

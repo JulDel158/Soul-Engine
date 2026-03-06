@@ -1,5 +1,4 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#pragma once
 
 #include "glm/ext/vector_float2.hpp"
 #include "glm/ext/vector_float3.hpp"
@@ -65,9 +64,9 @@ public:
 	inline void SetRefresh(const bool refresh)			{ can_refresh_ = refresh; }
 	
 	// Getters
-	inline Widget* GetParent() const							{ return parent_; }
-	inline std::vector<Widget*> GetChildren() const				{ return children_; }
-	inline Widget* GetNeighbor(EWidgetNeighbor direction) const { return neighbors_[static_cast<unsigned int>(direction)]; }
+	inline Widget* GetParent() const								{ return parent_; }
+	inline std::vector<Widget*> GetChildren() const					{ return children_; }
+	inline Widget* GetNeighbor(EWidgetNeighbor direction) const 	{ return neighbors_[static_cast<unsigned int>(direction)]; }
 	
 	inline const RenderList& GetRenderList() const					{ return render_list_; }
 	
@@ -82,5 +81,3 @@ public:
 	inline bool			CanUpdate() const							{ return can_update_; }
 	inline bool			CanRefresh() const							{ return can_refresh_; }
 };
-
-#endif
