@@ -42,6 +42,7 @@ Game::~Game()
 
 void Game::Init() const
 {
+	// Initialize/Load all persistent data, such as fonts and certain images
     ResourceManager& resourceManager = ResourceManager::Instance();
     
     // load shaders
@@ -151,7 +152,12 @@ void Game::ProcessInput(const float dt)
 
 void Game::End()
 {
-	// TODO: CALL END ON ALL GAMEOBJECTS
+	for (const auto& gameObject : game_objects_)
+	{
+		gameObject->End();
+	}
+	
+	game_state_ = EGameState::Unloading;
 }
 
 void Game::SetWindowPointer(GLFWwindow* window)

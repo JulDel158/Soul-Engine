@@ -24,7 +24,7 @@ public:
 	~SpriteComponent()override;
 	
 protected:
-	void Init() override;
+	void Start() override;
 	void Update(const float deltaTime) override;
 	
 public:

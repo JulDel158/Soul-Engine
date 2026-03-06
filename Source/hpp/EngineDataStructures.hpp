@@ -40,9 +40,11 @@ enum class EGameState : unsigned char
     
     InGame_Running =    3,
     InGame_Paused =     4,
-    InGame_Loading =    5,
-    
-    Exiting = 6
+	
+    Loading =			5,
+    Unloading =			6,
+	
+	Closing =			7
 };
 
 struct TextCharacter

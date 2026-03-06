@@ -33,7 +33,7 @@ public:
 	virtual ~GameObject();
 	
 protected:
-	virtual void Init(); // called at the start of the game (after loading)
+	virtual void Start(); // called at the start of the game (after loading)
 	virtual void Update(const float deltaTime); // called each frame while game is running
 	virtual void End(); // called before unloading (before this item gets destroyed)
 	

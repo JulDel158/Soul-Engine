@@ -27,9 +27,9 @@ SpriteComponent::~SpriteComponent()
 	animations_.clear();
 }
 
-void SpriteComponent::Init()
+void SpriteComponent::Start()
 {
-	BaseComponent::Init();
+	BaseComponent::Start();
 }
 
 void SpriteComponent::Update(const float deltaTime)

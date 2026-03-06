@@ -31,11 +31,11 @@ void GameObject::AddComponent(BaseComponent* component)
 	component->owner_ = this;
 }
 
-void GameObject::Init()
+void GameObject::Start()
 {
 	for (auto& component : components_)
 	{
-		component->Init();
+		component->Start();
 	}
 }
 

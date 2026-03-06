@@ -10,7 +10,7 @@ parent_(nullptr)
 {
 }
 
-void BaseComponent::Init()
+void BaseComponent::Start()
 {
 }
 

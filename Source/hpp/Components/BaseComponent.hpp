@@ -29,9 +29,9 @@ public:
 	virtual ~BaseComponent() = default;
 	
 protected:
-	virtual void Init(); // Called after a level is loaded
+	virtual void Start(); // Called after a level is loaded
 	virtual void Update(const float deltaTime); // called each frame while game is running
-	virtual void End(); // called before destroy
+	virtual void End(); // called before destroy as level is being unloaded
 	
 public:
 	// Setters
