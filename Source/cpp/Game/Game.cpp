@@ -6,18 +6,26 @@
 #include "Utils/ResourceManager.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "StringGlobals.hpp"
+#include "Audio/AudioManager.hpp"
 #include "Input/InputManager.hpp"
 #include "Rendering/SpriteRenderer.hpp"
 #include "Rendering/TextRenderer.hpp"
 #include "Game/GameObject.hpp"
+#include "UI/Panel.hpp"
 
 namespace
 {
-	constexpr unsigned int SHADER_T = 0;
+	constexpr unsigned int SHADER_S = 0;
+	constexpr unsigned int POSITION_S = 1;
+	constexpr unsigned int SIZE_S = 2;
+	constexpr unsigned int ROTATION_S = 3;
+	constexpr unsigned int COLOR_S = 4;
+	
+	constexpr unsigned int TEXT_T = 0;
 	constexpr unsigned int POSITION_T = 1;
-	constexpr unsigned int SIZE_T = 2;
-	constexpr unsigned int ROTATION_T = 3;
-	constexpr unsigned int COLOR_T = 4;
+	constexpr unsigned int SCALE_T = 2;
+	constexpr unsigned int COLOR_T = 3;
+	constexpr unsigned int FONT_T = 4;
 	
 }
 
@@ -25,6 +33,7 @@ Game::Game(const Settings& settings) :
 window_width_(settings.screen_width_),
 window_height_(settings.screen_height_),
 window_(nullptr),
+ui_panels_{nullptr},
 game_state_(EGameState::None)
 {
 	sprite_renderer_ = new SpriteRenderer(ESpriteCentering::Center);
@@ -83,21 +92,58 @@ void Game::Init() const
     text_renderer_->SwapShader(textShader);
 }
 
+void Game::Start()
+{
+	for (const auto& gameObject : game_objects_)
+	{
+		gameObject->Start();
+	}
+	
+	// after updating game objects, we update the UI
+	for (const auto& panel : ui_panels_)
+	{
+		if (panel == nullptr)
+		{
+			continue;
+		}
+		
+		panel->Start();
+	}
+}
+
 void Game::Update(const float dt)
 {
 	if (!IsGameRunning())
 	{
 		return;
 	}
-	
-	for (const auto& gameObject : game_objects_)
+
+	if (game_state_ == EGameState::InGame_Running)
 	{
-		if (!gameObject->IsActive())
+		for (const auto& gameObject : game_objects_)
+		{
+			if (!gameObject->IsActive())
+			{
+				continue;
+			}
+		
+			gameObject->Update(dt);
+		}
+	}
+	
+	int startIndex = 1;
+	int endIndex = 0;
+	
+	GetUIPanelIndex(startIndex, endIndex);
+	
+	for (int i = startIndex; i <= endIndex; i++)
+	{
+		if (ui_panels_[i] == nullptr || !ui_panels_[i]->IsActive())
 		{
 			continue;
 		}
 		
-		gameObject->Update(dt);
+		ui_panels_[i]->Update(dt);
 	}
 }
 
@@ -113,10 +159,10 @@ void Game::Render(const float dt) const
 			glm::vec2(400.0f, 400.0f),
 			(glm::cos(runTime) + std::sin(runTime)));
     
-    	text_renderer_->RenderText("Sample Text", glm::vec2(200.0f, 100.0f), 3.0f, glm::vec3(
-			0.1f, 
-			glm::clamp(glm::cos(runTime), 0.f, 1.f), 
-			 glm::clamp(glm::sin(runTime), 0.f, 1.f)));
+    	text_renderer_->RenderText("Sample Text", 
+    		glm::vec2(200.0f, 100.0f), 
+    		3.0f, 
+    		glm::vec3(0.1f, glm::clamp(glm::cos(runTime), 0.f, 1.f), glm::clamp(glm::sin(runTime), 0.f, 1.f)));
 	}
 
 	// Drawing all targets within all game objects
@@ -129,13 +175,60 @@ void Game::Render(const float dt) const
     	
     	for (const auto& renderTarget : gameObject->GetRenderList())
     	{
-			sprite_renderer_->DrawSprite(std::get<SHADER_T>(renderTarget), 
-				std::get<POSITION_T>(renderTarget), 
-				std::get<SIZE_T>(renderTarget), 
-				std::get<ROTATION_T>(renderTarget), 
-				std::get<COLOR_T>(renderTarget));
+			sprite_renderer_->DrawSprite(std::get<SHADER_S>(renderTarget), 
+				std::get<POSITION_S>(renderTarget), 
+				std::get<SIZE_S>(renderTarget), 
+				std::get<ROTATION_S>(renderTarget), 
+				std::get<COLOR_S>(renderTarget));
     	}
     }
+	
+	// TODO: Render UI
+	int startIndex = 1;
+	int endIndex = 0;
+	
+	GetUIPanelIndex(startIndex, endIndex);
+	
+	for (int i = startIndex; i <= endIndex; i++)
+	{
+		if (ui_panels_[i] == nullptr || !ui_panels_[i]->IsVisible())
+		{
+			continue;
+		}
+		
+		for (const auto& widgets : ui_panels_[i]->widgets_)
+		{
+			for (auto& widget : widgets.second)
+			{
+				if (!widget->IsVisible())
+				{
+					continue;
+				}
+				
+				// first we render sprites
+				for (const auto& renderTarget : widget->GetRenderList())
+				{
+					sprite_renderer_->DrawSprite(
+						std::get<SHADER_S>(renderTarget), 
+				std::get<POSITION_S>(renderTarget), 
+				std::get<SIZE_S>(renderTarget), 
+				std::get<ROTATION_S>(renderTarget), 
+				std::get<COLOR_S>(renderTarget));
+				}
+				
+				// Now we render the text as well
+				for (const auto& textTarget : widget->GetTextList())
+				{
+					text_renderer_->RenderText(
+						std::get<TEXT_T>(textTarget),
+						std::get<POSITION_T>(textTarget),
+						std::get<SCALE_T>(textTarget),
+						std::get<COLOR_T>(textTarget),
+						std::get<FONT_T>(textTarget));
+				}
+			}
+		}
+	}
     
     runTime += dt;
 }
@@ -157,10 +250,70 @@ void Game::End()
 		gameObject->End();
 	}
 	
+	// after updating game objects, we update the UI
+	for (const auto& panel : ui_panels_)
+	{
+		if (panel == nullptr)
+		{
+			continue;
+		}
+		
+		panel->End();
+	}
+	
 	game_state_ = EGameState::Unloading;
 }
 
 void Game::SetWindowPointer(GLFWwindow* window)
 {
     window_ = window;
+}
+
+void Game::GetUIPanelIndex(int& startIndex, int& endIndex) const
+{
+	switch (game_state_) // NOLINT
+	{
+	case EGameState::MainMenu:
+		{
+			endIndex = startIndex = static_cast<int>(EPanelType::MainMenu);
+			break;
+		}
+	case EGameState::Settings:
+		{
+			endIndex = startIndex = static_cast<int>(EPanelType::Settings_Main);
+			break;
+		}
+	case EGameState::Credits:
+		{
+			endIndex = startIndex = static_cast<int>(EPanelType::Credits);
+			break;
+		}
+	case EGameState::InGame_Running:
+		{
+			startIndex = static_cast<int>(EPanelType::Game_1);
+			endIndex = static_cast<int>(EPanelType::Game_10);
+			break;
+		}
+	case EGameState::InGame_Paused:
+		{
+			endIndex = startIndex = static_cast<int>(EPanelType::Pause);
+			break;
+		}
+	case EGameState::InGame_Settings:
+		{
+			endIndex = startIndex = static_cast<int>(EPanelType::Settings_InGame);
+			break;
+		}
+	case EGameState::Loading:
+	case EGameState::Unloading:
+		{
+			startIndex = static_cast<int>(EPanelType::Loading_1);
+			endIndex = static_cast<int>(EPanelType::Loading_9);
+			break;
+		}
+	default:
+		startIndex = static_cast<int>(EPanelType::Count);
+		endIndex = 0;
+		break;
+	}
 }

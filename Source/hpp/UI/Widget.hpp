@@ -8,18 +8,23 @@
 
 #include <vector>
 #include <tuple>
+#include <string>
 
 class Widget
 {
 protected:
+	friend class Panel;
 	using RenderData = std::tuple<Texture2D, glm::vec2, glm::vec2, float, glm::vec3>;
 	using RenderList = std::vector<RenderData>;
+	using TextData = std::tuple<std::string, glm::vec2, float, glm::vec3, std::string>;
+	using TextList = std::vector<TextData>;
 	
 	Widget* parent_;
 	std::vector<Widget*> children_;
 	Widget* neighbors_[static_cast<unsigned int>(EWidgetNeighbor::Count)];
 	
 	RenderList render_list_;
+	TextList text_list_;
 	
 	glm::vec2 position_;
 	glm::vec2 size_;
@@ -36,10 +41,12 @@ public:
 	Widget();
 	virtual ~Widget();
 	
+protected:
 	virtual void Start();
 	virtual void Update(const float deltaTime);
 	virtual void End();
 	
+public:
 	// Input events
 	virtual void OnMouseEnter(); // Event triggered when cursor hovers over widget
 	virtual void OnMouseLeave(); // Event triggered when cursors stops hovering over widget
@@ -69,6 +76,7 @@ public:
 	inline Widget* GetNeighbor(EWidgetNeighbor direction) const 	{ return neighbors_[static_cast<unsigned int>(direction)]; }
 	
 	inline const RenderList& GetRenderList() const					{ return render_list_; }
+	inline const TextList& GetTextList() const						{ return text_list_; }
 	
 	inline glm::vec2	GetPosition() const 						{ return position_; }
 	inline glm::vec2	GetSize() const								{ return size_; }

@@ -31,19 +31,21 @@ enum class ESpriteCentering : unsigned char
     Bottom_Right =  4,
 };
 
-enum class EGameState : unsigned char
+enum class EGameState : unsigned int
 {
     None =              0,
-    MainMenu =          1,
-    Settings =          2,
+    MainMenu = 			1,
+    Settings,
+	Credits,
     
-    InGame_Running =    3,
-    InGame_Paused =     4,
+    InGame_Running,
+    InGame_Paused,
+	InGame_Settings,
 	
-    Loading =			5,
-    Unloading =			6,
+    Loading,
+    Unloading,
 	
-	Closing =			7
+	Closing
 };
 
 struct TextCharacter
@@ -104,3 +106,45 @@ enum class EWidgetNeighbor : unsigned char
 	Right = 3,
 	Count = 4
 };
+
+enum class EPanelType : unsigned int
+{
+	// Main Menu
+	MainMenu = 0,
+	Settings_Main = 1,
+	Credits,
+	
+	//  Pause
+	Pause,
+	Settings_InGame,
+	
+	// In game
+	Game_1,
+	Game_2,
+	Game_3,
+	Game_4,
+	Game_5,
+	Game_6,
+	Game_7,
+	Game_8,
+	Game_9,
+	Game_10,
+	
+	// Loading
+	Loading_1,
+	Loading_2,
+	Loading_3,
+	Loading_4,
+	Loading_5,
+	Loading_6,
+	Loading_7,
+	Loading_8,
+	Loading_9,
+	
+	Count
+};
+
+#define GAME_SCREEN_START EPanelType::Game_1
+#define GAME_SCREEN_END EPanelType::Game_10
+#define LOADING_SCREEN_START EPanelType::Loading_1
+#define LOADING_SCREEN_END EPanelType::Loading_9

@@ -33,6 +33,7 @@
     <ClCompile Include="Source\cpp\Rendering\SpriteRenderer.cpp" />
     <ClCompile Include="Source\cpp\Rendering\TextRenderer.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Texture2D.cpp" />
+    <ClCompile Include="Source\cpp\UI\Panel.cpp" />
     <ClCompile Include="Source\cpp\UI\Widget.cpp" />
     <ClCompile Include="Source\cpp\Utils\Logger.cpp" />
     <ClCompile Include="Source\cpp\Utils\ResourceManager.cpp" />
@@ -530,6 +531,7 @@
     <ClInclude Include="Source\hpp\Rendering\SpriteRenderer.hpp" />
     <ClInclude Include="Source\hpp\Rendering\TextRenderer.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Texture2D.hpp" />
+    <ClInclude Include="Source\hpp\UI\Panel.hpp" />
     <ClInclude Include="Source\hpp\UI\Widget.hpp" />
     <ClInclude Include="Source\hpp\Utils\Logger.hpp" />
     <ClInclude Include="Source\hpp\Utils\ResourceManager.hpp" />

@@ -8,6 +8,7 @@ struct GLFWwindow; //NOLINT
 class SpriteRenderer;
 class TextRenderer;
 class GameObject;
+class Panel;
 
 // Class in charge of game's core. From here we will perform updates to the game state, physics, rendering, audio.
 // From here it is communicated what gets loaded and unloaded and the state of game objects
@@ -19,8 +20,9 @@ private:
     unsigned int window_width_;
     unsigned int window_height_;
     GLFWwindow* window_;
-	std::vector<GameObject*> game_objects_;
     EGameState game_state_;
+	std::vector<GameObject*> game_objects_;
+	Panel* ui_panels_[static_cast<unsigned int>(EPanelType::Count)];
     
     void Init() const;
     
@@ -31,6 +33,7 @@ public:
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
     
+	void Start();
     void Update(const float dt);
     void Render(const float dt) const;
     void ProcessAudio(const float dt);
@@ -42,4 +45,7 @@ public:
     inline bool			IsGamePaused() const	{ return game_state_ == EGameState::InGame_Paused; }
     
     void SetWindowPointer(GLFWwindow* window);
+	
+private:
+	void GetUIPanelIndex(int& startIndex, int& endIndex) const;
 };
