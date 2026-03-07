@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UI/Widget.hpp"
+#include "Input/InputAction.hpp"
 
 #include <map>
 #include <vector>
@@ -10,9 +11,11 @@ class Panel
 protected:
 	friend class Game;
 	std::map<unsigned int, std::vector<Widget*>> widgets_; // naturally maps are sorted by key on descending order
+	InputAction cursor_input_action_;
+	InputAction left_click_input_action_;
+	InputAction right_click_input_action_;
 	bool active_;
 	bool visible_;
-	
 
 public:
 	
@@ -31,4 +34,9 @@ protected:
 	void Start() const;
 	void Update(const float deltaTime) const;
 	void End() const;
+	
+private:
+	void OnRightClick(const glm::vec2 data);
+	void OnLeftClick(const glm::vec2 data);
+	void OnMouseMove(const glm::vec2 data, const float deltaTime);
 };

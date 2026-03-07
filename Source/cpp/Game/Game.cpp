@@ -160,7 +160,7 @@ void Game::Render(const float dt) const
 			(glm::cos(runTime) + std::sin(runTime)));
     
     	text_renderer_->RenderText("Sample Text", 
-    		glm::vec2(200.0f, 100.0f), 
+    		glm::vec2(0.0f, 0.0f), 
     		3.0f, 
     		glm::vec3(0.1f, glm::clamp(glm::cos(runTime), 0.f, 1.f), glm::clamp(glm::sin(runTime), 0.f, 1.f)));
 	}
@@ -196,7 +196,7 @@ void Game::Render(const float dt) const
 			continue;
 		}
 		
-		for (const auto& widgets : ui_panels_[i]->widgets_)
+		for (const auto& widgets : ui_panels_[i]->widgets_) // NOLINT
 		{
 			for (auto& widget : widgets.second)
 			{
@@ -241,6 +241,8 @@ void Game::ProcessAudio(const float dt)
 void Game::ProcessInput(const float dt)
 {
     InputManager::Instance().InputUpdate(dt);
+	
+	// TODO: Check mouse/cursor against UI panels and send events
 }
 
 void Game::End()

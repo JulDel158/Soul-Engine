@@ -69,7 +69,7 @@ void Widget::OnUnfocused()
 	is_highlighted_ = false;
 }
 
-void Widget::OnClick()
+void Widget::OnClick(const bool leftClick)
 {
 }
 

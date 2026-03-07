@@ -52,7 +52,7 @@ public:
 	virtual void OnMouseLeave(); // Event triggered when cursors stops hovering over widget
 	virtual void OnFocused(); // Event triggered when this widget becomes focused  via keyboard or controller
 	virtual void OnUnfocused(); // Event triggered when this widget loses focus via controller or keyboard
-	virtual void OnClick(); // Event triggered when mouse is clicked while hovering over widget
+	virtual void OnClick(const bool leftClick = true); // Event triggered when mouse is clicked while hovering over widget
 	virtual void OnSelected(); // Event triggered when widget is focused and selected via input (ex. pressing enter on keyboard or 'A'/'Start' on controller
 	
 	// Setters

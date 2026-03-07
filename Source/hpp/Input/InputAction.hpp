@@ -21,7 +21,7 @@ private:
     
 public:
     InputAction();
-    explicit InputAction(const EInputActionType type = EInputActionType::None, const ECursorDataMode cursorMode = ECursorDataMode::Position, const float clampMax = 100.0f, const bool canUpdate = false, const float deadZone = 0.0f);
+    explicit InputAction(const EInputActionType type, const ECursorDataMode cursorMode = ECursorDataMode::Position, const float clampMax = 100.0f, const bool canUpdate = false, const float deadZone = 0.0f);
     ~InputAction();
     
     // Input events
