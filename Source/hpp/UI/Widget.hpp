@@ -1,3 +1,5 @@
+#ifndef WIDGET_HPP
+#define WIDGET_HPP
 #pragma once
 
 #include "glm/ext/vector_float2.hpp"
@@ -89,3 +91,5 @@ public:
 	inline bool			CanUpdate() const							{ return can_update_; }
 	inline bool			CanRefresh() const							{ return can_refresh_; }
 };
+
+#endif

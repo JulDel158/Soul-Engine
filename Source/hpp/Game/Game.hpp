@@ -1,3 +1,5 @@
+#ifndef GAME_HPP
+#define GAME_HPP
 #pragma once
 
 #include "EngineDataStructures.hpp"
@@ -49,3 +51,4 @@ public:
 private:
 	void GetUIPanelIndex(int& startIndex, int& endIndex) const;
 };
+#endif

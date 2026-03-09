@@ -1,3 +1,5 @@
+#ifndef ENGINE_DATA_STRUCTURES_HPP
+#define ENGINE_DATA_STRUCTURES_HPP
 #pragma once
 
 #include "glm/vec2.hpp"
@@ -148,3 +150,5 @@ enum class EPanelType : unsigned int
 #define GAME_SCREEN_END EPanelType::Game_10
 #define LOADING_SCREEN_START EPanelType::Loading_1
 #define LOADING_SCREEN_END EPanelType::Loading_9
+
+#endif

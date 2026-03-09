@@ -1,3 +1,5 @@
+#ifndef TEXTURE_2D_HPP
+#define TEXTURE_2D_HPP
 #pragma once
 
 class Texture2D
@@ -35,3 +37,5 @@ private:
     // generates texture from image data
     void Generate(const unsigned char* data) const;
 };
+
+#endif

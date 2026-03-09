@@ -1,3 +1,5 @@
+#ifndef SHADER_HPP
+#define SHADER_HPP
 #pragma once
 
 #include <string>
@@ -45,3 +47,4 @@ private:
     // checks if shader compilation or program linking failed
     bool CheckCompileErrors(const unsigned int object, const std::string& type); 
 };
+#endif

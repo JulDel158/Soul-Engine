@@ -1,3 +1,5 @@
+#ifndef PANEL_HPP
+#define PANEL_HPP
 #pragma once
 
 #include "UI/Widget.hpp"
@@ -40,3 +42,4 @@ private:
 	void OnLeftClick(const glm::vec2 data);
 	void OnMouseMove(const glm::vec2 data, const float deltaTime);
 };
+#endif

@@ -1,3 +1,5 @@
+#ifndef AUDIO_MANAGER_HPP
+#define AUDIO_MANAGER_HPP
 #pragma once
 
 #include "miniaudio/miniaudio.h"
@@ -31,3 +33,4 @@ public:
     
     void ApplyVolumeChange();
 };
+#endif

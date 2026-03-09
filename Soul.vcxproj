@@ -28,6 +28,7 @@
     <ClCompile Include="Source\cpp\Input\InputAction.cpp" />
     <ClCompile Include="Source\cpp\Input\InputManager.cpp" />
     <ClCompile Include="Source\cpp\main.cpp" />
+    <ClCompile Include="Source\cpp\Physics\SimpleCollision.cpp" />
     <ClCompile Include="Source\cpp\Rendering\SpriteAnimation.cpp" />
     <ClCompile Include="Source\cpp\Rendering\Shader.cpp" />
     <ClCompile Include="Source\cpp\Rendering\SpriteRenderer.cpp" />
@@ -525,6 +526,8 @@
     <ClInclude Include="Source\hpp\Game\GameObject.hpp" />
     <ClInclude Include="Source\hpp\Input\InputAction.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
+    <ClInclude Include="Source\hpp\Physics\PhysicsDataStructures.hpp" />
+    <ClInclude Include="Source\hpp\Physics\SimpleCollision.hpp" />
     <ClInclude Include="Source\hpp\Rendering\SpriteAnimation.hpp" />
     <ClInclude Include="Source\hpp\StringGlobals.hpp" />
     <ClInclude Include="Source\hpp\Rendering\Shader.hpp" />

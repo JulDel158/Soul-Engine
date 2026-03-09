@@ -1,3 +1,5 @@
+#ifndef TEXT_RENDERER_HPP
+#define TEXT_RENDERER_HPP
 #pragma once
 
 #include "glm/ext/vector_float3.hpp"
@@ -27,3 +29,5 @@ public:
 private:
     void InitRenderData();
 };
+
+#endif

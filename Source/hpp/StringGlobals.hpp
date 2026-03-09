@@ -1,3 +1,5 @@
+#ifndef STRING_GLOBALS_HPP
+#define STRING_GLOBALS_HPP
 #pragma once
 
 #include <string_view>
@@ -64,3 +66,5 @@ constexpr std::string_view VSYNC = "vsync\0";
 
 // Log
 constexpr std::string_view LOG_PATH = "Assets/Log/Soul.log\0";
+
+#endif

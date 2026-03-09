@@ -1,3 +1,5 @@
+#ifndef INPUT_ACTION_HPP
+#define INPUT_ACTION_HPP
 #pragma once
 
 #include "glm/ext/vector_float2.hpp"
@@ -50,3 +52,4 @@ public:
     inline bool                 CanUpdate() const { return can_update_; }
     inline bool                 IsPressed() const {return is_pressed_; }
 };
+#endif

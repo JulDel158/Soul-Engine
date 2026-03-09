@@ -1,3 +1,5 @@
+#ifndef SPRITE_RENDERER_HPP
+#define SPRITE_RENDERER_HPP
 #pragma once
 
 #include "Shader.hpp"
@@ -36,3 +38,4 @@ private:
     
     void InitRenderData();
 };
+#endif

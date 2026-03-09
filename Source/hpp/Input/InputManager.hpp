@@ -1,3 +1,5 @@
+#ifndef INPUT_MANAGER_HPP
+#define INPUT_MANAGER_HPP
 #pragma once
 
 #include "glad/gl.h" // NOLINT
@@ -67,3 +69,4 @@ private:
     void ProcessMouseButtonEvent(const int button, const int action, const int mods);
     void ProcessScrollWheelEvent(const double xOffset, const double yOffset) const;
 };
+#endif

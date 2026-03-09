@@ -1,3 +1,5 @@
+#ifndef RESOURCE_MANAGER_HPP
+#define RESOURCE_MANAGER_HPP
 #pragma once
 
 #include <filesystem>
@@ -68,3 +70,5 @@ private:
     
     static Texture2D LoadTextureFromFile(const char* file, bool alpha);
 };
+
+#endif
