@@ -222,6 +222,15 @@ void InputManager::BindInputAction(InputAction* const action, const int scancode
             {
                 gamepad_button_input_actions_[controller][scancode].insert(action);
             }
+            else
+            {
+            	auto logger = Logger();
+            	logger.Log(ELogLevel::Warning,
+            		"InputManager::BindInputAction: The input action was Gamepad_Button but scancode: [" +
+            		std::to_string(scancode) +
+            		"] may be invalid or \n controller: [" +
+            		std::to_string(controller) + "] was invalid!!");
+            }
             break;
         }
     case EInputActionType::Gamepad_Axes:
@@ -229,6 +238,15 @@ void InputManager::BindInputAction(InputAction* const action, const int scancode
             if (scancode >= 0 && scancode <= GLFW_GAMEPAD_AXIS_LAST && controller >= GLFW_JOYSTICK_1 && controller <= GLFW_JOYSTICK_LAST)
             {
                 gamepad_axes_input_actions_[controller][scancode].insert(action);
+            }
+            else
+            {
+            	auto logger = Logger();
+            	logger.Log(ELogLevel::Warning,
+					"InputManager::BindInputAction: The input action was Gamepad_Axes but scancode: [" +
+					std::to_string(scancode) +
+					"] may be invalid or \n controller: [" +
+					std::to_string(controller) + "] was invalid!!");
             }
             break;
         }
