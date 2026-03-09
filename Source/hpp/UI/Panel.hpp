@@ -16,6 +16,7 @@ protected:
 	InputAction cursor_input_action_;
 	InputAction left_click_input_action_;
 	InputAction right_click_input_action_;
+	// TODO: Add input actions + logic for keyboard or controller navigation
 	bool active_;
 	bool visible_;
 
@@ -38,8 +39,8 @@ protected:
 	void End() const;
 	
 private:
-	void OnRightClick(const glm::vec2 data);
-	void OnLeftClick(const glm::vec2 data);
-	void OnMouseMove(const glm::vec2 data, const float deltaTime);
+	void OnRightClick(const glm::vec2 data) const;
+	void OnLeftClick(const glm::vec2 data) const;
+	void OnMouseMove(const glm::vec2 data, const float deltaTime) const;
 };
 #endif

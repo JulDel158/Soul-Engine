@@ -18,6 +18,7 @@ Widget::Widget() :
 	is_active_(true),
 	is_visible_(true),
 	is_highlighted_(false),
+	is_overlapping_(false),
 	can_update_(true),
 	can_refresh_(true)
 {
@@ -52,11 +53,13 @@ void Widget::End()
 void Widget::OnMouseEnter()
 {
 	is_highlighted_ = true;
+	is_overlapping_ = true;
 }
 
 void Widget::OnMouseLeave()
 {
 	is_highlighted_ = false;
+	is_overlapping_ = false;
 }
 
 void Widget::OnFocused()

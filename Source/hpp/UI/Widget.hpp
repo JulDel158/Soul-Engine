@@ -36,6 +36,7 @@ protected:
 	bool is_active_;
 	bool is_visible_;
 	bool is_highlighted_;
+	bool is_overlapping_;
 	bool can_update_;
 	bool can_refresh_;
 	
@@ -88,6 +89,7 @@ public:
 	inline bool			IsActive() const							{ return is_active_; }
 	inline bool			IsVisible() const							{ return is_visible_; }
 	inline bool			IsHighlighted() const						{ return is_highlighted_; }
+	inline bool			IsOverlapping() const						{ return is_overlapping_; }
 	inline bool			CanUpdate() const							{ return can_update_; }
 	inline bool			CanRefresh() const							{ return can_refresh_; }
 };

@@ -5,6 +5,8 @@
 
 #include "EngineDataStructures.hpp"
 #include "Input/InputManager.hpp"
+#include "Physics/PhysicsDataStructures.hpp"
+#include "Physics/SimpleCollision.hpp"
 
 Panel::Panel() :
 active_(true),
@@ -73,14 +75,60 @@ void Panel::End() const
 }
 
 // TODO: Check collision and process input events
-void Panel::OnRightClick(const glm::vec2 data)
+void Panel::OnRightClick(const glm::vec2 data) const
 {
+	for (const auto& layer : widgets_) // NOLINT
+	{
+		for (const auto& widget : layer.second)
+		{
+			if (!widget->IsActive())
+			{
+				continue;
+			}
+			if (SimpleCollision::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
+			{
+				widget->OnClick(false);
+			}
+		}
+	}
 }
 
-void Panel::OnLeftClick(const glm::vec2 data)
+void Panel::OnLeftClick(const glm::vec2 data) const
 {
+	for (const auto& layer : widgets_) // NOLINT
+	{
+		for (const auto& widget : layer.second)
+		{
+			if (!widget->IsActive())
+			{
+				continue;
+			}
+			if (SimpleCollision::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
+			{
+				widget->OnClick(true);
+			}
+		}
+	}
 }
 
-void Panel::OnMouseMove(const glm::vec2 data, const float deltaTime)
+void Panel::OnMouseMove(const glm::vec2 data, const float deltaTime) const
 {
+	for (const auto& layer : widgets_) // NOLINT
+	{
+		for (const auto& widget : layer.second)
+		{
+			if (!widget->IsActive())
+			{
+				continue;
+			}
+			if (SimpleCollision::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
+			{
+				widget->OnMouseEnter();
+			}
+			else if (widget->IsOverlapping()) // if there is no collision this frame but overlapping flag is set, it means mouse left bounds
+			{
+				widget->OnMouseLeave();
+			}
+		}
+	}
 }
