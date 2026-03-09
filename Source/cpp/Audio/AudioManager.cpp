@@ -4,8 +4,6 @@
 #include "Utils/ResourceManager.hpp"
 #include "Utils/Logger.hpp"
 
-#include <ranges>
-
 namespace
 {
     constexpr unsigned int SOUNDS_ALLOCATION = 100;
@@ -34,11 +32,11 @@ AudioManager::~AudioManager()
     }
     sounds_.clear();
     
-    for (ma_sound_group*& soundGroup : sound_groups_ | std::views::values)
+    for (auto& soundGroup : sound_groups_)
     {
-        ma_sound_group_uninit(soundGroup);
-        delete soundGroup;
-        soundGroup = nullptr;
+        ma_sound_group_uninit(soundGroup.second);
+        delete soundGroup.second;
+        soundGroup.second = nullptr;
     }
     sound_groups_.clear();
     

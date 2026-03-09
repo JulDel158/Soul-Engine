@@ -23,8 +23,8 @@ ResourceManager& ResourceManager::Instance()
 
 ResourceManager::ResourceManager()
 {
-    shaders_ = std::unordered_map<std::string, Shader>();
-    textures_ = std::unordered_map<std::string, Texture2D>();
+    shaders_ = robin_hood::unordered_map<std::string, Shader>();
+    textures_ = robin_hood::unordered_map<std::string, Texture2D>();
     settings_ = Settings();
     
     OpenFreeTypeLibrary();
@@ -143,7 +143,7 @@ void ResourceManager::LoadFont(const char* filePath, const unsigned int fontSize
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             static_cast<unsigned int>(face->glyph->advance.x)
         );
-        fonts_[name].insert(std::pair<char, TextCharacter>(i, character));
+        fonts_[name][static_cast<unsigned char>(i)] = character;
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -151,7 +151,7 @@ void ResourceManager::LoadFont(const char* filePath, const unsigned int fontSize
     FT_Done_Face(face);
 }
 
-std::unordered_map<char, TextCharacter>& ResourceManager::GetFont(const std::string& name)
+robin_hood::unordered_map<char, TextCharacter>& ResourceManager::GetFont(const std::string& name)
 {
     return fonts_[name];
 }

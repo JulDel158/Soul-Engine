@@ -3,18 +3,18 @@
 #pragma once
 
 #include "miniaudio/miniaudio.h"
+#include "robin_hood_hash/robin_hood.h"
+
+#include "EngineDataStructures.hpp"
 
 #include <vector>
 #include <string>
-#include <unordered_map>
-
-#include "EngineDataStructures.hpp"
 
 class AudioManager
 {
     ma_engine* audio_engine_;
     std::vector<ma_sound*> sounds_;
-    std::unordered_map<ESoundType, ma_sound_group*> sound_groups_;
+    robin_hood::unordered_map<ESoundType, ma_sound_group*> sound_groups_;
     
     AudioManager();
     ~AudioManager();

@@ -514,6 +514,7 @@
     <ClInclude Include="Source\Dependencies\include\rapidjson\stringbuffer.h" />
     <ClInclude Include="Source\Dependencies\include\rapidjson\uri.h" />
     <ClInclude Include="Source\Dependencies\include\rapidjson\writer.h" />
+    <ClInclude Include="Source\Dependencies\include\robin_hood_hash\robin_hood.h" />
     <ClInclude Include="Source\Dependencies\include\stb_image.h" />
     <ClInclude Include="Source\hpp\Audio\AudioManager.hpp" />
     <ClInclude Include="Source\hpp\Components\BaseComponent.hpp" />

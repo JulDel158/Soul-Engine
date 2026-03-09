@@ -2,24 +2,24 @@
 #define RESOURCE_MANAGER_HPP
 #pragma once
 
-#include <filesystem>
-#include <unordered_map>
-#include <string>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include "robin_hood_hash/robin_hood.h"
 
 #include "Rendering/Shader.hpp"
 #include "Rendering/Texture2D.hpp"
 #include "EngineDataStructures.hpp"
 
+#include <filesystem>
+#include <string>
+
 class ResourceManager
 {
-    using InnerMap = std::unordered_map<char, TextCharacter>;
-    using OuterMap = std::unordered_map<std::string, InnerMap>;
+    using InnerMap = robin_hood::unordered_map<char, TextCharacter>;
+    using OuterMap = robin_hood::unordered_map<std::string, InnerMap>;
     
-    std::unordered_map<std::string, Shader> shaders_;
-    std::unordered_map<std::string, Texture2D> textures_;
+    robin_hood::unordered_map<std::string, Shader> shaders_;
+    robin_hood::unordered_map<std::string, Texture2D> textures_;
     OuterMap fonts_;
     FT_Library free_type_library_;
     Settings settings_;

@@ -1,7 +1,5 @@
 #include "Rendering/TextRenderer.hpp"
 
-#include <unordered_map>
-
 #include "glad/gl.h"
 #include "glm/ext/matrix_clip_space.hpp"
 

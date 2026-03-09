@@ -3,19 +3,18 @@
 #pragma once
 
 #include "glm/ext/vector_float3.hpp"
+#include "robin_hood_hash/robin_hood.h"
 
 #include "BaseComponent.hpp"
 #include "Rendering/SpriteAnimation.hpp"
 #include "Rendering/Texture2D.hpp"
-
-#include <unordered_map>
 
 class GameObject;
 
 class SpriteComponent : public BaseComponent
 {
 protected:
-	std::unordered_map<int,SpriteAnimation> animations_;
+	robin_hood::unordered_map<int,SpriteAnimation> animations_;
 	glm::vec3 color_;
 	int current_animation_;
 	Texture2D base_texture_;

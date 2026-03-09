@@ -5,11 +5,9 @@
 #include "glad/gl.h" // NOLINT
 #include "GLFW/glfw3.h"
 #include "glm/ext/vector_float2.hpp"
+#include "robin_hood_hash/robin_hood.h"
 
 #include "InputAction.hpp"
-
-#include <unordered_map>
-#include <unordered_set>
 
 class InputManager
 {
@@ -17,14 +15,14 @@ private:
     // NOTE: The map's key is the scancode of the pressed keyboard key. 
     // To retrieve a key's scancode call glfwGetKeyScancode(int keyValue) 
     // Where keyValue is the Keyboard value as declared in glfw3.h. Ex: GLFW_KEY_A, GLFW_KEY_SEMICOLON, GLFW_KEY_ESCAPE, etc.
-    std::unordered_map<int, std::unordered_set<InputAction*>> keys_input_actions_;
-    std::unordered_set<InputAction*> cursor_position_input_actions_;
+    robin_hood::unordered_map<int, robin_hood::unordered_set<InputAction*>> keys_input_actions_;
+    robin_hood::unordered_set<InputAction*> cursor_position_input_actions_;
     // NOTE: The map's key is the mouse button as defined in glfw3.h. Ex: GLFW_MOUSE_BUTTON_(1-8)
-    std::unordered_map<int, std::unordered_set<InputAction*>> mouse_button_input_actions_;
-    std::unordered_set<InputAction*> scroll_wheel_input_action_;
+    robin_hood::unordered_map<int, robin_hood::unordered_set<InputAction*>> mouse_button_input_actions_;
+    robin_hood::unordered_set<InputAction*> scroll_wheel_input_action_;
     // We will store a map for each gamepad/joystick supported
-    std::unordered_map<int, std::unordered_set<InputAction*>> gamepad_button_input_actions_[GLFW_JOYSTICK_MAX_COUNT];
-    std::unordered_map<int, std::unordered_set<InputAction*>> gamepad_axes_input_actions_[GLFW_JOYSTICK_MAX_COUNT];
+    robin_hood::unordered_map<int, robin_hood::unordered_set<InputAction*>> gamepad_button_input_actions_[GLFW_JOYSTICK_MAX_COUNT];
+    robin_hood::unordered_map<int, robin_hood::unordered_set<InputAction*>> gamepad_axes_input_actions_[GLFW_JOYSTICK_MAX_COUNT];
     // For gamepads, we will have to poll the state, and manually send Pressed, Release events by comparing states
     GLFWgamepadstate current_gamepad_states_[GLFW_JOYSTICK_MAX_COUNT];
     GLFWgamepadstate previous_gamepad_states_[GLFW_JOYSTICK_MAX_COUNT];
