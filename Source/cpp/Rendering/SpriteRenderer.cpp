@@ -7,16 +7,19 @@
 #include "StringGlobals.hpp"
 
 SpriteRenderer::SpriteRenderer(const ESpriteCentering centering) :
+vao_(0),
+vbo_(0),
 centering_(centering)
 {
     InitRenderData();
 }
 
 SpriteRenderer::SpriteRenderer(const Shader& shader, const ESpriteCentering centering) :
+vao_(0),
+vbo_(0),
 centering_(centering)
 {
     shader_ = shader;
-    centering_ = centering;
     InitRenderData();
 }
 

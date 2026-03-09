@@ -16,7 +16,7 @@ private:
 public:
     // When copying a shader we just want the id and validity
     Shader();
-    Shader(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr); // note: geometry source code is optional
+    explicit Shader(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr); // note: geometry source code is optional
     ~Shader()=default; // Resource Manager will be in charge of calling clear as destructor calls after going out of scope could lead to accidental clearing
     
     Shader(const Shader& shader);
