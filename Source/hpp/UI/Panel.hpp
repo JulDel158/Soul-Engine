@@ -24,6 +24,10 @@ protected:
 	InputAction gamepad_axis_input_actions_[2];
 	
 	//TODO: Add logic for widget navigation within a panel!
+	Widget* active_widget_;
+	
+	float axis_timer_;
+	float axis_current_time_;
 	
 	bool active_;
 	bool visible_;
@@ -36,15 +40,17 @@ public:
 	void AddWidget(const unsigned int layer, Widget& widget);
 	void AddWidget(Widget& widget);
 	
+	inline void SetAxisTimer(const float second) { axis_timer_ = second; } // how much time has to pass before we process another axis input event from the keyboard
 	inline void SetActive(const bool active) { active_ = active; }
 	inline void SetVisible(const bool visible) { visible_ = visible; }
+	inline void SelectWidget(Widget& widget) { active_widget_ = &widget; }
 	
 	inline bool IsActive() const { return active_; }
 	inline bool IsVisible() const { return visible_; }
 	
 protected:
 	void Start() const;
-	void Update(const float deltaTime) const;
+	void Update(const float deltaTime);
 	void End() const;
 	
 private:
@@ -54,16 +60,17 @@ private:
 	void OnMouseMove(const glm::vec2 data, const float deltaTime) const;
 	
 	// Buttons
-	void OnLeftPressed(const glm::vec2 data) const;
-	void OnRightPressed(const glm::vec2 data) const;
-	void OnUpPressed(const glm::vec2 data) const;
-	void OnDownPressed(const glm::vec2 data) const;
+	void OnLeftPressed(const glm::vec2 data);
+	void OnRightPressed(const glm::vec2 data);
+	void OnUpPressed(const glm::vec2 data);
+	void OnDownPressed(const glm::vec2 data);
 	
 	void OnSelectPressed(const glm::vec2 data) const;
 	void OnReturnPressed(const glm::vec2 data) const;
 	
 	// Gamepad axes
-	void OnXAxisUpdated(const glm::vec2 data, const float deltaTime) const;
-	void OnYAxisUpdated(const glm::vec2 data, const float deltaTime) const;
+	void OnAxisUpdated(const glm::vec2 data, const float deltaTime);
+	
+	void SearchForFocusTarget();
 };
 #endif

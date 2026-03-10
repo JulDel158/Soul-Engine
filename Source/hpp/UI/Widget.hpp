@@ -39,6 +39,8 @@ protected:
 	bool is_overlapping_;
 	bool can_update_;
 	bool can_refresh_;
+	bool can_listen_to_input_;
+	bool can_be_focused_;
 	
 public:
 	Widget();
@@ -57,6 +59,7 @@ public:
 	virtual void OnUnfocused(); // Event triggered when this widget loses focus via controller or keyboard
 	virtual void OnClick(const bool leftClick = true); // Event triggered when mouse is clicked while hovering over widget
 	virtual void OnSelected(); // Event triggered when widget is focused and selected via input (ex. pressing enter on keyboard or 'A'/'Start' on controller
+	virtual void OnReturnPressed(); // Event triggered when the return button/key is pressed while this widget is selected. (ex. escape key on keyboard or 'B'/'Back' on controller
 	
 	// Setters
 	void SetParent(Widget& parent);
@@ -72,6 +75,8 @@ public:
 	inline void SetVisible(const bool visible)			{ is_visible_ = visible; }
 	inline void SetCanUpdate(const bool update)			{ can_update_ = update; }
 	inline void SetRefresh(const bool refresh)			{ can_refresh_ = refresh; }
+	inline void SetListenToInput(const bool listen)		{ can_listen_to_input_ = listen; }
+	inline void SetCanBeFocused(const bool focus)		{ can_be_focused_ = focus; }
 	
 	// Getters
 	inline Widget* GetParent() const								{ return parent_; }
@@ -92,6 +97,8 @@ public:
 	inline bool			IsOverlapping() const						{ return is_overlapping_; }
 	inline bool			CanUpdate() const							{ return can_update_; }
 	inline bool			CanRefresh() const							{ return can_refresh_; }
+	inline bool			IsListeningToInput() const					{ return can_listen_to_input_; }
+	inline bool			CanBeFocused() const						{ return can_be_focused_; }
 };
 
 #endif

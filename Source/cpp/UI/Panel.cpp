@@ -20,9 +20,14 @@ namespace
 	
 	constexpr unsigned int AXIS_X_IA = 0;
 	constexpr unsigned int AXIS_Y_IA = 1;
+	
+	constexpr float DEAD_ZONE = 0.75f;
+	constexpr float DEFAULT_AXIS_TIMER = 0.5f;
 }
 
 Panel::Panel() :
+axis_timer_(DEFAULT_AXIS_TIMER),
+axis_current_time_(0.0f),
 active_(true),
 visible_(true)
 {
@@ -47,10 +52,7 @@ visible_(true)
 		keyboard_buttons_input_actions_[i].SetType(EInputActionType::Keyboard);
 		gamepad_buttons_input_actions_[i].SetType(EInputActionType::Gamepad_Button);
 	}
-	for (auto& inputAction : gamepad_axis_input_actions_)
-	{
-		inputAction.SetType(EInputActionType::Gamepad_Axes);
-	}
+	
 	
 	auto Lleft_pressed = [this](const glm::vec2 data){this->OnLeftPressed(data);};
 	auto Lright_pressed = [this](const glm::vec2 data){this->OnRightPressed(data);};
@@ -76,8 +78,12 @@ visible_(true)
 	gamepad_buttons_input_actions_[SELECT_IA].BindPressed(Lselect_pressed);
 	gamepad_buttons_input_actions_[BACK_IA].BindPressed(Lreturn_pressed);
 	
-	gamepad_buttons_input_actions_[AXIS_X_IA].BindUpdated([this](const glm::vec2 data, const float deltaTime){this->OnXAxisUpdated(data, deltaTime);});
-	gamepad_buttons_input_actions_[AXIS_Y_IA].BindUpdated([this](const glm::vec2 data, const float deltaTime){this->OnYAxisUpdated(data, deltaTime);});
+	for (auto& inputAction : gamepad_axis_input_actions_)
+	{
+		inputAction.SetType(EInputActionType::Gamepad_Axes);
+		inputAction.SetDeadZone(DEAD_ZONE);
+		inputAction.BindUpdated([this](const glm::vec2 data, const float deltaTime){this->OnAxisUpdated(data, deltaTime);});
+	}
 	
 	inputManager.BindInputAction(&keyboard_buttons_input_actions_[LEFT_IA], glfwGetKeyScancode(GLFW_KEY_LEFT));
 	inputManager.BindInputAction(&keyboard_buttons_input_actions_[RIGHT_IA], glfwGetKeyScancode(GLFW_KEY_RIGHT));
@@ -99,7 +105,6 @@ visible_(true)
 	
 	inputManager.BindInputAction(&gamepad_axis_input_actions_[AXIS_X_IA], GLFW_GAMEPAD_AXIS_LEFT_X, GLFW_JOYSTICK_1);
 	inputManager.BindInputAction(&gamepad_axis_input_actions_[AXIS_Y_IA], GLFW_GAMEPAD_AXIS_LEFT_Y, GLFW_JOYSTICK_1);
-	
 }
 
 Panel::~Panel()
@@ -129,8 +134,9 @@ void Panel::Start() const
 	}
 }
 
-void Panel::Update(const float deltaTime) const
+void Panel::Update(const float deltaTime)
 {
+	axis_current_time_ -= deltaTime;
 	for (const auto& layer : widgets_) //NOLINT
 	{
 		for (const auto& widget : layer.second)
@@ -154,14 +160,13 @@ void Panel::End() const
 	}
 }
 
-// TODO: Check collision and process input events
 void Panel::OnRightClick(const glm::vec2 data) const
 {
 	for (const auto& layer : widgets_) // NOLINT
 	{
 		for (const auto& widget : layer.second)
 		{
-			if (!widget->IsActive())
+			if (!widget->IsActive() || !widget->IsListeningToInput())
 			{
 				continue;
 			}
@@ -179,7 +184,7 @@ void Panel::OnLeftClick(const glm::vec2 data) const
 	{
 		for (const auto& widget : layer.second)
 		{
-			if (!widget->IsActive())
+			if (!widget->IsActive() || !widget->IsListeningToInput())
 			{
 				continue;
 			}
@@ -197,7 +202,7 @@ void Panel::OnMouseMove(const glm::vec2 data, const float deltaTime) const
 	{
 		for (const auto& widget : layer.second)
 		{
-			if (!widget->IsActive())
+			if (!widget->IsActive() || !widget->IsListeningToInput())
 			{
 				continue;
 			}
@@ -213,35 +218,151 @@ void Panel::OnMouseMove(const glm::vec2 data, const float deltaTime) const
 	}
 }
 
-// TODO: add input logic for keyboard and controller
-void Panel::OnLeftPressed(const glm::vec2 data) const
+void Panel::OnLeftPressed(const glm::vec2 data)
 {
+	if (active_widget_ == nullptr)
+	{
+		SearchForFocusTarget();
+		return;
+	}
+	Widget* target = active_widget_->GetNeighbor(EWidgetNeighbor::Left);
+	if (target == nullptr) // Nothing happens
+	{
+		return;
+	}
+	
+	active_widget_->OnUnfocused();
+	target->OnFocused();
+	active_widget_ = target;
 }
 
-void Panel::OnRightPressed(const glm::vec2 data) const
+void Panel::OnRightPressed(const glm::vec2 data)
 {
+	if (active_widget_ == nullptr)
+	{
+		SearchForFocusTarget();
+		return;
+	}
+	Widget* target = active_widget_->GetNeighbor(EWidgetNeighbor::Right);
+	if (target == nullptr) // Nothing happens
+	{
+		return;
+	}
+	
+	active_widget_->OnUnfocused();
+	target->OnFocused();
+	active_widget_ = target;
 }
 
-void Panel::OnUpPressed(const glm::vec2 data) const
+void Panel::OnUpPressed(const glm::vec2 data)
 {
+	if (active_widget_ == nullptr)
+	{
+		SearchForFocusTarget();
+		return;
+	}
+	Widget* target = active_widget_->GetNeighbor(EWidgetNeighbor::Up);
+	if (target == nullptr) // Nothing happens
+	{
+		return;
+	}
+	
+	active_widget_->OnUnfocused();
+	target->OnFocused();
+	active_widget_ = target;
 }
 
-void Panel::OnDownPressed(const glm::vec2 data) const
+void Panel::OnDownPressed(const glm::vec2 data)
 {
+	if (active_widget_ == nullptr)
+	{
+		SearchForFocusTarget();
+		return;
+	}
+	Widget* target = active_widget_->GetNeighbor(EWidgetNeighbor::Down);
+	if (target == nullptr) // Nothing happens
+	{
+		return;
+	}
+	
+	active_widget_->OnUnfocused();
+	target->OnFocused();
+	active_widget_ = target;
 }
 
 void Panel::OnSelectPressed(const glm::vec2 data) const
 {
+	if (active_widget_ == nullptr)
+	{
+		return;
+	}
+	active_widget_->OnSelected();
 }
 
 void Panel::OnReturnPressed(const glm::vec2 data) const
 {
+	if (active_widget_ == nullptr)
+	{
+		return;
+	}
+	active_widget_->OnReturnPressed();
 }
 
-void Panel::OnXAxisUpdated(const glm::vec2 data, const float deltaTime) const
+void Panel::OnAxisUpdated(const glm::vec2 data, const float deltaTime)
 {
+	if (active_widget_ == nullptr)
+	{
+		SearchForFocusTarget();
+		return;
+	}
+	
+	if (axis_current_time_ > 0.0f) // not enough time has passed, exit
+	{
+		return;
+	}
+	
+	Widget* target = nullptr;
+	// The Y axis will be checked first as it is often prioritized in menus
+	if (data.y > 0.0f) // positive value goes down the screen
+	{
+		target = active_widget_->GetNeighbor(EWidgetNeighbor::Down);
+	}
+	else if (data.y < 0.0f) // going up
+	{
+		target = active_widget_->GetNeighbor(EWidgetNeighbor::Up);
+	}
+	else if (data.x > 0.0f) // going right
+	{
+		target = active_widget_->GetNeighbor(EWidgetNeighbor::Right);
+	}
+	else if (data.x < 0.0f) // going left
+	{
+		target = active_widget_->GetNeighbor(EWidgetNeighbor::Left);
+	}
+	if (target == nullptr) // No target was found
+	{
+		return;
+	}
+	
+	active_widget_->OnUnfocused();
+	target->OnFocused();
+	active_widget_ = target;
+	
+	// reset the timer
+	axis_current_time_ = axis_timer_;
 }
 
-void Panel::OnYAxisUpdated(const glm::vec2 data, const float deltaTime) const
+void Panel::SearchForFocusTarget()
 {
+	for (std::pair<const unsigned int, std::vector<Widget*>>& layer : widgets_) // NOLINT
+	{
+		for (Widget*& widget : layer.second)
+		{
+			if (widget->IsActive() && widget->IsListeningToInput() && widget->CanBeFocused())
+			{
+				active_widget_ = widget;
+				return;
+			}
+		}
+	}
 }

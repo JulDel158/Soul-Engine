@@ -80,6 +80,10 @@ void Widget::OnSelected()
 {
 }
 
+void Widget::OnReturnPressed()
+{
+}
+
 void Widget::SetParent(Widget& parent)
 {
 	parent_ = &parent;
