@@ -146,9 +146,17 @@ enum class EPanelType : unsigned int
 	Count
 };
 
-#define GAME_SCREEN_START EPanelType::Game_1
-#define GAME_SCREEN_END EPanelType::Game_10
-#define LOADING_SCREEN_START EPanelType::Loading_1
-#define LOADING_SCREEN_END EPanelType::Loading_9
+enum class EComponentClassType : int
+{
+	Base = 0,
+	SpriteComponent
+};
+
+enum class EGameObjectClassType : int
+{
+	Base = 0,
+	BackgroundTile
+};
+
 
 #endif

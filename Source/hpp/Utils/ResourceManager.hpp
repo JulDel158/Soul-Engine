@@ -9,18 +9,22 @@
 #include "Rendering/Shader.hpp"
 #include "Rendering/Texture2D.hpp"
 #include "EngineDataStructures.hpp"
+#include "Components/BaseComponent.hpp"
+#include "Game/GameObject.hpp"
 
 #include <filesystem>
 #include <string>
 
 class ResourceManager
 {
-    using InnerMap = robin_hood::unordered_map<char, TextCharacter>;
-    using OuterMap = robin_hood::unordered_map<std::string, InnerMap>;
+    using FontMap = robin_hood::unordered_map<char, TextCharacter>;
+    using FontsMap = robin_hood::unordered_map<std::string, FontMap>;
     
     robin_hood::unordered_map<std::string, Shader> shaders_;
     robin_hood::unordered_map<std::string, Texture2D> textures_;
-    OuterMap fonts_;
+	robin_hood::unordered_map<EComponentClassType, std::vector<BaseComponent*>> components_;
+	std::vector<GameObject*> game_objects_;
+    FontsMap fonts_;
     FT_Library free_type_library_;
     Settings settings_;
     bool is_ft_open_;
@@ -38,7 +42,7 @@ public:
     Texture2D GetTexture2D(const std::string& name);
     
     void LoadFont(const char* filePath, const unsigned int fontSize, const std::string& name);
-    InnerMap& GetFont(const std::string& name);
+    FontMap& GetFont(const std::string& name);
     
     void LoadSettings(Settings& settings);
     void SaveSettings(const Settings& settings);
@@ -46,17 +50,20 @@ public:
 
     // Text renderer moves memory back and forth when using a font.
     // This function returns the memory to the resource manager
-    void ReclaimFontMemory(InnerMap& font, const std::string& name);
+    void ReclaimFontMemory(FontMap& font, const std::string& name);
     
     bool ContainsShader(const std::string& name) const;
     bool ContainsTexture2D(const std::string& name) const;
     bool ContainsFont(const std::string& name) const;
-    
-    // call before loading fonts. Note: this is called on construction
-    void OpenFreeTypeLibrary();
-    
-    // call after we finish loading fonts
-    void CloseFreeTypeLibrary();
+	
+	// Level loading
+	BaseComponent& CreateComponent(EComponentClassType type, unsigned int& storageIndex); // Creates a component dynamically
+	BaseComponent* GetComponent(EComponentClassType type, unsigned int storageIndex); // Returns an existing component if available
+	GameObject& CreateGameObject(EGameObjectClassType type, unsigned int& storageIndex);
+	GameObject* GetGameObject(unsigned int storageIndex) const;
+	
+	void OpenFreeTypeLibrary(); // call before loading fonts. Note: this is called on construction
+	void CloseFreeTypeLibrary(); // call after we finish loading fonts
     
 private:
     ResourceManager();

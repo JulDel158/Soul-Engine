@@ -6,6 +6,7 @@
 #include "glm/ext/vector_float3.hpp"
 
 #include "Rendering/Texture2D.hpp"
+#include "EngineDataStructures.hpp"
 
 #include <tuple>
 #include <optional>
@@ -17,6 +18,7 @@ protected:
 	using RenderData = std::tuple<Texture2D, glm::vec2, glm::vec2, float, glm::vec3>;
 	friend class GameObject;
 	friend class Game;
+	friend class ResourceManager;
 	
 	glm::vec2 position_;
 	glm::vec2 scale_;
@@ -24,6 +26,7 @@ protected:
 	bool enabled_;
 	GameObject* owner_;
 	BaseComponent* parent_;
+	EComponentClassType component_type_;
 	
 public:
 	BaseComponent();
@@ -34,20 +37,24 @@ protected:
 	virtual void Update(const float deltaTime); // called each frame while game is running
 	virtual void End(); // called before destroy as level is being unloaded
 	
+	virtual void Clear(); // called right before getting destroyed
+	
 public:
 	// Setters
-	inline void SetPosition(const glm::vec2& position)	{ position_ = position; }
-	inline void SetScale(const glm::vec2& size)			{ scale_ = size; }
-	inline void SetRotation(const float rotation)		{ rotation_ = rotation; }
-	inline void SetEnabled(const bool enabled)			{ enabled_ = enabled; }
+	inline void SetPosition(const glm::vec2& position)			{ position_ = position; }
+	inline void SetScale(const glm::vec2& size)					{ scale_ = size; }
+	inline void SetRotation(const float rotation)				{ rotation_ = rotation; }
+	inline void SetEnabled(const bool enabled)					{ enabled_ = enabled; }
+	inline void SetComponenType(EComponentClassType componentType)	{ component_type_ = componentType; }
 	
 	// Getters
-	inline glm::vec2	GetPosition() const	{ return position_; }
-	inline glm::vec2	GetScale() const	{ return scale_; }
-	inline float		GetRotation() const	{ return rotation_; }
-	inline bool			GetEnabled() const	{ return enabled_; }
-	inline bool			HasOwner() const	{ return owner_ != nullptr; }
-	inline bool			IsAttached() const	{ return parent_ != nullptr; }
+	inline glm::vec2		GetPosition() const	{ return position_; }
+	inline glm::vec2		GetScale() const	{ return scale_; }
+	inline float			GetRotation() const	{ return rotation_; }
+	inline bool				GetEnabled() const	{ return enabled_; }
+	inline bool				HasOwner() const	{ return owner_ != nullptr; }
+	inline bool				IsAttached() const	{ return parent_ != nullptr; }
+	inline EComponentClassType	GetType() const		{ return component_type_; }
 	
 	virtual std::optional<RenderData> GetRenderData(); 
 };

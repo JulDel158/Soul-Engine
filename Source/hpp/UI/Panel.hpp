@@ -23,7 +23,6 @@ protected:
 	InputAction gamepad_buttons_input_actions_[6];
 	InputAction gamepad_axis_input_actions_[2];
 	
-	//TODO: Add logic for widget navigation within a panel!
 	Widget* active_widget_;
 	
 	float axis_timer_;

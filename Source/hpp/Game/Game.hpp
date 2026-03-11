@@ -11,6 +11,7 @@ class SpriteRenderer;
 class TextRenderer;
 class GameObject;
 class Panel;
+class Level;
 
 // Class in charge of game's core. From here we will perform updates to the game state, physics, rendering, audio.
 // From here it is communicated what gets loaded and unloaded and the state of game objects
@@ -23,8 +24,11 @@ private:
     unsigned int window_height_;
     GLFWwindow* window_;
     EGameState game_state_;
-	std::vector<GameObject*> game_objects_;
+	
+	Level* level_;
 	Panel* ui_panels_[static_cast<unsigned int>(EPanelType::Count)];
+	float in_game_run_time_;
+	float runtime_;
     
     void Init() const;
     

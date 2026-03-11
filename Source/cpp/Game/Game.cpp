@@ -12,6 +12,7 @@
 #include "Rendering/TextRenderer.hpp"
 #include "Game/GameObject.hpp"
 #include "UI/Panel.hpp"
+#include "Game/Level.hpp"
 
 namespace
 {
@@ -33,8 +34,11 @@ Game::Game(const Settings& settings) :
 window_width_(settings.screen_width_),
 window_height_(settings.screen_height_),
 window_(nullptr),
+game_state_(EGameState::None),
+level_(nullptr),
 ui_panels_{nullptr},
-game_state_(EGameState::None)
+in_game_run_time_(0.0f),
+runtime_(0.0f)
 {
 	sprite_renderer_ = new SpriteRenderer(ESpriteCentering::Center);
 	text_renderer_ = new TextRenderer();
@@ -94,9 +98,13 @@ void Game::Init() const
 
 void Game::Start()
 {
-	for (const auto& gameObject : game_objects_)
+	// for (const auto& gameObject : game_objects_)
+	// {
+	// 	gameObject->Start();
+	// }
+	if (level_ != nullptr)
 	{
-		gameObject->Start();
+		level_->Start();
 	}
 	
 	// after updating game objects, we update the UI
@@ -113,27 +121,31 @@ void Game::Start()
 
 void Game::Update(const float dt)
 {
-	if (!IsGameRunning())
-	{
-		return;
-	}
+	runtime_ += dt;
 
 	if (game_state_ == EGameState::InGame_Running)
 	{
-		for (const auto& gameObject : game_objects_)
+		// TODO: Game objects will now be updated from within the owning level
+		// for (const auto& gameObject : game_objects_)
+		// {
+		// 	if (!gameObject->IsActive())
+		// 	{
+		// 		continue;
+		// 	}
+		//
+		// 	gameObject->Update(dt);
+		// }
+		if (level_ != nullptr)
 		{
-			if (!gameObject->IsActive())
-			{
-				continue;
-			}
-		
-			gameObject->Update(dt);
+			level_->Update(dt);
 		}
+		in_game_run_time_ += dt;
 	}
 	
 	int startIndex = 1;
 	int endIndex = 0;
 	
+	// We will update UI based on the game state
 	GetUIPanelIndex(startIndex, endIndex);
 	
 	for (int i = startIndex; i <= endIndex; i++)
@@ -166,22 +178,26 @@ void Game::Render(const float dt) const
 	}
 
 	// Drawing all targets within all game objects
-    for (const auto& gameObject : game_objects_)
-    {
-    	if (!gameObject->IsVisible())
-    	{
-    		continue;
-    	}
-    	
-    	for (const auto& renderTarget : gameObject->GetRenderList())
-    	{
-			sprite_renderer_->DrawSprite(std::get<SHADER_S>(renderTarget), 
-				std::get<POSITION_S>(renderTarget), 
-				std::get<SIZE_S>(renderTarget), 
-				std::get<ROTATION_S>(renderTarget), 
-				std::get<COLOR_S>(renderTarget));
-    	}
-    }
+	if (level_ != nullptr)
+	{
+		level_->Render(dt, *sprite_renderer_);
+	}
+   //  for (const auto& gameObject : game_objects_)
+   //  {
+   //  	if (!gameObject->IsVisible())
+   //  	{
+   //  		continue;
+   //  	}
+   //  	
+   //  	for (const auto& renderTarget : gameObject->GetRenderList())
+   //  	{
+			// sprite_renderer_->DrawSprite(std::get<SHADER_S>(renderTarget), 
+			// 	std::get<POSITION_S>(renderTarget), 
+			// 	std::get<SIZE_S>(renderTarget), 
+			// 	std::get<ROTATION_S>(renderTarget), 
+			// 	std::get<COLOR_S>(renderTarget));
+   //  	}
+   //  }
 	
 	// TODO: Render UI
 	int startIndex = 1;
@@ -241,15 +257,17 @@ void Game::ProcessAudio(const float dt)
 void Game::ProcessInput(const float dt)
 {
     InputManager::Instance().InputUpdate(dt);
-	
-	// TODO: Check mouse/cursor against UI panels and send events
 }
 
 void Game::End()
 {
-	for (const auto& gameObject : game_objects_)
+	// for (const auto& gameObject : game_objects_)
+	// {
+	// 	gameObject->End();
+	// }
+	if (level_ != nullptr)
 	{
-		gameObject->End();
+		level_->End();
 	}
 	
 	// after updating game objects, we update the UI

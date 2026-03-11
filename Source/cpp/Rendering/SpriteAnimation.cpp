@@ -5,6 +5,8 @@
 #include "EngineDataStructures.hpp"
 #include "Utils/Logger.hpp"
 
+#include <utility>
+
 SpriteAnimation::SpriteAnimation() :
 current_time_(0.0f),
 current_frame_(0),
@@ -14,14 +16,26 @@ play_once_(false)
 {
 }
 
-SpriteAnimation::SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond) :
+SpriteAnimation::SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond, const bool autoPlay) :
 current_time_(0.0f),
 current_frame_(0),
 frames_per_second_(framesPerSecond),
 is_playing_(false),
-play_once_(false)
+play_once_(false),
+auto_play_(autoPlay)
 {
 	SetAnimationSprites(textureNames);
+}
+
+SpriteAnimation::SpriteAnimation(std::vector<Texture2D>& textures, const unsigned int framesPerSecond, const bool autoPlay) :
+textures_(std::move(textures)),
+current_time_(0.0f),
+current_frame_(0),
+frames_per_second_(framesPerSecond),
+is_playing_(false),
+play_once_(false),
+auto_play_(autoPlay)
+{
 }
 
 SpriteAnimation::~SpriteAnimation()
@@ -41,6 +55,11 @@ void SpriteAnimation::Update(const float deltaTime)
 	if (textures_.empty())
 	{
 		return;
+	}
+	
+	if (auto_play_)
+	{
+		StartAnimation();
 	}
 	
 	current_frame_ = static_cast<unsigned int>(current_time_ * static_cast<float>(frames_per_second_)) % static_cast<unsigned int>(textures_.size());

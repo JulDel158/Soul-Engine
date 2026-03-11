@@ -14,13 +14,15 @@ Widget::Widget() :
 	position_(ZERO_VECTOR_2_F),
 	size_(HUNDRED_VECTOR_2_F),
 	rotation_(0.0f),
-	layer_(0), 
+	layer_(0),
 	is_active_(true),
 	is_visible_(true),
 	is_highlighted_(false),
 	is_overlapping_(false),
 	can_update_(true),
-	can_refresh_(true)
+	can_refresh_(true), 
+	can_listen_to_input_(false), 
+	can_be_focused_(false)
 {
 }
 

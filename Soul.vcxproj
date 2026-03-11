@@ -24,6 +24,7 @@
     <ClCompile Include="Source\cpp\Components\SpriteComponent.cpp" />
     <ClCompile Include="Source\cpp\Game\Game.cpp" />
     <ClCompile Include="Source\cpp\Game\GameObject.cpp" />
+    <ClCompile Include="Source\cpp\Game\Level.cpp" />
     <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\Input\InputAction.cpp" />
     <ClCompile Include="Source\cpp\Input\InputManager.cpp" />
@@ -38,6 +39,7 @@
     <ClCompile Include="Source\cpp\UI\Widget.cpp" />
     <ClCompile Include="Source\cpp\Utils\Logger.cpp" />
     <ClCompile Include="Source\cpp\Utils\ResourceManager.cpp" />
+    <ClCompile Include="Source\cpp\World\BackgroundTile.cpp" />
     <ClCompile Include="Source\Dependencies\include\glm\detail\glm.cpp" />
     <ClCompile Include="Source\Dependencies\include\miniaudio\miniaudio.c" />
   </ItemGroup>
@@ -525,6 +527,7 @@
     <ClInclude Include="Source\hpp\ft2build.h" />
     <ClInclude Include="Source\hpp\Game\Game.hpp" />
     <ClInclude Include="Source\hpp\Game\GameObject.hpp" />
+    <ClInclude Include="Source\hpp\Game\Level.hpp" />
     <ClInclude Include="Source\hpp\Input\InputAction.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
     <ClInclude Include="Source\hpp\Physics\PhysicsDataStructures.hpp" />
@@ -539,6 +542,7 @@
     <ClInclude Include="Source\hpp\UI\Widget.hpp" />
     <ClInclude Include="Source\hpp\Utils\Logger.hpp" />
     <ClInclude Include="Source\hpp\Utils\ResourceManager.hpp" />
+    <ClInclude Include="Source\hpp\World\BackgroundTile.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Source\Dependencies\include\glm\CMakeLists.txt" />

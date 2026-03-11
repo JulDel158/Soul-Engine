@@ -22,6 +22,10 @@ void BaseComponent::End()
 {
 }
 
+void BaseComponent::Clear()
+{
+}
+
 std::optional<BaseComponent::RenderData> BaseComponent::GetRenderData()
 {
 	return std::nullopt;

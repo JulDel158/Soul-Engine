@@ -16,12 +16,14 @@ private:
 	unsigned int frames_per_second_;
 	bool is_playing_;
 	bool play_once_;
+	bool auto_play_;
 	
 	//TODO: We might want to add delegates, also we might want to add other flags to control how we play the animation
 	
 public:
 	SpriteAnimation();
-	explicit SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond = 30);
+	explicit SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond = 30, const bool autoPlay = false);
+	explicit SpriteAnimation(std::vector<Texture2D>& textures, const unsigned int framesPerSecond = 30, const bool autoPlay = false);
 	~SpriteAnimation();
 	
 	void Update(const float deltaTime);

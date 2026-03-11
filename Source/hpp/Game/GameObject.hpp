@@ -6,6 +6,7 @@
 #include "glm/ext/vector_float3.hpp"
 
 #include "Rendering/Texture2D.hpp"
+#include "EngineDataStructures.hpp"
 
 #include <tuple>
 #include <vector>
@@ -19,42 +20,51 @@ class GameObject
 protected:
 	using RenderData = std::tuple<Texture2D, glm::vec2, glm::vec2, float, glm::vec3>;
 	using RenderList = std::vector<RenderData>;
-	friend class Game;
+	friend class Level;
+	friend class ResourceManager;
 	
 	glm::vec2 position_;
 	glm::vec2 size_;
 	RenderList render_list_;
 	std::vector<BaseComponent*> components_;
 	float rotation_;
+	EGameObjectClassType type_;
 	bool is_active_;
 	bool is_visible_;
+	bool fixed_render_list_;
 	
 public:
 	GameObject();
-	virtual ~GameObject();
+	virtual ~GameObject() = default;
 	
 protected:
 	virtual void Start(); // called at the start of the game (after loading)
 	virtual void Update(const float deltaTime); // called each frame while game is running
 	virtual void End(); // called before unloading (before this item gets destroyed)
 	
+	virtual void Clear(); // called right before destruction
+	
 public:
 	
 	void AddComponent(BaseComponent* component);
 	
 	// Setters
-	inline void SetPosition(const glm::vec2& position)	{position_ = position;}
-	inline void SetSize(const glm::vec2& size)			{size_ = size;}
-	inline void SetRotation(const float rotation)		{rotation_ = rotation;}
-	inline void SetIsActive(const bool isActive)		{ is_active_ = isActive; }
-	inline void SetIsVisible(const bool isVisible)		{ is_visible_ = isVisible; }
+	inline void SetPosition(const glm::vec2& position)			{position_ = position;}
+	inline void SetSize(const glm::vec2& size)					{size_ = size;}
+	inline void SetRotation(const float rotation)				{rotation_ = rotation;}
+	inline void SetClassType(const EGameObjectClassType type)	{ type_ = type; }
+	inline void SetIsActive(const bool isActive)				{ is_active_ = isActive; }
+	inline void SetIsVisible(const bool isVisible)				{ is_visible_ = isVisible; }
+	inline void SetFixedRenderList(const bool fixedRenderList)	{ fixed_render_list_ = fixedRenderList; }
 	
 	// Getters
-	inline glm::vec2	GetPosition() const			{ return position_; }
-	inline glm::vec2	GetSize() const				{ return size_; }
-	inline float		GetRotation() const 		{ return rotation_; }
-	inline const RenderList& GetRenderList() const	{ return render_list_; }
-	inline bool			IsActive() const			{ return is_active_; }
-	inline bool			IsVisible() const			{ return is_visible_; }
+	inline glm::vec2	GetPosition() const				{ return position_; }
+	inline glm::vec2	GetSize() const					{ return size_; }
+	inline float		GetRotation() const 			{ return rotation_; }
+	inline const RenderList& GetRenderList() const		{ return render_list_; }
+	inline EGameObjectClassType GetClassType() const	{ return type_; }
+	inline bool			IsActive() const				{ return is_active_; }
+	inline bool			IsVisible() const				{ return is_visible_; }
+	inline bool			GetFixedRenderList() const		{ return fixed_render_list_; }
 };
 #endif

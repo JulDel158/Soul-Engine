@@ -9,6 +9,8 @@
 
 #include "StringGlobals.hpp"
 #include "Utils/Logger.hpp"
+#include "Components/SpriteComponent.hpp"
+#include "World/BackgroundTile.hpp"
 
 #include <filesystem>
 #include <sstream>
@@ -275,7 +277,7 @@ Settings ResourceManager::GetSettings() const
     return settings_;
 }
 
-void ResourceManager::ReclaimFontMemory(InnerMap& font, const std::string& name)
+void ResourceManager::ReclaimFontMemory(FontMap& font, const std::string& name)
 {
     fonts_[name] = std::move(font);
 }
@@ -307,49 +309,97 @@ void ResourceManager::Clear()
     {
         pair.second.clear();
     }
+	
+	for (auto& pair : components_)
+	{
+		for (auto& component : pair.second)
+		{
+			component->Clear();
+			delete component;
+		}
+		pair.second.clear();
+	}
+	
+	for (const auto& object : game_objects_)
+	{
+		object->Clear();
+		delete object;
+	}
     
     shaders_.clear();
     textures_.clear();
     fonts_.clear();
+	components_.clear();
+	game_objects_.clear();
     
     CloseFreeTypeLibrary();
 }
 
-void ResourceManager::OpenFreeTypeLibrary()
+BaseComponent& ResourceManager::CreateComponent(const EComponentClassType type, unsigned int& storageIndex)
 {
-    if (is_ft_open_)
-    {
-        return;
-    }
-    
-    if (const auto error = FT_Init_FreeType(&free_type_library_); error)
-    {
-    	auto logger = Logger();
-    	logger.Log(ELogLevel::Error, "ResourceManager::OpenFreeTypeLibrary:FREETYPE: Could not init FreeType Library!");
-        return;
-    }
-    is_ft_open_ = true;
+	BaseComponent* component = nullptr;
+	
+	// TODO: As component classes get created, add cases
+	switch (type)
+	{
+	case EComponentClassType::Base:
+		component = new BaseComponent();
+		break;
+	case EComponentClassType::SpriteComponent:
+		component = new SpriteComponent();
+		break;
+	}
+	component->SetComponenType(type);
+	components_[type].push_back(component);
+	storageIndex = static_cast<unsigned int>(components_[type].size());
+	
+	return *component;
 }
 
-void ResourceManager::CloseFreeTypeLibrary()
+BaseComponent* ResourceManager::GetComponent(const EComponentClassType type, const unsigned int storageIndex)
 {
-    if (!is_ft_open_)
-    {
-        return;
-    }
-    
-    if (const auto error = FT_Done_FreeType(free_type_library_); error)
-    {
-    	auto logger = Logger();
-    	logger.Log(ELogLevel::Error,"ResourceManager::CloseFreeTypeLibrary:FREETYPE: Could not close FreeType Library");
-        return;
-    }
-    is_ft_open_ = false;
+	BaseComponent* result = nullptr;
+	if (components_.contains(type) && storageIndex < static_cast<unsigned int>(components_[type].size()))
+	{
+		result = components_[type][storageIndex];
+	}
+	return result;
+}
+
+GameObject& ResourceManager::CreateGameObject(EGameObjectClassType type, unsigned int& storageIndex)
+{
+	GameObject* result = nullptr;
+	
+	// TODO: Add cases as more classes get added to project
+	switch (type)
+	{
+	case EGameObjectClassType::Base:
+		result = new GameObject();
+		break;
+	case EGameObjectClassType::BackgroundTile:
+		result = new BackgroundTile();
+		break;
+	}
+	result->SetClassType(type);
+	
+	return *result;
+}
+
+GameObject* ResourceManager::GetGameObject(const unsigned int storageIndex) const
+{
+	GameObject* result = nullptr;
+	
+	if (storageIndex < static_cast<unsigned int>(game_objects_.size()))
+	{
+		result = game_objects_[storageIndex];
+	}
+	
+	return result;
 }
 
 Shader ResourceManager::LoadShaderFromFile(const std::filesystem::path& vertexShaderPath, 
-    const std::filesystem::path& fragmentShaderPath,
-    const std::filesystem::path& geometryShaderPath, bool hasGeometryShader)
+                                           const std::filesystem::path& fragmentShaderPath,
+                                           const std::filesystem::path& geometryShaderPath, bool hasGeometryShader)
 {
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode;
@@ -418,3 +468,34 @@ Texture2D ResourceManager::LoadTextureFromFile(const char* file, bool alpha)
     return texture;
 }
 
+void ResourceManager::OpenFreeTypeLibrary()
+{
+	if (is_ft_open_)
+	{
+		return;
+	}
+    
+	if (const auto error = FT_Init_FreeType(&free_type_library_); error)
+	{
+		auto logger = Logger();
+		logger.Log(ELogLevel::Error, "ResourceManager::OpenFreeTypeLibrary:FREETYPE: Could not init FreeType Library!");
+		return;
+	}
+	is_ft_open_ = true;
+}
+
+void ResourceManager::CloseFreeTypeLibrary()
+{
+	if (!is_ft_open_)
+	{
+		return;
+	}
+    
+	if (const auto error = FT_Done_FreeType(free_type_library_); error)
+	{
+		auto logger = Logger();
+		logger.Log(ELogLevel::Error,"ResourceManager::CloseFreeTypeLibrary:FREETYPE: Could not close FreeType Library");
+		return;
+	}
+	is_ft_open_ = false;
+}

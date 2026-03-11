@@ -14,10 +14,10 @@ class GameObject;
 class SpriteComponent : public BaseComponent
 {
 protected:
+	Texture2D base_texture_;
 	robin_hood::unordered_map<int,SpriteAnimation> animations_;
 	glm::vec3 color_;
 	int current_animation_;
-	Texture2D base_texture_;
 	
 public:
 	SpriteComponent();
