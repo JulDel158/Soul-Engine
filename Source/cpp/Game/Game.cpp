@@ -10,7 +10,6 @@
 #include "Input/InputManager.hpp"
 #include "Rendering/SpriteRenderer.hpp"
 #include "Rendering/TextRenderer.hpp"
-#include "Game/GameObject.hpp"
 #include "UI/Panel.hpp"
 #include "Game/Level.hpp"
 
@@ -92,6 +91,25 @@ void Game::Init() const
 	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_3.data(), true, ESpriteKey::Debug4);
 	
 	// TODO: Load player textures
+	resourceManager.LoadTexture2D(PLAYER_IDLE_1.data(), true, ESpriteKey::Player_Idle_1);
+	resourceManager.LoadTexture2D(PLAYER_IDLE_2.data(), true, ESpriteKey::Player_Idle_2);
+	resourceManager.LoadTexture2D(PLAYER_IDLE_3.data(), true, ESpriteKey::Player_Idle_3);
+	
+	resourceManager.LoadTexture2D(PLAYER_WALKING_LEFT_1.data(), true, ESpriteKey::Player_Left_1);
+	resourceManager.LoadTexture2D(PLAYER_WALKING_LEFT_2.data(), true, ESpriteKey::Player_Left_2);
+	resourceManager.LoadTexture2D(PLAYER_WALKING_LEFT_3.data(), true, ESpriteKey::Player_Left_3);
+	
+	resourceManager.LoadTexture2D(PLAYER_WALKING_RIGHT_1.data(), true, ESpriteKey::Player_Right_1);
+	resourceManager.LoadTexture2D(PLAYER_WALKING_RIGHT_2.data(), true, ESpriteKey::Player_Right_2);
+	resourceManager.LoadTexture2D(PLAYER_WALKING_RIGHT_3.data(), true, ESpriteKey::Player_Right_3);
+	
+	resourceManager.LoadTexture2D(PLAYER_WALKING_UP_1.data(), true, ESpriteKey::Player_Up_1);
+	resourceManager.LoadTexture2D(PLAYER_WALKING_UP_2.data(), true, ESpriteKey::Player_Up_2);
+	resourceManager.LoadTexture2D(PLAYER_WALKING_UP_3.data(), true, ESpriteKey::Player_Up_3);
+	
+	resourceManager.LoadTexture2D(PLAYER_WALKING_DOWN_1.data(), true, ESpriteKey::Player_Down_1);
+	resourceManager.LoadTexture2D(PLAYER_WALKING_DOWN_2.data(), true, ESpriteKey::Player_Down_2);
+	resourceManager.LoadTexture2D(PLAYER_WALKING_DOWN_3.data(), true, ESpriteKey::Player_Down_3);
     
     // set base shaders on renderers
     sprite_renderer_->SwapShader(spriteShader);
@@ -201,7 +219,6 @@ void Game::Render(const float dt) const
    //  	}
    //  }
 	
-	// TODO: Render UI
 	int startIndex = 1;
 	int endIndex = 0;
 	

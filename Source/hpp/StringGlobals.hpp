@@ -24,6 +24,27 @@ constexpr std::string_view TEST_ANIM_FRAME_1 = "Assets/Textures/test_anim_1.png\
 constexpr std::string_view TEST_ANIM_FRAME_2 = "Assets/Textures/test_anim_2.png\0";
 constexpr std::string_view TEST_ANIM_FRAME_3 = "Assets/Textures/test_anim_3.png\0";
 
+constexpr std::string_view PLAYER_IDLE_1 = "Assets/Textures/debug/player/idle1.png\0";
+constexpr std::string_view PLAYER_IDLE_2 = "Assets/Textures/debug/player/idle2.png\0";
+constexpr std::string_view PLAYER_IDLE_3 = "Assets/Textures/debug/player/idle3.png\0";
+
+constexpr std::string_view PLAYER_WALKING_LEFT_1 = "Assets/Textures/debug/player/walking_left1.png\0";
+constexpr std::string_view PLAYER_WALKING_LEFT_2 = "Assets/Textures/debug/player/walking_left2.png\0";
+constexpr std::string_view PLAYER_WALKING_LEFT_3 = "Assets/Textures/debug/player/walking_left3.png\0";
+
+constexpr std::string_view PLAYER_WALKING_RIGHT_1 = "Assets/Textures/debug/player/walking_right1.png\0";
+constexpr std::string_view PLAYER_WALKING_RIGHT_2 = "Assets/Textures/debug/player/walking_right2.png\0";
+constexpr std::string_view PLAYER_WALKING_RIGHT_3 = "Assets/Textures/debug/player/walking_right3.png\0";
+
+constexpr std::string_view PLAYER_WALKING_UP_1 = "Assets/Textures/debug/player/walking_up1.png\0";
+constexpr std::string_view PLAYER_WALKING_UP_2 = "Assets/Textures/debug/player/walking_up2.png\0";
+constexpr std::string_view PLAYER_WALKING_UP_3 = "Assets/Textures/debug/player/walking_up3.png\0";
+
+constexpr std::string_view PLAYER_WALKING_DOWN_1 = "Assets/Textures/debug/player/walking_down1.png\0";
+constexpr std::string_view PLAYER_WALKING_DOWN_2 = "Assets/Textures/debug/player/walking_down2.png\0";
+constexpr std::string_view PLAYER_WALKING_DOWN_3 = "Assets/Textures/debug/player/walking_down3.png\0";
+
+
 // font paths
 constexpr std::string_view FONT_ARIAL_PATH = "Assets/Fonts/arial.ttf\0";
 
