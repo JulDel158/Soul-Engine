@@ -1,22 +1,22 @@
 #include "Rendering/SpriteAnimation.hpp"
 
 #include "Utils/ResourceManager.hpp"
-#include "StringGlobals.hpp"
 #include "EngineDataStructures.hpp"
 #include "Utils/Logger.hpp"
 
 #include <utility>
 
 SpriteAnimation::SpriteAnimation() :
-current_time_(0.0f),
-current_frame_(0),
-frames_per_second_(20),
-is_playing_(false),
-play_once_(false)
+	current_time_(0.0f),
+	current_frame_(0),
+	frames_per_second_(20),
+	is_playing_(false),
+	play_once_(false), 
+	auto_play_(false)
 {
 }
 
-SpriteAnimation::SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond, const bool autoPlay) :
+SpriteAnimation::SpriteAnimation(const std::vector<ESpriteKey>& textureNames, const unsigned int framesPerSecond, const bool autoPlay) :
 current_time_(0.0f),
 current_frame_(0),
 frames_per_second_(framesPerSecond),
@@ -91,7 +91,7 @@ void SpriteAnimation::StopAnimation(const bool restart)
 	}
 }
 
-void SpriteAnimation::SetAnimationSprites(const std::vector<std::string>& names)
+void SpriteAnimation::SetAnimationSprites(const std::vector<ESpriteKey>& names)
 {
 	auto& resourceManager = ResourceManager::Instance();
 	auto logger = Logger();
@@ -104,9 +104,9 @@ void SpriteAnimation::SetAnimationSprites(const std::vector<std::string>& names)
 		}
 		else
 		{
-			textures_.emplace_back(resourceManager.GetTexture2D(MISSING_TEXTURE.data()));
+			textures_.emplace_back(resourceManager.GetTexture2D(ESpriteKey::Missing));
 			logger.Log(ELogLevel::Warning, "SpriteAnimation::SetAnimationSprites: Texture: [" 
-				+ textureName 
+				+ DataConverter::ToString(textureName) 
 				+ "] Missing!\nLoading MISSING_TEXTURE into frame: ["
 				+ std::to_string(textures_.size())
 				+ "]");
@@ -125,7 +125,7 @@ Texture2D SpriteAnimation::GetCurrentFrameTexture() const
 			"] current frame: [" + 
 			std::to_string(current_frame_) +
 			"]");
-		return resourceManager.GetTexture2D(MISSING_TEXTURE.data());
+		return resourceManager.GetTexture2D(ESpriteKey::Missing);
 	}
 	
 	return textures_[current_frame_];

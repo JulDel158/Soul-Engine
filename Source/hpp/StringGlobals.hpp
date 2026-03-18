@@ -34,15 +34,6 @@ constexpr std::string_view AUDIO_1 = "Assets/Audio/Fragmentum.wav\0";
 constexpr std::string_view SPRITE_RENDERER_PROGRAM1 = "SPRITE\0";
 constexpr std::string_view FONT_RENDERER_PROGRAM1 = "FONT\0";
 
-// texture keys
-constexpr std::string_view TEXTURE1_KEY = "FACE\0";
-constexpr std::string_view MISSING_TEXTURE_KEY = "MISSING TEXTURE\0";
-constexpr std::string_view PLACEHOLDER_TEXTURE_KEY = "PLACEHOLDER TEXTURE\0";
-constexpr std::string_view ANIM_KEY_1 = "FRAME 1\0";
-constexpr std::string_view ANIM_KEY_2 = "FRAME 2\0";
-constexpr std::string_view ANIM_KEY_3 = "FRAME 3\0";
-
-
 // font keys
 constexpr std::string_view FONT_ARIAL = "arial\0";
 

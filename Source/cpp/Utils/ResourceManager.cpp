@@ -26,7 +26,7 @@ ResourceManager& ResourceManager::Instance()
 ResourceManager::ResourceManager()
 {
     shaders_ = robin_hood::unordered_map<std::string, Shader>();
-    textures_ = robin_hood::unordered_map<std::string, Texture2D>();
+    textures_ = robin_hood::unordered_map<ESpriteKey, Texture2D>();
     settings_ = Settings();
     
     OpenFreeTypeLibrary();
@@ -66,23 +66,23 @@ bool ResourceManager::ContainsShader(const std::string& name) const
     return shaders_.contains(name);
 }
 
-Texture2D ResourceManager::LoadTexture2D(const char* filePath, bool alpha, const std::string& name)
+Texture2D ResourceManager::LoadTexture2D(const char* filePath, bool alpha, const ESpriteKey spriteId)
 {
-    if (textures_.contains(name))
+    if (textures_.contains(spriteId))
     {
     	auto logger = Logger();
-        logger.Log(ELogLevel::Warning,"ResourceManager::LoadTexture2D: Overriding existing texture: " + name);
-        textures_[name].Clear();
-        textures_.erase(name);
+        logger.Log(ELogLevel::Warning,"ResourceManager::LoadTexture2D: Overriding existing texture: " + DataConverter::ToString(spriteId));
+        textures_[spriteId].Clear();
+        textures_.erase(spriteId);
     }
     
-    textures_[name] = LoadTextureFromFile(filePath, alpha);
-    return textures_[name];
+    textures_[spriteId] = LoadTextureFromFile(filePath, alpha);
+    return textures_[spriteId];
 }
 
-Texture2D ResourceManager::GetTexture2D(const std::string& name)
+Texture2D ResourceManager::GetTexture2D(const ESpriteKey spriteId)
 {
-    return textures_[name];
+    return textures_[spriteId];
 }
 
 void ResourceManager::LoadFont(const char* filePath, const unsigned int fontSize, const std::string& name)
@@ -282,9 +282,9 @@ void ResourceManager::ReclaimFontMemory(FontMap& font, const std::string& name)
     fonts_[name] = std::move(font);
 }
 
-bool ResourceManager::ContainsTexture2D(const std::string& name) const
+bool ResourceManager::ContainsTexture2D(const ESpriteKey spriteId) const
 {
-    return textures_.contains(name);
+    return textures_.contains(spriteId);
 }
 
 bool ResourceManager::ContainsFont(const std::string& name) const

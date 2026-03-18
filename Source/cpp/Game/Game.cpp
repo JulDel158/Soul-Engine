@@ -84,12 +84,14 @@ void Game::Init() const
     resourceManager.CloseFreeTypeLibrary();
     
     // load textures. Note: Texture loading may be moved over time and loaded/unloaded based on "levels"
-    resourceManager.LoadTexture2D(TEXTURE1.data(), true, TEXTURE1_KEY.data());
-	resourceManager.LoadTexture2D(MISSING_TEXTURE.data(), true, MISSING_TEXTURE_KEY.data());
-	resourceManager.LoadTexture2D(PLACEHOLDER_TEXTURE.data(), true, PLACEHOLDER_TEXTURE_KEY.data());
-	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_1.data(), true, ANIM_KEY_1.data());
-	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_2.data(), true, ANIM_KEY_2.data());
-	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_3.data(), true, ANIM_KEY_3.data());
+    resourceManager.LoadTexture2D(TEXTURE1.data(), true, ESpriteKey::Debug1);
+	resourceManager.LoadTexture2D(MISSING_TEXTURE.data(), true, ESpriteKey::Missing);
+	resourceManager.LoadTexture2D(PLACEHOLDER_TEXTURE.data(), true, ESpriteKey::PlaceHolder);
+	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_1.data(), true, ESpriteKey::Debug2);
+	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_2.data(), true, ESpriteKey::Debug3);
+	resourceManager.LoadTexture2D(TEST_ANIM_FRAME_3.data(), true, ESpriteKey::Debug4);
+	
+	// TODO: Load player textures
     
     // set base shaders on renderers
     sprite_renderer_->SwapShader(spriteShader);
@@ -166,7 +168,7 @@ void Game::Render(const float dt) const
 	if (true) 
 	{ // Temporary
 		ResourceManager& resourceManager = ResourceManager::Instance();
-		sprite_renderer_->DrawSprite(resourceManager.GetTexture2D(TEXTURE1_KEY.data()), 
+		sprite_renderer_->DrawSprite(resourceManager.GetTexture2D(ESpriteKey::Debug1), 
 			glm::vec2(600.0f + glm::sin(runTime) * 400.0f, 500.0f),
 			glm::vec2(400.0f, 400.0f),
 			(glm::cos(runTime) + std::sin(runTime)));

@@ -21,7 +21,7 @@ class ResourceManager
     using FontsMap = robin_hood::unordered_map<std::string, FontMap>;
     
     robin_hood::unordered_map<std::string, Shader> shaders_;
-    robin_hood::unordered_map<std::string, Texture2D> textures_;
+    robin_hood::unordered_map<ESpriteKey, Texture2D> textures_;
 	robin_hood::unordered_map<EComponentClassType, std::vector<BaseComponent*>> components_;
 	std::vector<GameObject*> game_objects_;
     FontsMap fonts_;
@@ -38,8 +38,8 @@ public:
     Shader LoadShader(const char *vertexShaderFile, const char *fragmentShaderFile, const char *geometryShaderFile, const std::string& name);
     Shader GetShader(const std::string& name);
     
-    Texture2D LoadTexture2D(const char *filePath, bool alpha, const std::string& name);
-    Texture2D GetTexture2D(const std::string& name);
+    Texture2D LoadTexture2D(const char *filePath, bool alpha, const ESpriteKey spriteId);
+    Texture2D GetTexture2D(const ESpriteKey spriteId);
     
     void LoadFont(const char* filePath, const unsigned int fontSize, const std::string& name);
     FontMap& GetFont(const std::string& name);
@@ -53,7 +53,7 @@ public:
     void ReclaimFontMemory(FontMap& font, const std::string& name);
     
     bool ContainsShader(const std::string& name) const;
-    bool ContainsTexture2D(const std::string& name) const;
+    bool ContainsTexture2D(const ESpriteKey spriteId) const;
     bool ContainsFont(const std::string& name) const;
 	
 	// Level loading

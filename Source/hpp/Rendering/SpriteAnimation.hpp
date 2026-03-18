@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Texture2D.hpp"
+#include "EngineDataStructures.hpp"
 
 #include <string>
 #include <vector>
@@ -22,7 +23,7 @@ private:
 	
 public:
 	SpriteAnimation();
-	explicit SpriteAnimation(const std::vector<std::string>& textureNames, const unsigned int framesPerSecond = 30, const bool autoPlay = false);
+	explicit SpriteAnimation(const std::vector<ESpriteKey>& textureNames, const unsigned int framesPerSecond = 30, const bool autoPlay = false);
 	explicit SpriteAnimation(std::vector<Texture2D>& textures, const unsigned int framesPerSecond = 30, const bool autoPlay = false);
 	~SpriteAnimation();
 	
@@ -31,7 +32,7 @@ public:
 	void StopAnimation(const bool restart = true);
 	
 	// Setters
-	void		SetAnimationSprites(const std::vector<std::string>& names);
+	void		SetAnimationSprites(const std::vector<ESpriteKey>& names);
 	inline void SetFramesPerSecond(const unsigned int framesPerSecond) { frames_per_second_ = framesPerSecond; }
 	
 	// Getters

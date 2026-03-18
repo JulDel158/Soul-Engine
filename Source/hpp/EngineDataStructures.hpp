@@ -4,6 +4,8 @@
 
 #include "glm/vec2.hpp"
 
+#include <string>
+
 struct Settings
 {
 public:
@@ -48,6 +50,44 @@ enum class EGameState : unsigned int
     Unloading,
 	
 	Closing
+};
+
+enum class ESpriteKey : unsigned int
+{
+	None = 0,
+	
+	Missing,
+	PlaceHolder,
+	
+	Debug1,
+	Debug2,
+	Debug3,
+	Debug4,
+	Debug5,
+	Debug6,
+	Debug7,
+	Debug8,
+	Debug9,
+	
+	Player_Idle_1,
+	Player_Idle_2,
+	Player_Idle_3,
+	
+	Player_Left_1,
+	Player_Left_2,
+	Player_Left_3,
+	
+	Player_Right_1,
+	Player_Right_2,
+	Player_Right_3,
+	
+	Player_Up_1,
+	Player_Up_2,
+	Player_Up_3,
+	
+	Player_Down_1,
+	Player_Down_2,
+	Player_Down_3,
 };
 
 struct TextCharacter
@@ -157,6 +197,103 @@ enum class EGameObjectClassType : int
 	Base = 0,
 	BackgroundTile
 };
+
+namespace  DataConverter
+{
+	inline std::string ToString(const ESpriteKey spriteId)
+	{
+		std::string result;
+		switch (spriteId)
+		{
+		case ESpriteKey::None:
+			result = "None";
+			break;
+		case ESpriteKey::Missing:
+			result = "Missing";
+			break;
+		case ESpriteKey::PlaceHolder:
+			result = "PlaceHolder";
+			break;
+		case ESpriteKey::Debug1:
+			result = "Debug1";
+			break;
+		case ESpriteKey::Debug2:
+			result = "Debug2";
+			break;
+		case ESpriteKey::Debug3:
+			result = "Debug3";
+			break;
+		case ESpriteKey::Debug4:
+			result = "Debug4";
+			break;
+		case ESpriteKey::Debug5:
+			result = "Debug5";
+			break;
+		case ESpriteKey::Debug6:
+			result = "Debug6";
+			break;
+		case ESpriteKey::Debug7:
+			result = "Debug7";
+			break;
+		case ESpriteKey::Debug8:
+			result = "Debug8";
+			break;
+		case ESpriteKey::Debug9:
+			result = "Debug9";
+			break;
+		case ESpriteKey::Player_Idle_1:
+			result = "Player_Idle_1";
+			break;
+		case ESpriteKey::Player_Idle_2:
+			result = "Player_Idle_2";
+			break;
+		case ESpriteKey::Player_Idle_3:
+			result = "Player_Idle_3";
+			break;
+		case ESpriteKey::Player_Left_1:
+			result = "Player_Left_1";
+			break;
+		case ESpriteKey::Player_Left_2:
+			result = "Player_Left_2";
+			break;
+		case ESpriteKey::Player_Left_3:
+			result = "Player_Left_3";
+			break;
+		case ESpriteKey::Player_Right_1:
+			result = "Player_Right_1";
+			break;
+		case ESpriteKey::Player_Right_2:
+			result = "Player_Right_2";
+			break;
+		case ESpriteKey::Player_Right_3:
+			result = "Player_Right_3";
+			break;
+		case ESpriteKey::Player_Up_1:
+			result = "Player_Up_1";
+			break;
+		case ESpriteKey::Player_Up_2:
+			result = "Player_Up_2";
+			break;
+		case ESpriteKey::Player_Up_3:
+			result = "Player_Up_3";
+			break;
+		case ESpriteKey::Player_Down_1:
+			result = "Player_Down_1";
+			break;
+		case ESpriteKey::Player_Down_2:
+			result = "Player_Down_2";
+			break;
+		case ESpriteKey::Player_Down_3:
+			result = "Player_Down_3";
+			break;
+		default:
+			result = "Unknown/Missing";
+			break;
+		}
+		
+		return result;
+	}
+}
 
 
 #endif
