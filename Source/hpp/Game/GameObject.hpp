@@ -47,6 +47,7 @@ protected:
 public:
 	
 	void AddComponent(BaseComponent* component);
+	// TODO: Add function to remove component??
 	
 	// Setters
 	inline void SetPosition(const glm::vec2& position)			{position_ = position;}

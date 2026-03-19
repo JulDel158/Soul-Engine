@@ -20,7 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\cpp\Audio\AudioManager.cpp" />
+    <ClCompile Include="Source\cpp\Characters\Character.cpp" />
     <ClCompile Include="Source\cpp\Components\BaseComponent.cpp" />
+    <ClCompile Include="Source\cpp\Components\MovementComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\SpriteComponent.cpp" />
     <ClCompile Include="Source\cpp\Game\Game.cpp" />
     <ClCompile Include="Source\cpp\Game\GameObject.cpp" />
@@ -519,12 +521,15 @@
     <ClInclude Include="Source\Dependencies\include\robin_hood_hash\robin_hood.h" />
     <ClInclude Include="Source\Dependencies\include\stb_image.h" />
     <ClInclude Include="Source\hpp\Audio\AudioManager.hpp" />
+    <ClInclude Include="Source\hpp\Characters\Character.hpp" />
     <ClInclude Include="Source\hpp\Components\BaseComponent.hpp" />
+    <ClInclude Include="Source\hpp\Components\MovementComponent.hpp" />
     <ClInclude Include="Source\hpp\Components\SpriteComponent.hpp" />
     <ClInclude Include="Source\hpp\EngineDataStructures.hpp" />
     <ClInclude Include="Source\hpp\freetype\config\ftconfig.h" />
     <ClInclude Include="Source\hpp\freetype\config\ftoption.h" />
     <ClInclude Include="Source\hpp\ft2build.h" />
+    <ClInclude Include="Source\hpp\GameDataStructures.hpp" />
     <ClInclude Include="Source\hpp\Game\Game.hpp" />
     <ClInclude Include="Source\hpp\Game\GameObject.hpp" />
     <ClInclude Include="Source\hpp\Game\Level.hpp" />

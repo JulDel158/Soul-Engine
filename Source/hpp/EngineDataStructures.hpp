@@ -189,13 +189,16 @@ enum class EPanelType : unsigned int
 enum class EComponentClassType : int
 {
 	Base = 0,
-	SpriteComponent
+	SpriteComponent,
+	MovementComponent
+	//TODO: Add any new component type here
 };
 
 enum class EGameObjectClassType : int
 {
 	Base = 0,
 	BackgroundTile
+	// TODO: Add any new gameobject type here
 };
 
 namespace  DataConverter
@@ -294,6 +297,5 @@ namespace  DataConverter
 		return result;
 	}
 }
-
 
 #endif

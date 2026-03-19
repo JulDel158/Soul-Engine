@@ -10,6 +10,7 @@
 #include "StringGlobals.hpp"
 #include "Utils/Logger.hpp"
 #include "Components/SpriteComponent.hpp"
+#include "Components/MovementComponent.hpp"
 #include "World/BackgroundTile.hpp"
 
 #include <filesystem>
@@ -348,6 +349,9 @@ BaseComponent& ResourceManager::CreateComponent(const EComponentClassType type, 
 	case EComponentClassType::SpriteComponent:
 		component = new SpriteComponent();
 		break;
+	case EComponentClassType::MovementComponent:
+	 	component = new MovementComponent();
+		break;
 	}
 	component->SetComponenType(type);
 	components_[type].push_back(component);
@@ -381,6 +385,7 @@ GameObject& ResourceManager::CreateGameObject(EGameObjectClassType type, unsigne
 		break;
 	}
 	result->SetClassType(type);
+	game_objects_.push_back(result);
 	
 	return *result;
 }
