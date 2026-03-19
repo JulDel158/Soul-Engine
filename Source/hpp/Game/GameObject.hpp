@@ -46,7 +46,7 @@ protected:
 	
 public:
 	
-	void AddComponent(BaseComponent* component);
+	void RegisterComponent(BaseComponent* component);
 	// TODO: Add function to remove component??
 	
 	// Setters

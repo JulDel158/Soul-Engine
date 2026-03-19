@@ -197,12 +197,53 @@ enum class EComponentClassType : int
 enum class EGameObjectClassType : int
 {
 	Base = 0,
-	BackgroundTile
+	BackgroundTile,
+	Character
 	// TODO: Add any new gameobject type here
 };
 
 namespace  DataConverter
 {
+	inline std::string ToString(const EGameObjectClassType classType)
+	{
+		std::string result;
+		
+		switch (classType)
+		{
+		case EGameObjectClassType::Base:
+			result = "Base";
+			break;
+		case EGameObjectClassType::BackgroundTile:
+			result = "BackgroundTile";
+			break;
+		case EGameObjectClassType::Character:
+			result = "Character";
+			break;
+		}
+		
+		return result;
+	}
+	inline std::string ToString(const EComponentClassType componentType)
+	{
+		std::string result;
+		
+		switch (componentType)
+		{
+		case EComponentClassType::Base:
+			result = "Base";
+			break;
+		case EComponentClassType::SpriteComponent:
+			result = "SpriteComponent";
+			break;
+		case EComponentClassType::MovementComponent:
+			result = "MovementComponent";
+			break;
+		}
+		
+		
+		return result;
+	}
+	
 	inline std::string ToString(const ESpriteKey spriteId)
 	{
 		std::string result;

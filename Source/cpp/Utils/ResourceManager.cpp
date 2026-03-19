@@ -17,6 +17,9 @@
 #include <sstream>
 #include <fstream>
 #include <utility>
+#include <cassert>
+
+#include "Characters/Character.hpp"
 
 ResourceManager& ResourceManager::Instance()
 {
@@ -336,9 +339,9 @@ void ResourceManager::Clear()
     CloseFreeTypeLibrary();
 }
 
-BaseComponent& ResourceManager::CreateComponent(const EComponentClassType type, unsigned int& storageIndex)
+BaseComponent* ResourceManager::CreateComponent(const EComponentClassType type, unsigned int& storageIndex)
 {
-	BaseComponent* component = nullptr;
+	BaseComponent* component = nullptr; // NOLINT
 	
 	// TODO: As component classes get created, add cases
 	switch (type)
@@ -352,12 +355,17 @@ BaseComponent& ResourceManager::CreateComponent(const EComponentClassType type, 
 	case EComponentClassType::MovementComponent:
 	 	component = new MovementComponent();
 		break;
+	default: // NOLINT
+		auto log = Logger();
+		log.Log(ELogLevel::Error, "ResourceManager::CreateComponent: undefined or unhandled type: ["
+			+ DataConverter::ToString(type) + "]");
+		return nullptr;
 	}
 	component->SetComponenType(type);
 	components_[type].push_back(component);
 	storageIndex = static_cast<unsigned int>(components_[type].size());
 	
-	return *component;
+	return component;
 }
 
 BaseComponent* ResourceManager::GetComponent(const EComponentClassType type, const unsigned int storageIndex)
@@ -370,9 +378,9 @@ BaseComponent* ResourceManager::GetComponent(const EComponentClassType type, con
 	return result;
 }
 
-GameObject& ResourceManager::CreateGameObject(EGameObjectClassType type, unsigned int& storageIndex)
+GameObject* ResourceManager::CreateGameObject(EGameObjectClassType type, unsigned int& storageIndex)
 {
-	GameObject* result = nullptr;
+	GameObject* result = nullptr; //NOLINT
 	
 	// TODO: Add cases as more classes get added to project
 	switch (type)
@@ -383,11 +391,19 @@ GameObject& ResourceManager::CreateGameObject(EGameObjectClassType type, unsigne
 	case EGameObjectClassType::BackgroundTile:
 		result = new BackgroundTile();
 		break;
+	case EGameObjectClassType::Character:
+		result = new Character();
+		break;
+	default: // NOLINT
+		auto log = Logger();
+		log.Log(ELogLevel::Error, "ResourceManager::CreateComponent: undefined or unhandled type: ["
+			+ DataConverter::ToString(type) + "]");
+		return nullptr;
 	}
 	result->SetClassType(type);
 	game_objects_.push_back(result);
 	
-	return *result;
+	return result;
 }
 
 GameObject* ResourceManager::GetGameObject(const unsigned int storageIndex) const

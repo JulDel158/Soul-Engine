@@ -14,10 +14,9 @@ protected:
 	SpriteComponent* sprite_component_;
 	MovementComponent* movement_component_;
 	
-	
 public:
 	Character();
-	~Character() override;
+	~Character() override = default;
 	
 protected:
 	void InitializeComponents();

@@ -43,7 +43,6 @@ bool MovementComponent::IsMovingInDirection(EMovementDirection direction) const
 bool MovementComponent::IsMoving() const
 {
 	return glm::length2(direction_) > 0.0f;
-	return true;
 }
 
 void MovementComponent::Start()

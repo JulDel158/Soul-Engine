@@ -27,7 +27,7 @@ void GameObject::Clear()
 	components_.clear();
 }
 
-void GameObject::AddComponent(BaseComponent* component)
+void GameObject::RegisterComponent(BaseComponent* component)
 {
 	components_.push_back(component);
 	component->owner_ = this;

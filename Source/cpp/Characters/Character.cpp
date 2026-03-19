@@ -10,21 +10,17 @@ Character::Character()
 	InitializeComponents();
 }
 
-Character::~Character()
-{
-}
-
 void Character::InitializeComponents()
 {
 	auto& resourceManager = ResourceManager::Instance();
 	try
 	{
 		unsigned int componentIndex;
-		sprite_component_ = dynamic_cast<SpriteComponent*>(&resourceManager.CreateComponent(EComponentClassType::SpriteComponent, componentIndex));
-		AddComponent(sprite_component_);
+		sprite_component_ = dynamic_cast<SpriteComponent*>(resourceManager.CreateComponent(EComponentClassType::SpriteComponent, componentIndex));
+		RegisterComponent(sprite_component_);
 		
-		movement_component_ = dynamic_cast<MovementComponent*>(&resourceManager.CreateComponent(EComponentClassType::MovementComponent, componentIndex));
-		AddComponent(movement_component_);
+		movement_component_ = dynamic_cast<MovementComponent*>(resourceManager.CreateComponent(EComponentClassType::MovementComponent, componentIndex));
+		RegisterComponent(movement_component_);
 	}
 	catch (...)
 	{

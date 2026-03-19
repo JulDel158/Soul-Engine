@@ -48,8 +48,8 @@ void BackgroundTile::InitializeComponents()
 	try
 	{
 		unsigned int componentIndex;
-		sprite_ = dynamic_cast<SpriteComponent*>(&resourceManager.CreateComponent(EComponentClassType::SpriteComponent, componentIndex));
-		AddComponent(sprite_);
+		sprite_ = dynamic_cast<SpriteComponent*>(resourceManager.CreateComponent(EComponentClassType::SpriteComponent, componentIndex));
+		RegisterComponent(sprite_);
 	}
 	catch (...)
 	{
