@@ -12,10 +12,11 @@
 #include "Rendering/TextRenderer.hpp"
 #include "UI/Panel.hpp"
 #include "Game/Level.hpp"
+#include "Game/TestLevel.hpp"
 
 namespace
 {
-	constexpr unsigned int SHADER_S = 0;
+	constexpr unsigned int TEXTURE_S = 0;
 	constexpr unsigned int POSITION_S = 1;
 	constexpr unsigned int SIZE_S = 2;
 	constexpr unsigned int ROTATION_S = 3;
@@ -50,9 +51,10 @@ Game::~Game()
 	
 	delete text_renderer_;
 	delete sprite_renderer_;
+	delete level_;
 }
 
-void Game::Init() const
+void Game::Init()
 {
 	// Initialize/Load all persistent data, such as fonts and certain images
     ResourceManager& resourceManager = ResourceManager::Instance();
@@ -114,6 +116,9 @@ void Game::Init() const
     // set base shaders on renderers
     sprite_renderer_->SwapShader(spriteShader);
     text_renderer_->SwapShader(textShader);
+	
+	level_ = new TestLevel();
+	game_state_ = EGameState::InGame_Running;
 }
 
 void Game::Start()
@@ -142,7 +147,6 @@ void Game::Start()
 void Game::Update(const float dt)
 {
 	runtime_ += dt;
-
 	if (game_state_ == EGameState::InGame_Running)
 	{
 		// TODO: Game objects will now be updated from within the owning level
@@ -202,6 +206,7 @@ void Game::Render(const float dt) const
 	{
 		level_->Render(dt, *sprite_renderer_);
 	}
+	
    //  for (const auto& gameObject : game_objects_)
    //  {
    //  	if (!gameObject->IsVisible())
@@ -244,7 +249,7 @@ void Game::Render(const float dt) const
 				for (const auto& renderTarget : widget->GetRenderList())
 				{
 					sprite_renderer_->DrawSprite(
-						std::get<SHADER_S>(renderTarget), 
+						std::get<TEXTURE_S>(renderTarget), 
 				std::get<POSITION_S>(renderTarget), 
 				std::get<SIZE_S>(renderTarget), 
 				std::get<ROTATION_S>(renderTarget), 

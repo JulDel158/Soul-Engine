@@ -17,7 +17,8 @@ GameObject::GameObject() :
 	type_(EGameObjectClassType::Base),
 	is_active_(true),
 	is_visible_(true),
-	fixed_render_list_(true)
+	fixed_render_list_(false),
+	render_list_initialized_(false)
 {
 }
 
@@ -53,7 +54,7 @@ void GameObject::Update(const float deltaTime)
 	for (const auto& component : components_)
 	{
 		component->Update(deltaTime);
-		if (!fixed_render_list_)
+		if (fixed_render_list_ && render_list_initialized_)
 		{
 			continue;
 		}
@@ -62,6 +63,7 @@ void GameObject::Update(const float deltaTime)
 			render_list_.emplace_back(renderData.value());
 		}
 	}
+	render_list_initialized_ = !render_list_.empty();
 }
 
 void GameObject::End()

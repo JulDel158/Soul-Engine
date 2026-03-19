@@ -12,6 +12,7 @@ class TextRenderer;
 class GameObject;
 class Panel;
 class Level;
+class PlayerCharacter;
 
 // Class in charge of game's core. From here we will perform updates to the game state, physics, rendering, audio.
 // From here it is communicated what gets loaded and unloaded and the state of game objects
@@ -30,7 +31,7 @@ private:
 	float in_game_run_time_;
 	float runtime_;
     
-    void Init() const;
+    void Init();
     
 public:
     explicit Game(const Settings& settings);

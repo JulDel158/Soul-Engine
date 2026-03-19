@@ -32,6 +32,7 @@ protected:
 	bool is_active_;
 	bool is_visible_;
 	bool fixed_render_list_;
+	bool render_list_initialized_;
 	
 public:
 	GameObject();

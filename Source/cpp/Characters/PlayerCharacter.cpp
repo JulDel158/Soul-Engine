@@ -7,12 +7,11 @@
 #include "EngineDataStructures.hpp"
 #include "GameDataStructures.hpp"
 #include "Components/SpriteComponent.hpp"
+#include "Components/MovementComponent.hpp"
 #include "Utils/ResourceManager.hpp"
 #include "Input/InputManager.hpp"
 
 #include <vector>
-
-#include "Components/MovementComponent.hpp"
 
 namespace
 {
@@ -37,31 +36,31 @@ PlayerCharacter::PlayerCharacter()
 	spriteKeys.push_back(ESpriteKey::Player_Idle_1);
 	spriteKeys.push_back(ESpriteKey::Player_Idle_2);
 	spriteKeys.push_back(ESpriteKey::Player_Idle_3);
-	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Idle), SpriteAnimation(spriteKeys, 10));
+	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Idle), SpriteAnimation(spriteKeys, 30));
 	
 	spriteKeys.clear();
 	spriteKeys.push_back(ESpriteKey::Player_Left_1);
 	spriteKeys.push_back(ESpriteKey::Player_Left_2);
 	spriteKeys.push_back(ESpriteKey::Player_Left_3);
-	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Walking_Left), SpriteAnimation(spriteKeys, 10));
+	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Walking_Left), SpriteAnimation(spriteKeys, 30));
 	
 	spriteKeys.clear();
 	spriteKeys.push_back(ESpriteKey::Player_Right_1);
 	spriteKeys.push_back(ESpriteKey::Player_Right_2);
 	spriteKeys.push_back(ESpriteKey::Player_Right_3);
-	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Walking_Right), SpriteAnimation(spriteKeys, 10));
+	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Walking_Right), SpriteAnimation(spriteKeys, 30));
 	
 	spriteKeys.clear();
 	spriteKeys.push_back(ESpriteKey::Player_Up_1);
 	spriteKeys.push_back(ESpriteKey::Player_Up_2);
 	spriteKeys.push_back(ESpriteKey::Player_Up_3);
-	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Walking_Up), SpriteAnimation(spriteKeys, 10));
+	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Walking_Up), SpriteAnimation(spriteKeys, 30));
 	
 	spriteKeys.clear();
 	spriteKeys.push_back(ESpriteKey::Player_Down_1);
 	spriteKeys.push_back(ESpriteKey::Player_Down_2);
 	spriteKeys.push_back(ESpriteKey::Player_Down_3);
-	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Walking_Down), SpriteAnimation(spriteKeys, 10));
+	sprite_component_->AddAnimation(static_cast<int>(EPlayerAnimationState::Walking_Down), SpriteAnimation(spriteKeys, 30));
 	
 	InitializeInputActions();
 }
@@ -114,6 +113,7 @@ void PlayerCharacter::InitializeInputActions()
 	gamepad_movement_ia_.BindUpdated([this](const glm::vec2 data, const float deltaTime)
 	{
 		this->OnMovementInputUpdate(data, false, false);
+		// todo: play animations
 	});
 	
 	keyboard_up_ia_.BindPressed([this](const glm::vec2 data)
@@ -122,6 +122,10 @@ void PlayerCharacter::InitializeInputActions()
 		{
 			this->OnMovementInputUpdate(glm::vec2(0.0f, -1.0f), true, false);
 			y_owner_ = UP_KEY;
+			if (x_owner_ == NO_OWNER)
+			{
+				sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Up));
+			}
 		}
 	});
 	keyboard_up_ia_.BindReleased([this]()
@@ -131,6 +135,11 @@ void PlayerCharacter::InitializeInputActions()
 			this->OnMovementInputUpdate(glm::vec2(0.0f, 0.0f), true, false);
 			y_owner_ = NO_OWNER;
 		}
+		
+		if (x_owner_ == NO_OWNER && y_owner_ == NO_OWNER)
+		{
+			sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Idle));
+		}
 	});
 	
 	keyboard_down_ia_.BindPressed([this](const glm::vec2 data)
@@ -139,6 +148,10 @@ void PlayerCharacter::InitializeInputActions()
 		{
 			this->OnMovementInputUpdate(glm::vec2(0.0f, 1.0f), true, false);
 			y_owner_ = DOWN_KEY;
+			if (x_owner_ == NO_OWNER)
+			{
+				sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Down));
+			}
 		}
 	});
 	keyboard_down_ia_.BindReleased([this]()
@@ -148,6 +161,11 @@ void PlayerCharacter::InitializeInputActions()
 			this->OnMovementInputUpdate(glm::vec2(0.0f, 0.0f), true, false);
 			y_owner_ = NO_OWNER;
 		}
+		
+		if (x_owner_ == NO_OWNER && y_owner_ == NO_OWNER)
+		{
+			sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Idle));
+		}
 	});
 	
 	keyboard_left_ia_.BindPressed([this](const glm::vec2 data)
@@ -156,6 +174,8 @@ void PlayerCharacter::InitializeInputActions()
 		{
 			this->OnMovementInputUpdate(glm::vec2(-1.0f, 0.0f), false, true);
 			x_owner_ = LEFT_KEY;
+			
+			sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Left));
 		}
 	});
 	keyboard_left_ia_.BindReleased([this]()
@@ -165,6 +185,23 @@ void PlayerCharacter::InitializeInputActions()
 			this->OnMovementInputUpdate(glm::vec2(0.0f, 0.0f), false, true);
 			x_owner_ = NO_OWNER;
 		}
+		
+		if (x_owner_ == NO_OWNER)
+		{
+			switch (y_owner_)
+			{
+			case UP_KEY:
+				sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Up));
+				break;
+			case DOWN_KEY:
+				sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Down));
+				break;
+			case NO_OWNER:
+			default:
+				sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Idle));
+			}
+		}
+		
 	});
 	
 	keyboard_right_ia_.BindPressed([this](const glm::vec2 data)
@@ -173,6 +210,7 @@ void PlayerCharacter::InitializeInputActions()
 		{
 			this->OnMovementInputUpdate(glm::vec2(1.0f, 0.0f), false, true);
 			x_owner_ = RIGHT_KEY;
+			sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Right));
 		}
 	});
 	keyboard_right_ia_.BindReleased([this]()
@@ -181,6 +219,22 @@ void PlayerCharacter::InitializeInputActions()
 		{
 			this->OnMovementInputUpdate(glm::vec2(0.0f, 0.0f), false, true);
 			x_owner_ = NO_OWNER;
+		}
+		
+		if (x_owner_ == NO_OWNER)
+		{
+			switch (y_owner_)
+			{
+			case UP_KEY:
+				sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Up));
+				break;
+			case DOWN_KEY:
+				sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Down));
+				break;
+			case NO_OWNER:
+			default:
+				sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Idle));
+			}
 		}
 	});
 	

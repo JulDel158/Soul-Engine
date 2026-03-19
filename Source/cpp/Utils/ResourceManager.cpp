@@ -12,14 +12,14 @@
 #include "Components/SpriteComponent.hpp"
 #include "Components/MovementComponent.hpp"
 #include "World/BackgroundTile.hpp"
+#include "Characters/Character.hpp"
+#include "Characters/PlayerCharacter.hpp"
 
 #include <filesystem>
 #include <sstream>
 #include <fstream>
 #include <utility>
 #include <cassert>
-
-#include "Characters/Character.hpp"
 
 ResourceManager& ResourceManager::Instance()
 {
@@ -393,6 +393,9 @@ GameObject* ResourceManager::CreateGameObject(const EGameObjectClassType type, u
 		break;
 	case EGameObjectClassType::Character:
 		result = new Character();
+		break;
+	case EGameObjectClassType::PlayerCharacter:
+		result = new PlayerCharacter();
 		break;
 	default: // NOLINT
 		auto log = Logger();

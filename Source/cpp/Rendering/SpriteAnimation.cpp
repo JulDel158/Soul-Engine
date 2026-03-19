@@ -95,7 +95,7 @@ void SpriteAnimation::SetAnimationSprites(const std::vector<ESpriteKey>& names)
 {
 	auto& resourceManager = ResourceManager::Instance();
 	auto logger = Logger();
-	textures_.resize(names.size());
+	textures_.reserve(names.size());
 	for (const auto& textureName : names)
 	{
 		if (resourceManager.ContainsTexture2D(textureName))

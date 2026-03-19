@@ -28,6 +28,7 @@
     <ClCompile Include="Source\cpp\Game\Game.cpp" />
     <ClCompile Include="Source\cpp\Game\GameObject.cpp" />
     <ClCompile Include="Source\cpp\Game\Level.cpp" />
+    <ClCompile Include="Source\cpp\Game\TestLevel.cpp" />
     <ClCompile Include="Source\cpp\gl.c" />
     <ClCompile Include="Source\cpp\Input\InputAction.cpp" />
     <ClCompile Include="Source\cpp\Input\InputManager.cpp" />
@@ -535,6 +536,7 @@
     <ClInclude Include="Source\hpp\Game\Game.hpp" />
     <ClInclude Include="Source\hpp\Game\GameObject.hpp" />
     <ClInclude Include="Source\hpp\Game\Level.hpp" />
+    <ClInclude Include="Source\hpp\Game\TestLevel.hpp" />
     <ClInclude Include="Source\hpp\Input\InputAction.hpp" />
     <ClInclude Include="Source\hpp\Input\InputManager.hpp" />
     <ClInclude Include="Source\hpp\Physics\PhysicsDataStructures.hpp" />

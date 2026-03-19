@@ -198,7 +198,8 @@ enum class EGameObjectClassType : int
 {
 	Base = 0,
 	BackgroundTile,
-	Character
+	Character,
+	PlayerCharacter
 	// TODO: Add any new gameobject type here
 };
 
@@ -219,6 +220,8 @@ namespace  DataConverter
 		case EGameObjectClassType::Character:
 			result = "Character";
 			break;
+		case EGameObjectClassType::PlayerCharacter:
+			result = "PlayerCharacter";
 		}
 		
 		return result;
