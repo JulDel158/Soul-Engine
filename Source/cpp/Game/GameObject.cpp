@@ -7,12 +7,12 @@
 namespace
 {
 	constexpr auto ZERO_VECTOR_2_F = glm::vec2(0.0f);
-	constexpr auto ONE_HUNDRED_VECTOR_2_F = glm::vec2(100.0f);
+	constexpr auto ONE_VECTOR_2_F = glm::vec2(1.0f);
 }
 
 GameObject::GameObject() :
 	position_(ZERO_VECTOR_2_F),
-	size_(ONE_HUNDRED_VECTOR_2_F),
+	size_(ONE_VECTOR_2_F),
 	rotation_(0.0f), 
 	type_(EGameObjectClassType::Base),
 	is_active_(true),

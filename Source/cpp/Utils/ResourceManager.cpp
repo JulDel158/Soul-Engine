@@ -378,7 +378,7 @@ BaseComponent* ResourceManager::GetComponent(const EComponentClassType type, con
 	return result;
 }
 
-GameObject* ResourceManager::CreateGameObject(EGameObjectClassType type, unsigned int& storageIndex)
+GameObject* ResourceManager::CreateGameObject(const EGameObjectClassType type, unsigned int& storageIndex)
 {
 	GameObject* result = nullptr; //NOLINT
 	
