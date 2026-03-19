@@ -1,6 +1,6 @@
 #include "Characters/PlayerCharacter.hpp"
 
-#include "gl/GL.h" // NOLINT
+#include "glad/gl.h" // NOLINT
 #include "GLFW/glfw3.h"
 
 #include "Rendering/SpriteAnimation.hpp"
