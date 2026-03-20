@@ -30,3 +30,8 @@ std::optional<BaseComponent::RenderData> BaseComponent::GetRenderData()
 {
 	return std::nullopt;
 }
+
+std::optional<BaseComponent::PhysicsData> BaseComponent::GetCollisionData() const
+{
+	return std::nullopt;
+}

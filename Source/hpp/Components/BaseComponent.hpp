@@ -7,6 +7,7 @@
 
 #include "Rendering/Texture2D.hpp"
 #include "EngineDataStructures.hpp"
+#include "Physics/PhysicsDataStructures.hpp"
 
 #include <tuple>
 #include <optional>
@@ -16,6 +17,7 @@ class BaseComponent
 {
 protected:
 	using RenderData = std::tuple<Texture2D, glm::vec2, glm::vec2, float, glm::vec3>;
+	using PhysicsData = std::tuple<EPhysicsObjectType, void*>;
 	friend class GameObject;
 	friend class Game;
 	friend class ResourceManager;
@@ -45,7 +47,7 @@ public:
 	inline void SetScale(const glm::vec2& size)					{ scale_ = size; }
 	inline void SetRotation(const float rotation)				{ rotation_ = rotation; }
 	inline void SetEnabled(const bool enabled)					{ enabled_ = enabled; }
-	inline void SetComponenType(EComponentClassType componentType)	{ component_type_ = componentType; }
+	inline void SetComponentType(EComponentClassType componentType)	{ component_type_ = componentType; }
 	
 	// Getters
 	inline glm::vec2		GetPosition() const	{ return position_; }
@@ -55,7 +57,9 @@ public:
 	inline bool				HasOwner() const	{ return owner_ != nullptr; }
 	inline bool				IsAttached() const	{ return parent_ != nullptr; }
 	inline EComponentClassType	GetType() const		{ return component_type_; }
+	inline GameObject*		GetOwner() const		{ return owner_; }
 	
 	virtual std::optional<RenderData> GetRenderData(); 
+	virtual std::optional<PhysicsData> GetCollisionData() const;
 };
 #endif

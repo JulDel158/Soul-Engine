@@ -361,7 +361,7 @@ BaseComponent* ResourceManager::CreateComponent(const EComponentClassType type, 
 			+ DataConverter::ToString(type) + "]");
 		return nullptr;
 	}
-	component->SetComponenType(type);
+	component->SetComponentType(type);
 	components_[type].push_back(component);
 	storageIndex = static_cast<unsigned int>(components_[type].size());
 	

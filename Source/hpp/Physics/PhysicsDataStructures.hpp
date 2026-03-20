@@ -4,6 +4,16 @@
 
 #include "glm/glm.hpp"
 
+enum class EPhysicsObjectType : unsigned char
+{
+	None = 0,
+	Quad,
+	Circle,
+	Line,
+	Point // Note: A point is just a vec2
+	// TODO: Add any new physics object class types here
+};
+
 struct Quad
 {
 	glm::vec2 position_;
@@ -36,6 +46,7 @@ struct Line
 	glm::vec2 point2_;
 	
 	Line() : point1_{glm::vec2(0.0f)}, point2_{glm::vec2(0.0f)} {}
+	Line(const glm::vec2 point1, const glm::vec2 point2) : point1_{point1}, point2_{point2} {}
 };
 
 struct Circle
@@ -46,13 +57,13 @@ struct Circle
 	Circle() : position_{glm::vec2(0.0f)}, radius_{0.0f} {}
 };
 
-struct Triangle
-{
-	glm::vec2 point1_;
-	glm::vec2 point2_;
-	glm::vec2 point3_;
-	
-	Triangle() : point1_{glm::vec2(0.0f)}, point2_{glm::vec2(0.0f)}, point3_{glm::vec2(0.0f)} {}
-};
+// struct Triangle
+// {
+// 	glm::vec2 point1_;
+// 	glm::vec2 point2_;
+// 	glm::vec2 point3_;
+// 	
+// 	Triangle() : point1_{glm::vec2(0.0f)}, point2_{glm::vec2(0.0f)}, point3_{glm::vec2(0.0f)} {}
+// };
 
 #endif
