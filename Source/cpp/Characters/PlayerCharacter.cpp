@@ -66,6 +66,16 @@ PlayerCharacter::PlayerCharacter()
 	InitializeInputActions();
 }
 
+void PlayerCharacter::StartSwimming() const
+{
+	movement_component_->SetMovementMode(EMovementMode::Swimming);
+}
+
+void PlayerCharacter::StopSwimming() const
+{
+	movement_component_->SetMovementMode(EMovementMode::Walking);
+}
+
 void PlayerCharacter::OnMovementInputUpdate(glm::vec2 data, const bool keepCurrentX, const bool keepCurrentY) const
 {
 	// This is to ensure gamepad values are always either -1, 0, or 1
@@ -103,12 +113,30 @@ void PlayerCharacter::OnMovementInputUpdate(glm::vec2 data, const bool keepCurre
 
 void PlayerCharacter::SprintPressed() const
 {
+	if (movement_component_->IsSwimming())
+	{
+		return;
+	}
 	movement_component_->SetMovementMode(EMovementMode::Running);
 }
 
 void PlayerCharacter::SprintReleased() const
 {
+	if (movement_component_->IsSwimming())
+	{
+		return;
+	}
 	movement_component_->SetMovementMode(EMovementMode::Walking);
+}
+
+void PlayerCharacter::InteractPressed() const
+{
+	// TODO: Handle interact logic
+}
+
+void PlayerCharacter::InteractReleased() const
+{
+	// TODO: Handle interact logic
 }
 
 void PlayerCharacter::InitializeInputActions()
@@ -117,11 +145,14 @@ void PlayerCharacter::InitializeInputActions()
 	
 	gamepad_movement_ia_.SetType(EInputActionType::Gamepad_Axes);
 	gamepad_sprint_ia_.SetType(EInputActionType::Gamepad_Button);
+	gamepad_interaction_ia_.SetType(EInputActionType::Gamepad_Button);
+	
 	keyboard_up_ia_.SetType(EInputActionType::Keyboard);
 	keyboard_down_ia_.SetType(EInputActionType::Keyboard);
 	keyboard_left_ia_.SetType(EInputActionType::Keyboard);
 	keyboard_right_ia_.SetType(EInputActionType::Keyboard);
 	keyboard_sprint_ia_.SetType(EInputActionType::Keyboard);
+	keyboard_interaction_ia_.SetType(EInputActionType::Keyboard);
 	
 	gamepad_movement_ia_.BindUpdated([this](const glm::vec2 data, const float deltaTime)
 	{
@@ -154,6 +185,22 @@ void PlayerCharacter::InitializeInputActions()
 		this->SprintReleased();
 	});
 	
+	gamepad_interaction_ia_.BindPressed([this](const glm::vec2 data)
+	{
+		if (!gamepad_mode_)
+		{
+			return;
+		}
+		this->InteractPressed();
+	});
+	gamepad_interaction_ia_.BindReleased([this]()
+	{
+		if (!gamepad_mode_)
+		{
+			return;
+		}
+		this->InteractReleased();
+	});
 	
 	keyboard_up_ia_.BindPressed([this](const glm::vec2 data)
 	{
@@ -308,6 +355,23 @@ void PlayerCharacter::InitializeInputActions()
 		}
 		
 		this->SprintReleased();
+	});
+	
+	keyboard_interaction_ia_.BindPressed([this](const glm::vec2 data)
+	{
+		if (gamepad_mode_)
+		{
+			return;
+		}
+		this->InteractPressed();
+	});
+	keyboard_interaction_ia_.BindReleased([this]()
+	{
+		if (gamepad_mode_)
+		{
+			return;
+		}
+		this->InteractReleased();
 	});
 	
 	inputManager.BindInputAction(&gamepad_movement_ia_, GLFW_GAMEPAD_AXIS_LEFT_X, GLFW_JOYSTICK_1);
