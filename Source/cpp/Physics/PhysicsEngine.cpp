@@ -1,4 +1,4 @@
-#include "Physics/SimpleCollision.hpp"
+#include "Physics/PhysicsEngine.hpp"
 
 namespace
 {
@@ -8,14 +8,33 @@ namespace
 	constexpr unsigned int BOTTOM_RIGHT = 3;
 }
 
-bool SimpleCollision::IsOverlapping(const Quad& quad, const glm::vec2 point)
+PhysicsEngine& PhysicsEngine::Instance()
+{
+	static auto instance = PhysicsEngine();
+	return instance;
+}
+
+void PhysicsEngine::RegisterComponent(BaseComponent& component)
+{
+	registered_components_.insert(&component);
+}
+
+void PhysicsEngine::UnregisterComponent(BaseComponent& component)
+{
+	if (registered_components_.contains(&component))
+	{
+		registered_components_.erase(&component);
+	}
+}
+
+bool PhysicsEngine::IsOverlapping(const Quad& quad, const glm::vec2 point)
 {
 	const bool xInRange = (point.x >= quad.position_.x - quad.GetScaledSize().x) &&  point.x <= quad.position_.x + quad.GetScaledSize().x;
 	const bool yInRange = (point.y >= quad.position_.y - quad.GetScaledSize().y) &&  point.y <= quad.position_.y + quad.GetScaledSize().y;
 	return xInRange && yInRange;
 }
 
-bool SimpleCollision::IsOverlapping(const Quad& a, const Quad& b)
+bool PhysicsEngine::IsOverlapping(const Quad& a, const Quad& b)
 {
 	glm::vec2 cornersA[4];
 	glm::vec2 cornersB[4];
@@ -36,7 +55,7 @@ bool SimpleCollision::IsOverlapping(const Quad& a, const Quad& b)
 	return result;
 }
 
-bool SimpleCollision::IsOverlapping(const Circle circle, const glm::vec2 point)
+bool PhysicsEngine::IsOverlapping(const Circle circle, const glm::vec2 point)
 {
 	const float x = point.x - circle.position_.x;
 	const float y = point.y - circle.position_.y;
@@ -44,7 +63,7 @@ bool SimpleCollision::IsOverlapping(const Circle circle, const glm::vec2 point)
 	return distanceSquared <= circle.radius_ * circle.radius_;
 }
 
-bool SimpleCollision::IsOverlapping(const Circle a, const Circle b)
+bool PhysicsEngine::IsOverlapping(const Circle a, const Circle b)
 {
 	const float x = a.position_.x - b.position_.x;
 	const float y = a.position_.y - b.position_.y;

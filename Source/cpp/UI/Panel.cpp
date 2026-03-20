@@ -6,7 +6,7 @@
 #include "EngineDataStructures.hpp"
 #include "Input/InputManager.hpp"
 #include "Physics/PhysicsDataStructures.hpp"
-#include "Physics/SimpleCollision.hpp"
+#include "Physics/PhysicsEngine.hpp"
 
 namespace
 {
@@ -170,7 +170,7 @@ void Panel::OnRightClick(const glm::vec2 data) const
 			{
 				continue;
 			}
-			if (SimpleCollision::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
+			if (PhysicsEngine::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
 			{
 				widget->OnClick(false);
 			}
@@ -188,7 +188,7 @@ void Panel::OnLeftClick(const glm::vec2 data) const
 			{
 				continue;
 			}
-			if (SimpleCollision::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
+			if (PhysicsEngine::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
 			{
 				widget->OnClick(true);
 			}
@@ -206,7 +206,7 @@ void Panel::OnMouseMove(const glm::vec2 data, const float deltaTime) const
 			{
 				continue;
 			}
-			if (SimpleCollision::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
+			if (PhysicsEngine::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
 			{
 				widget->OnMouseEnter();
 			}
