@@ -5,7 +5,7 @@
 
 namespace
 {
-	constexpr unsigned int SHADER_S = 0;
+	constexpr unsigned int TEXTURE_S = 0;
 	constexpr unsigned int POSITION_S = 1;
 	constexpr unsigned int SIZE_S = 2;
 	constexpr unsigned int ROTATION_S = 3;
@@ -63,7 +63,7 @@ void Level::Render(const float deltaTime, SpriteRenderer& renderer)
 		{
 			for (const auto& renderTarget : gameObject->GetRenderList())
 			{
-				renderer.DrawSprite(std::get<SHADER_S>(renderTarget), 
+				renderer.DrawSprite(std::get<TEXTURE_S>(renderTarget), 
 				std::get<POSITION_S>(renderTarget), 
 				std::get<SIZE_S>(renderTarget), 
 				std::get<ROTATION_S>(renderTarget), 

@@ -31,8 +31,8 @@ void Character::InitializeComponents()
 		movement_component_ = dynamic_cast<MovementComponent*>(resourceManager.CreateComponent(EComponentClassType::MovementComponent, componentIndex));
 		RegisterComponent(movement_component_);
 		
-		movement_component_->SetWalkingSpeed(100.0f);
-		movement_component_->SetMovementSpeed(10.0f);
+		movement_component_->SetMovementSpeed(100.0f);
+		movement_component_->SetWalkingSpeed(1.5f);
 		movement_component_->SetRunningSpeed(2.0f);
 		movement_component_->SetSwimmingSpeed(0.5f);
 		movement_component_->UseSpeedAsScales(true);
