@@ -20,7 +20,7 @@ public:
 	void RegisterComponent(BaseComponent& component);
 	void UnregisterComponent(BaseComponent& component);
 	
-	bool CheckCollision(const BaseComponent& component, BaseComponent*& outHit);
+	bool CheckCollision(BaseComponent& component, BaseComponent*& outHit);
 	
 	// Check whether the 2 objects are colliding
 	static bool IsOverlapping(const Quad& quad, const glm::vec2 point);

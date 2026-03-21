@@ -190,7 +190,8 @@ enum class EComponentClassType : int
 {
 	Base = 0,
 	SpriteComponent,
-	MovementComponent
+	MovementComponent,
+	BoxCollisionComponent
 	//TODO: Add any new component type here
 };
 
@@ -241,6 +242,8 @@ namespace  DataConverter
 		case EComponentClassType::MovementComponent:
 			result = "MovementComponent";
 			break;
+		case EComponentClassType::BoxCollisionComponent:
+			result = "BoxCollisionComponent";
 		}
 		
 		

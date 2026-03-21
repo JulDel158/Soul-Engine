@@ -43,7 +43,7 @@ void PhysicsEngine::UnregisterComponent(BaseComponent& component)
 	}
 }
 
-bool PhysicsEngine::CheckCollision(const BaseComponent& component, BaseComponent*& outHit)
+bool PhysicsEngine::CheckCollision(BaseComponent& component, BaseComponent*& outHit)
 {
 	auto collisionData = component.GetCollisionData();
 	if (collisionData == std::nullopt)

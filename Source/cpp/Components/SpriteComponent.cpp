@@ -20,6 +20,7 @@ SpriteComponent::SpriteComponent() :
 color_(ONE_VECTOR_3_F),
 current_animation_(BASE_SPRITE_ID)
 {
+	component_type_ = EComponentClassType::SpriteComponent;
 }
 
 SpriteComponent::~SpriteComponent()
@@ -96,12 +97,12 @@ std::optional<BaseComponent::RenderData> SpriteComponent::GetRenderData()
 	}
 	
 	const glm::vec2 relativePosition = (parent_ != nullptr) ? parent_->GetPosition() : ZERO_VECTOR_2_F;
-	const glm::vec2 relativeScale = (parent_ != nullptr) ? parent_->GetScale() : ONE_VECTOR_2_F;
+	const glm::vec2 relativeScale = (parent_ != nullptr) ? parent_->GetSize() : ONE_VECTOR_2_F;
 	const float relativeRotation = (parent_ != nullptr) ? parent_->GetRotation() : 0.0f;
 	
 	return std::make_tuple(GetCurrentTexture(), 
 		position_ + owner_->GetPosition() + relativePosition, 
-		scale_ * owner_->GetSize() * relativeScale, 
+		size_ * owner_->GetSize() * relativeScale, 
 		rotation_ + owner_->GetRotation() + relativeRotation, 
 		color_);
 }

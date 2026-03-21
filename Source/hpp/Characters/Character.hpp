@@ -6,6 +6,7 @@
 
 class SpriteComponent;
 class MovementComponent;
+class BoxCollisionComponent;
 
 // Base class for characters
 class Character : public GameObject
@@ -13,6 +14,7 @@ class Character : public GameObject
 protected:
 	SpriteComponent* sprite_component_;
 	MovementComponent* movement_component_;
+	BoxCollisionComponent* box_collision_component_;
 	
 public:
 	Character();

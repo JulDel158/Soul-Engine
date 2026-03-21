@@ -14,12 +14,14 @@
 #include "World/BackgroundTile.hpp"
 #include "Characters/Character.hpp"
 #include "Characters/PlayerCharacter.hpp"
+#include "Components/BoxCollisionComponent.hpp"
 
 #include <filesystem>
 #include <sstream>
 #include <fstream>
 #include <utility>
 #include <cassert>
+
 
 ResourceManager& ResourceManager::Instance()
 {
@@ -339,7 +341,7 @@ void ResourceManager::Clear()
     CloseFreeTypeLibrary();
 }
 
-BaseComponent* ResourceManager::CreateComponent(const EComponentClassType type, unsigned int& storageIndex)
+BaseComponent* ResourceManager::CreateComponent(const EComponentClassType type, unsigned int& storageIndex, GameObject* owner)
 {
 	BaseComponent* component = nullptr; // NOLINT
 	
@@ -355,6 +357,9 @@ BaseComponent* ResourceManager::CreateComponent(const EComponentClassType type, 
 	case EComponentClassType::MovementComponent:
 	 	component = new MovementComponent();
 		break;
+	case EComponentClassType::BoxCollisionComponent:
+		component = new BoxCollisionComponent();
+		break;
 	default: // NOLINT
 		auto log = Logger();
 		log.Log(ELogLevel::Error, "ResourceManager::CreateComponent: undefined or unhandled type: ["
@@ -362,6 +367,7 @@ BaseComponent* ResourceManager::CreateComponent(const EComponentClassType type, 
 		return nullptr;
 	}
 	component->SetComponentType(type);
+	component->owner_ = owner;
 	components_[type].push_back(component);
 	storageIndex = static_cast<unsigned int>(components_[type].size());
 	

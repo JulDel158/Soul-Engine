@@ -1,8 +1,10 @@
 #include "Components/MovementComponent.hpp"
 
-#include "Game/GameObject.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
 #include "glm/gtx/norm.hpp"
+
+#include "EngineDataStructures.hpp"
+#include "Game/GameObject.hpp"
 
 MovementComponent::MovementComponent() : 
 movement_speed_(0.0f), 
@@ -12,6 +14,7 @@ swimming_speed_(1.0f),
 movement_as_scale_(false),
 movement_mode_(EMovementMode::None)
 {
+	component_type_ = EComponentClassType::MovementComponent;
 }
 
 bool MovementComponent::IsMovingInDirection(EMovementDirection direction) const

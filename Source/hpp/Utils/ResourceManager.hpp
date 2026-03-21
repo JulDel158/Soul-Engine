@@ -57,7 +57,7 @@ public:
     bool ContainsFont(const std::string& name) const;
 	
 	// Level loading
-	BaseComponent* CreateComponent(EComponentClassType type, unsigned int& storageIndex); // Creates a component dynamically
+	BaseComponent* CreateComponent(EComponentClassType type, unsigned int& storageIndex, GameObject* owner); // Creates a component dynamically
 	BaseComponent* GetComponent(EComponentClassType type, unsigned int storageIndex); // Returns an existing component if available
 	GameObject* CreateGameObject(EGameObjectClassType type, unsigned int& storageIndex);
 	GameObject* GetGameObject(unsigned int storageIndex) const;

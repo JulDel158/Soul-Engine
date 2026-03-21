@@ -12,6 +12,8 @@
 #include <tuple>
 #include <optional>
 
+#include "Game/GameObject.hpp"
+
 // Base class for all game components
 class BaseComponent
 {
@@ -23,7 +25,7 @@ protected:
 	friend class ResourceManager;
 	
 	glm::vec2 position_;
-	glm::vec2 scale_;
+	glm::vec2 size_;
 	float rotation_;
 	bool enabled_;
 	GameObject* owner_;
@@ -44,15 +46,16 @@ protected:
 public:
 	// Setters
 	inline void SetPosition(const glm::vec2& position)			{ position_ = position; }
-	inline void SetScale(const glm::vec2& size)					{ scale_ = size; }
+	inline void SetSize(const glm::vec2& size)					{ size_ = size; }
 	inline void SetRotation(const float rotation)				{ rotation_ = rotation; }
 	inline void SetEnabled(const bool enabled)					{ enabled_ = enabled; }
 	inline void SetComponentType(EComponentClassType componentType)	{ component_type_ = componentType; }
 	
+	// TODO: only add or multiply owner if no parent is present
 	// Getters
-	inline glm::vec2		GetPosition() const	{ return position_; }
-	inline glm::vec2		GetScale() const	{ return scale_; }
-	inline float			GetRotation() const	{ return rotation_; }
+	inline glm::vec2		GetPosition() const	{ return position_ + (owner_ != nullptr ? owner_->GetPosition(): glm::vec2(0.0f)) + (parent_ != nullptr ? parent_->GetPosition() : glm::vec2(0.0f)); }
+	inline glm::vec2		GetSize() const	{ return size_ + (owner_ != nullptr ? owner_->GetSize(): glm::vec2(1.0f)) + (parent_ != nullptr ? parent_->GetSize() : glm::vec2(1.0f)); }
+	inline float			GetRotation() const	{ return rotation_ + (owner_ != nullptr ? owner_->GetRotation(): 0.0f) + (parent_ != nullptr ? parent_->GetRotation() : 1.0f); }
 	inline bool				GetEnabled() const	{ return enabled_; }
 	inline bool				HasOwner() const	{ return owner_ != nullptr; }
 	inline bool				IsAttached() const	{ return parent_ != nullptr; }
@@ -60,6 +63,6 @@ public:
 	inline GameObject*		GetOwner() const		{ return owner_; }
 	
 	virtual std::optional<RenderData> GetRenderData(); 
-	virtual std::optional<PhysicsData> GetCollisionData() const;
+	virtual std::optional<PhysicsData> GetCollisionData();
 };
 #endif
