@@ -14,6 +14,7 @@ swimming_speed_(1.0f),
 movement_as_scale_(false),
 movement_mode_(EMovementMode::None)
 {
+	is_visible_ = false;
 	component_type_ = EComponentClassType::MovementComponent;
 }
 

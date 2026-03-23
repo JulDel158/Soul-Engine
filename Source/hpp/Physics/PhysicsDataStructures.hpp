@@ -26,11 +26,11 @@ struct Quad
 	glm::vec2 GetScaledSize() const { return size_ * scale_; }
 	void GetCorners(glm::vec2& topLeft, glm::vec2& bottomLeft, glm::vec2& topRight, glm::vec2& bottomRight ) const
 	{
-		const float left = position_.x - (size_.x *scale_.x);
-		const float right = position_.x + (size_.x *scale_.x);
+		const float left = position_.x - (size_.x * scale_.x);
+		const float right = position_.x + (size_.x * scale_.x);
 		// top of the screen is represented by 0, value increases in + direction as we go down
-		const float up = position_.y - (size_.y *scale_.y);
-		const float down = position_.y + (size_.y *scale_.y);
+		const float up = position_.y - (size_.y * scale_.y);
+		const float down = position_.y + (size_.y * scale_.y);
 		
 		bottomLeft.x	= topLeft.x		= left;
 		topRight.x		= bottomRight.x = right;

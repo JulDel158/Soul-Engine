@@ -43,25 +43,25 @@ void PhysicsEngine::UnregisterComponent(BaseComponent& component)
 	}
 }
 
-bool PhysicsEngine::CheckCollision(BaseComponent& component, BaseComponent*& outHit)
+bool PhysicsEngine::CheckCollision(const BaseComponent& component, BaseComponent*& outHit)
 {
 	auto collisionData = component.GetCollisionData();
-	if (collisionData == std::nullopt)
+	if (collisionData == std::nullopt || !component.IsEnabled())
 	{
-		// the component had no collision data...
+		// the component had no collision data or was disabled...
 		return false;
 	}
-	void* data = std::get<DATA>(collisionData.value());
+	const void* data = std::get<DATA>(collisionData.value());
 	for (const auto& collider : registered_components_)
 	{
 		auto otherCollisionData = collider->GetCollisionData();
-		if (&component == collider || collider->GetOwner() == component.GetOwner() || otherCollisionData == std::nullopt)
+		if (!collider->IsEnabled() || &component == collider || collider->GetOwner() == component.GetOwner() || otherCollisionData == std::nullopt)
 		{
 			continue;
 		}
 		
-		bool foundCollision = false;
-		void* otherData = std::get<DATA>(otherCollisionData.value());
+		bool foundCollision = false; // NOLINT
+		const void* otherData = std::get<DATA>(otherCollisionData.value());
 		
 		// check and reinterpret data
 		// demonic switch statement of pain and suffering
@@ -69,20 +69,20 @@ bool PhysicsEngine::CheckCollision(BaseComponent& component, BaseComponent*& out
 		{
 		case EPhysicsObjectType::Line:
 			{
-				const Line* lineA = static_cast<Line*>(data);
+				const Line* lineA = static_cast<const Line*>(data);
 				switch (std::get<TYPE>(otherCollisionData.value()))
 				{
 				case EPhysicsObjectType::Line:
-					foundCollision = DoSegmentsIntersect(*lineA, *static_cast<Line*>(otherData));
+					foundCollision = DoSegmentsIntersect(*lineA, *static_cast<const Line*>(otherData));
 					break;
 				case EPhysicsObjectType::Point:
-					foundCollision = IsPointOnSegment(*lineA, *static_cast<glm::vec2*>(otherData));
+					foundCollision = IsPointOnSegment(*lineA, *static_cast<const glm::vec2*>(otherData));
 					break;
 				case EPhysicsObjectType::Quad:
-					foundCollision = IsOverlapping(*static_cast<Quad*>(otherData), *lineA);
+					foundCollision = IsOverlapping(*static_cast<const Quad*>(otherData), *lineA);
 					break;
 				case EPhysicsObjectType::Circle:
-					foundCollision = SegmentCircleCollision(*lineA, *static_cast<Circle*>(otherData));
+					foundCollision = SegmentCircleCollision(*lineA, *static_cast<const Circle*>(otherData));
 					break;
 				case EPhysicsObjectType::None:
 				default: // NOLINT
@@ -92,20 +92,20 @@ bool PhysicsEngine::CheckCollision(BaseComponent& component, BaseComponent*& out
 			}
 		case EPhysicsObjectType::Point:
 			{
-				const glm::vec2* pointA = static_cast<glm::vec2*>(data);
+				const glm::vec2* pointA = static_cast<const glm::vec2*>(data);
 				switch (std::get<TYPE>(otherCollisionData.value()))
 				{
 				case EPhysicsObjectType::Line:
-					foundCollision = IsPointOnSegment(*static_cast<Line*>(otherData), *pointA);
+					foundCollision = IsPointOnSegment(*static_cast<const Line*>(otherData), *pointA);
 					break;
 				case EPhysicsObjectType::Point:
-					foundCollision = *static_cast<glm::vec2*>(otherData) == *pointA;
+					foundCollision = *static_cast<const glm::vec2*>(otherData) == *pointA;
 					break;
 				case EPhysicsObjectType::Quad:
-					foundCollision = IsOverlapping(*static_cast<Quad*>(otherData), *pointA);
+					foundCollision = IsOverlapping(*static_cast<const Quad*>(otherData), *pointA);
 					break;
 				case EPhysicsObjectType::Circle:
-					foundCollision = IsOverlapping(*static_cast<Circle*>(otherData), *pointA);
+					foundCollision = IsOverlapping(*static_cast<const Circle*>(otherData), *pointA);
 					break;
 				case EPhysicsObjectType::None:
 				default: // NOLINT
@@ -115,20 +115,20 @@ bool PhysicsEngine::CheckCollision(BaseComponent& component, BaseComponent*& out
 			}
 		case EPhysicsObjectType::Quad:
 			{
-				const Quad* quadA = static_cast<Quad*>(data);
+				const Quad* quadA = static_cast<const Quad*>(data);
 				switch (std::get<TYPE>(otherCollisionData.value()))
 				{
 				case EPhysicsObjectType::Line:
-					foundCollision = IsOverlapping(*quadA,*static_cast<Line*>(otherData));
+					foundCollision = IsOverlapping(*quadA,*static_cast<const Line*>(otherData));
 					break;
 				case EPhysicsObjectType::Point:
-					foundCollision = IsOverlapping(*quadA,*static_cast<glm::vec2*>(otherData));
+					foundCollision = IsOverlapping(*quadA,*static_cast<const glm::vec2*>(otherData));
 					break;
 				case EPhysicsObjectType::Quad:
-					foundCollision = IsOverlapping(*quadA,*static_cast<Quad*>(otherData));
+					foundCollision = IsOverlapping(*quadA,*static_cast<const Quad*>(otherData));
 					break;
 				case EPhysicsObjectType::Circle:
-					foundCollision = IsOverlapping(*quadA, *static_cast<Circle*>(otherData));
+					foundCollision = IsOverlapping(*quadA, *static_cast<const Circle*>(otherData));
 					break;
 				case EPhysicsObjectType::None:
 				default: // NOLINT
@@ -138,20 +138,20 @@ bool PhysicsEngine::CheckCollision(BaseComponent& component, BaseComponent*& out
 			}
 		case EPhysicsObjectType::Circle:
 			{
-				const Circle* circleA = static_cast<Circle*>(data);
+				const Circle* circleA = static_cast<const Circle*>(data);
 				switch (std::get<TYPE>(otherCollisionData.value()))
 				{
 				case EPhysicsObjectType::Line:
-					foundCollision = SegmentCircleCollision(*static_cast<Line*>(otherData), *circleA);
+					foundCollision = SegmentCircleCollision(*static_cast<const Line*>(otherData), *circleA);
 					break;
 				case EPhysicsObjectType::Point:
-					foundCollision = IsOverlapping(*circleA, *static_cast<glm::vec2*>(otherData));
+					foundCollision = IsOverlapping(*circleA, *static_cast<const glm::vec2*>(otherData));
 					break;
 				case EPhysicsObjectType::Quad:
-					foundCollision = IsOverlapping(*static_cast<Quad*>(otherData), *circleA);
+					foundCollision = IsOverlapping(*static_cast<const Quad*>(otherData), *circleA);
 					break;
 				case EPhysicsObjectType::Circle:
-					foundCollision = IsOverlapping(*circleA, *static_cast<Circle*>(otherData));
+					foundCollision = IsOverlapping(*circleA, *static_cast<const Circle*>(otherData));
 					break;
 				case EPhysicsObjectType::None:
 				default: // NOLINT

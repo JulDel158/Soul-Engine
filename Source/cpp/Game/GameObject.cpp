@@ -53,15 +53,21 @@ void GameObject::Update(const float deltaTime)
 	
 	for (const auto& component : components_)
 	{
-		component->Update(deltaTime);
+		if (component->IsEnabled())
+		{
+			component->Update(deltaTime);
+		}
+		
 		if (fixed_render_list_ && render_list_initialized_)
 		{
 			continue;
 		}
-		if (auto renderData = component->GetRenderData(); renderData != std::nullopt)
+		
+		if (auto renderData = component->GetRenderData(); component->IsVisible() && renderData != std::nullopt)
 		{
 			render_list_.emplace_back(renderData.value());
 		}
+		
 	}
 	render_list_initialized_ = !render_list_.empty();
 }

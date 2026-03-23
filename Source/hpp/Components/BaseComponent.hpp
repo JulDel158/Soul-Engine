@@ -19,7 +19,7 @@ class BaseComponent
 {
 protected:
 	using RenderData = std::tuple<Texture2D, glm::vec2, glm::vec2, float, glm::vec3>;
-	using PhysicsData = std::tuple<EPhysicsObjectType, void*>;
+	using PhysicsData = std::tuple<EPhysicsObjectType, const void*>;
 	friend class GameObject;
 	friend class Game;
 	friend class ResourceManager;
@@ -28,6 +28,7 @@ protected:
 	glm::vec2 size_;
 	float rotation_;
 	bool enabled_;
+	bool is_visible_;
 	GameObject* owner_;
 	BaseComponent* parent_;
 	EComponentClassType component_type_;
@@ -45,24 +46,25 @@ protected:
 	
 public:
 	// Setters
-	inline void SetPosition(const glm::vec2& position)			{ position_ = position; }
-	inline void SetSize(const glm::vec2& size)					{ size_ = size; }
-	inline void SetRotation(const float rotation)				{ rotation_ = rotation; }
-	inline void SetEnabled(const bool enabled)					{ enabled_ = enabled; }
+	inline void SetPosition(const glm::vec2& position)				{ position_ = position; }
+	inline void SetSize(const glm::vec2& size)						{ size_ = size; }
+	inline void SetRotation(const float rotation)					{ rotation_ = rotation; }
+	inline void SetEnabled(const bool enabled)						{ enabled_ = enabled; }
+	inline void SetIsVisible(const bool visible)					{ is_visible_ = visible; }
 	inline void SetComponentType(EComponentClassType componentType)	{ component_type_ = componentType; }
 	
-	// TODO: only add or multiply owner if no parent is present
 	// Getters
-	inline glm::vec2		GetPosition() const	{ return position_ + (owner_ != nullptr ? owner_->GetPosition(): glm::vec2(0.0f)) + (parent_ != nullptr ? parent_->GetPosition() : glm::vec2(0.0f)); }
-	inline glm::vec2		GetSize() const	{ return size_ + (owner_ != nullptr ? owner_->GetSize(): glm::vec2(1.0f)) + (parent_ != nullptr ? parent_->GetSize() : glm::vec2(1.0f)); }
-	inline float			GetRotation() const	{ return rotation_ + (owner_ != nullptr ? owner_->GetRotation(): 0.0f) + (parent_ != nullptr ? parent_->GetRotation() : 1.0f); }
-	inline bool				GetEnabled() const	{ return enabled_; }
-	inline bool				HasOwner() const	{ return owner_ != nullptr; }
-	inline bool				IsAttached() const	{ return parent_ != nullptr; }
-	inline EComponentClassType	GetType() const		{ return component_type_; }
-	inline GameObject*		GetOwner() const		{ return owner_; }
+	glm::vec2					GetPosition() const;
+	glm::vec2					GetSize() const;
+	float						GetRotation() const;
+	inline bool					IsEnabled() const		{ return enabled_; }
+	inline bool					IsVisible() const		{ return is_visible_; }
+	inline bool					HasOwner() const		{ return owner_ != nullptr; }
+	inline bool					IsAttached() const		{ return parent_ != nullptr; }
+	inline EComponentClassType	GetType() const			{ return component_type_; }
+	inline GameObject*			GetOwner() const		{ return owner_; }
 	
 	virtual std::optional<RenderData> GetRenderData(); 
-	virtual std::optional<PhysicsData> GetCollisionData();
+	virtual std::optional<PhysicsData> GetCollisionData() const;
 };
 #endif

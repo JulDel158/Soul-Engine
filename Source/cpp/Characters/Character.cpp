@@ -39,8 +39,10 @@ void Character::InitializeComponents()
 		movement_component_->UseSpeedAsScales(true);
 		movement_component_->SetMovementMode(EMovementMode::Walking);
 		
+		// Size and position will be the same as the owner, we can adjust it by setting the scale instead
 		box_collision_component_ = dynamic_cast<BoxCollisionComponent*>(resourceManager.CreateComponent(EComponentClassType::BoxCollisionComponent, componentIndex, this));
-		box_collision_component_->SetSize(glm::vec2(DEFAULT_SPRITE_SIZE));
+		RegisterComponent(box_collision_component_);
+		box_collision_component_->SetColliderScale(glm::vec2(1.0f, 1.0f)); 
 	}
 	catch (...)
 	{
