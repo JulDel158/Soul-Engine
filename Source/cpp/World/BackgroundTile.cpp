@@ -14,33 +14,6 @@ BackgroundTile::BackgroundTile()
 	InitializeComponents();
 }
 
-// BackgroundTile::BackgroundTile(std::vector<Texture2D>& textures) :
-// sprite_(nullptr)
-// {
-// 	InitializeComponents();
-// 	
-// 	if (textures.empty() || sprite_ == nullptr)
-// 	{
-// 		auto l = Logger();
-// 		l.Log(ELogLevel::Warning, "BackgroundTile(): textures array size: [" + 
-// 			std::to_string(textures.size()) + 
-// 			"] sprite_ is nullptr = [" +
-// 			std::to_string(sprite_ == nullptr) + "]");
-// 		return;
-// 	}
-// 	if (textures.size() == 1)
-// 	{
-// 		sprite_->SetDefaultTexture(textures.at(0));
-// 	}
-// 	else
-// 	{
-// 		SpriteAnimation spriteAnimation = SpriteAnimation(textures, 30, true);
-// 		sprite_->AddAnimation(0, spriteAnimation);
-// 		sprite_->PlayAnimation(0);
-// 	}
-// 	
-// }
-
 void BackgroundTile::SetSprite(std::vector<Texture2D>& textures) const
 {
 	if (textures.empty() || sprite_ == nullptr)
@@ -74,7 +47,7 @@ void BackgroundTile::InitializeComponents()
 		RegisterComponent(sprite_);
 		
 		collider_ = dynamic_cast<BoxCollisionComponent*>(resourceManager.CreateComponent(EComponentClassType::BoxCollisionComponent, componentIndex, this));
-		collider_->SetColliderScale(glm::vec2(1.0f));
+		collider_->SetColliderScale(glm::vec2(0.8f, 0.8f));
 		collider_->SetOverlap(true);
 		RegisterComponent(collider_);
 	}

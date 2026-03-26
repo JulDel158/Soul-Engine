@@ -7,21 +7,22 @@
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/writer.h"
 
-#include "StringGlobals.hpp"
-#include "Utils/Logger.hpp"
 #include "Components/SpriteComponent.hpp"
 #include "Components/MovementComponent.hpp"
-#include "World/BackgroundTile.hpp"
+#include "Components/BoxCollisionComponent.hpp"
+#include "Components/HealthComponent.hpp"
 #include "Characters/Character.hpp"
 #include "Characters/PlayerCharacter.hpp"
-#include "Components/BoxCollisionComponent.hpp"
+#include "Characters/CombatCharacter.hpp"
+#include "StringGlobals.hpp"
+#include "Utils/Logger.hpp"
+#include "World/BackgroundTile.hpp"
 
 #include <filesystem>
 #include <sstream>
 #include <fstream>
 #include <utility>
 #include <cassert>
-
 
 ResourceManager& ResourceManager::Instance()
 {
@@ -360,6 +361,9 @@ BaseComponent* ResourceManager::CreateComponent(const EComponentClassType type, 
 	case EComponentClassType::BoxCollisionComponent:
 		component = new BoxCollisionComponent();
 		break;
+	case EComponentClassType::HealthComponent:
+		component = new HealthComponent();
+		break;
 	default: // NOLINT
 		auto log = Logger();
 		log.Log(ELogLevel::Error, "ResourceManager::CreateComponent: undefined or unhandled type: ["
@@ -402,6 +406,9 @@ GameObject* ResourceManager::CreateGameObject(const EGameObjectClassType type, u
 		break;
 	case EGameObjectClassType::PlayerCharacter:
 		result = new PlayerCharacter();
+		break;
+	case EGameObjectClassType::CombatCharacter:
+		result = new CombatCharacter();
 		break;
 	default: // NOLINT
 		auto log = Logger();

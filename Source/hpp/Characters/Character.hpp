@@ -20,7 +20,7 @@ public:
 	Character();
 	~Character() override = default;
 	
-protected:
+private:
 	void InitializeComponents();
 };
 

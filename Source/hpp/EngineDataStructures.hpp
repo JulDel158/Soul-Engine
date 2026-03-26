@@ -191,7 +191,8 @@ enum class EComponentClassType : int
 	Base = 0,
 	SpriteComponent,
 	MovementComponent,
-	BoxCollisionComponent
+	BoxCollisionComponent,
+	HealthComponent
 	//TODO: Add any new component type here
 };
 
@@ -200,7 +201,8 @@ enum class EGameObjectClassType : int
 	Base = 0,
 	BackgroundTile,
 	Character,
-	PlayerCharacter
+	PlayerCharacter,
+	CombatCharacter
 	// TODO: Add any new gameobject type here
 };
 
@@ -223,6 +225,9 @@ namespace  DataConverter
 			break;
 		case EGameObjectClassType::PlayerCharacter:
 			result = "PlayerCharacter";
+			break;
+		case EGameObjectClassType::CombatCharacter:
+			result = "CombatCharacter";
 		}
 		
 		return result;
@@ -244,6 +249,10 @@ namespace  DataConverter
 			break;
 		case EComponentClassType::BoxCollisionComponent:
 			result = "BoxCollisionComponent";
+			break;
+		case EComponentClassType::HealthComponent:
+			result = "HealthComponent";
+			break;
 		}
 		
 		

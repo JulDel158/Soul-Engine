@@ -34,6 +34,8 @@ public:
 	
 	inline void SetDefaultTexture(const Texture2D& texture) { base_texture_ = texture; }
 	
+	inline bool IsPlayingAnimation(const int id) const { return current_animation_ == id; };
+	
 	std::optional<RenderData> GetRenderData() override;
 	
 private:

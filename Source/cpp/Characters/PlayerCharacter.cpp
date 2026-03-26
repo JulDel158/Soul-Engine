@@ -388,23 +388,23 @@ void PlayerCharacter::InitializeInputActions()
 void PlayerCharacter::UpdateAnimationState() const
 {
 	// Left and right have priority over up and down
-	if (x_owner_ == LEFT_KEY)
+	if (x_owner_ == LEFT_KEY && (y_owner_ == NO_OWNER))
 	{
 		sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Left));
 	}
-	else if (x_owner_ == RIGHT_KEY)
+	else if (x_owner_ == RIGHT_KEY && (y_owner_ == NO_OWNER))
 	{
 		sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Right));
 	}
-	else if (y_owner_ == UP_KEY)
+	else if (y_owner_ == UP_KEY && x_owner_ == NO_OWNER)
 	{
 		sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Up));
 	}
-	else if (y_owner_ == DOWN_KEY)
+	else if (y_owner_ == DOWN_KEY && x_owner_ == NO_OWNER)
 	{
 		sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Walking_Down));
 	}
-	else
+	else if (x_owner_ == NO_OWNER && y_owner_ == NO_OWNER)
 	{
 		sprite_component_->PlayAnimation(static_cast<int>(EPlayerAnimationState::Idle));
 	}

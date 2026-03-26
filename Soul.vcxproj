@@ -21,9 +21,13 @@
   <ItemGroup>
     <ClCompile Include="Source\cpp\Audio\AudioManager.cpp" />
     <ClCompile Include="Source\cpp\Characters\Character.cpp" />
+    <ClCompile Include="Source\cpp\Characters\CombatCharacter.cpp" />
     <ClCompile Include="Source\cpp\Characters\PlayerCharacter.cpp" />
+    <ClCompile Include="Source\cpp\Combat\CombatAction.cpp" />
+    <ClCompile Include="Source\cpp\Combat\CombatModifier.cpp" />
     <ClCompile Include="Source\cpp\Components\BaseComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\BoxCollisionComponent.cpp" />
+    <ClCompile Include="Source\cpp\Components\HealthComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\MovementComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\SpriteComponent.cpp" />
     <ClCompile Include="Source\cpp\Game\Game.cpp" />
@@ -43,6 +47,7 @@
     <ClCompile Include="Source\cpp\UI\Panel.cpp" />
     <ClCompile Include="Source\cpp\UI\Widget.cpp" />
     <ClCompile Include="Source\cpp\Utils\Logger.cpp" />
+    <ClCompile Include="Source\cpp\Utils\RandomGenerator.cpp" />
     <ClCompile Include="Source\cpp\Utils\ResourceManager.cpp" />
     <ClCompile Include="Source\cpp\World\BackgroundTile.cpp" />
     <ClCompile Include="Source\Dependencies\include\glm\detail\glm.cpp" />
@@ -525,9 +530,13 @@
     <ClInclude Include="Source\Dependencies\include\stb_image.h" />
     <ClInclude Include="Source\hpp\Audio\AudioManager.hpp" />
     <ClInclude Include="Source\hpp\Characters\Character.hpp" />
+    <ClInclude Include="Source\hpp\Characters\CombatCharacter.hpp" />
     <ClInclude Include="Source\hpp\Characters\PlayerCharacter.hpp" />
+    <ClInclude Include="Source\hpp\Combat\CombatAction.hpp" />
+    <ClInclude Include="Source\hpp\Combat\CombatModifier.hpp" />
     <ClInclude Include="Source\hpp\Components\BaseComponent.hpp" />
     <ClInclude Include="Source\hpp\Components\BoxCollisionComponent.hpp" />
+    <ClInclude Include="Source\hpp\Components\HealthComponent.hpp" />
     <ClInclude Include="Source\hpp\Components\MovementComponent.hpp" />
     <ClInclude Include="Source\hpp\Components\SpriteComponent.hpp" />
     <ClInclude Include="Source\hpp\EngineDataStructures.hpp" />
@@ -552,6 +561,7 @@
     <ClInclude Include="Source\hpp\UI\Panel.hpp" />
     <ClInclude Include="Source\hpp\UI\Widget.hpp" />
     <ClInclude Include="Source\hpp\Utils\Logger.hpp" />
+    <ClInclude Include="Source\hpp\Utils\RandomGenerator.hpp" />
     <ClInclude Include="Source\hpp\Utils\ResourceManager.hpp" />
     <ClInclude Include="Source\hpp\World\BackgroundTile.hpp" />
   </ItemGroup>
