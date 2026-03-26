@@ -30,24 +30,6 @@ enum class EPlayerAnimationState : int
 	Walking_Right,
 };
 
-enum class ECombatModifierType : unsigned int
-{
-	None = 0,
-	Block,
-	Speed,
-	ActionPoint,
-	Damage,
-	Healing,
-	Wounding,
-	SkillCost,
-	AttackCost,
-	BlockCost,
-	MoveCost,
-	Movement,
-	Range,
-	Accuracy
-};
-
 enum class ECombatModifierExecutionTime : unsigned char
 {
 	OnApply = 0,
