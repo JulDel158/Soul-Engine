@@ -186,79 +186,8 @@ enum class EPanelType : unsigned int
 	Count
 };
 
-enum class EComponentClassType : int
-{
-	Base = 0,
-	SpriteComponent,
-	MovementComponent,
-	BoxCollisionComponent,
-	HealthComponent
-	//TODO: Add any new component type here
-};
-
-enum class EGameObjectClassType : int
-{
-	Base = 0,
-	BackgroundTile,
-	Character,
-	PlayerCharacter,
-	CombatCharacter
-	// TODO: Add any new gameobject type here
-};
-
 namespace  DataConverter
 {
-	inline std::string ToString(const EGameObjectClassType classType)
-	{
-		std::string result;
-		
-		switch (classType)
-		{
-		case EGameObjectClassType::Base:
-			result = "Base";
-			break;
-		case EGameObjectClassType::BackgroundTile:
-			result = "BackgroundTile";
-			break;
-		case EGameObjectClassType::Character:
-			result = "Character";
-			break;
-		case EGameObjectClassType::PlayerCharacter:
-			result = "PlayerCharacter";
-			break;
-		case EGameObjectClassType::CombatCharacter:
-			result = "CombatCharacter";
-		}
-		
-		return result;
-	}
-	inline std::string ToString(const EComponentClassType componentType)
-	{
-		std::string result;
-		
-		switch (componentType)
-		{
-		case EComponentClassType::Base:
-			result = "Base";
-			break;
-		case EComponentClassType::SpriteComponent:
-			result = "SpriteComponent";
-			break;
-		case EComponentClassType::MovementComponent:
-			result = "MovementComponent";
-			break;
-		case EComponentClassType::BoxCollisionComponent:
-			result = "BoxCollisionComponent";
-			break;
-		case EComponentClassType::HealthComponent:
-			result = "HealthComponent";
-			break;
-		}
-		
-		
-		return result;
-	}
-	
 	inline std::string ToString(const ESpriteKey spriteId)
 	{
 		std::string result;

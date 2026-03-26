@@ -8,19 +8,11 @@
 #include "rapidjson/writer.h"
 
 #include "Components/SpriteComponent.hpp"
-#include "Components/MovementComponent.hpp"
 #include "Components/BoxCollisionComponent.hpp"
-#include "Components/HealthComponent.hpp"
-#include "Characters/Character.hpp"
-#include "Characters/PlayerCharacter.hpp"
-#include "Characters/CombatCharacter.hpp"
 #include "StringGlobals.hpp"
-#include "Utils/Logger.hpp"
 #include "World/BackgroundTile.hpp"
 
-#include <filesystem>
 #include <sstream>
-#include <fstream>
 #include <utility>
 #include <cassert>
 
@@ -340,98 +332,6 @@ void ResourceManager::Clear()
 	game_objects_.clear();
     
     CloseFreeTypeLibrary();
-}
-
-BaseComponent* ResourceManager::CreateComponent(const EComponentClassType type, unsigned int& storageIndex, GameObject* owner)
-{
-	BaseComponent* component = nullptr; // NOLINT
-	
-	// TODO: As component classes get created, add cases
-	switch (type)
-	{
-	case EComponentClassType::Base:
-		component = new BaseComponent();
-		break;
-	case EComponentClassType::SpriteComponent:
-		component = new SpriteComponent();
-		break;
-	case EComponentClassType::MovementComponent:
-	 	component = new MovementComponent();
-		break;
-	case EComponentClassType::BoxCollisionComponent:
-		component = new BoxCollisionComponent();
-		break;
-	case EComponentClassType::HealthComponent:
-		component = new HealthComponent();
-		break;
-	default: // NOLINT
-		auto log = Logger();
-		log.Log(ELogLevel::Error, "ResourceManager::CreateComponent: undefined or unhandled type: ["
-			+ DataConverter::ToString(type) + "]");
-		return nullptr;
-	}
-	component->SetComponentType(type);
-	component->owner_ = owner;
-	components_[type].push_back(component);
-	storageIndex = static_cast<unsigned int>(components_[type].size());
-	
-	return component;
-}
-
-BaseComponent* ResourceManager::GetComponent(const EComponentClassType type, const unsigned int storageIndex)
-{
-	BaseComponent* result = nullptr;
-	if (components_.contains(type) && storageIndex < static_cast<unsigned int>(components_[type].size()))
-	{
-		result = components_[type][storageIndex];
-	}
-	return result;
-}
-
-GameObject* ResourceManager::CreateGameObject(const EGameObjectClassType type, unsigned int& storageIndex)
-{
-	GameObject* result = nullptr; //NOLINT
-	
-	// TODO: Add cases as more classes get added to project
-	switch (type)
-	{
-	case EGameObjectClassType::Base:
-		result = new GameObject();
-		break;
-	case EGameObjectClassType::BackgroundTile:
-		result = new BackgroundTile();
-		break;
-	case EGameObjectClassType::Character:
-		result = new Character();
-		break;
-	case EGameObjectClassType::PlayerCharacter:
-		result = new PlayerCharacter();
-		break;
-	case EGameObjectClassType::CombatCharacter:
-		result = new CombatCharacter();
-		break;
-	default: // NOLINT
-		auto log = Logger();
-		log.Log(ELogLevel::Error, "ResourceManager::CreateComponent: undefined or unhandled type: ["
-			+ DataConverter::ToString(type) + "]");
-		return nullptr;
-	}
-	result->SetClassType(type);
-	game_objects_.push_back(result);
-	
-	return result;
-}
-
-GameObject* ResourceManager::GetGameObject(const unsigned int storageIndex) const
-{
-	GameObject* result = nullptr;
-	
-	if (storageIndex < static_cast<unsigned int>(game_objects_.size()))
-	{
-		result = game_objects_[storageIndex];
-	}
-	
-	return result;
 }
 
 Shader ResourceManager::LoadShaderFromFile(const std::filesystem::path& vertexShaderPath, 

@@ -18,7 +18,7 @@ void CombatCharacter::InitComponents()
 	{
 		auto& resourceManager = ResourceManager::Instance();
 		unsigned int componentIndex;
-		health_component_ = dynamic_cast<HealthComponent*>(resourceManager.CreateComponent(EComponentClassType::Base,componentIndex, this));
+		health_component_ = resourceManager.CreateComponent<HealthComponent>(componentIndex, this);
 		RegisterComponent(health_component_);
 		
 	}

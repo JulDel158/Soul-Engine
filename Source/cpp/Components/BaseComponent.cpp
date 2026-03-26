@@ -7,8 +7,7 @@ BaseComponent::BaseComponent() :
 	enabled_(true),
 	is_visible_(true),
 	owner_(nullptr),
-	parent_(nullptr), 
-	component_type_(EComponentClassType::Base)
+	parent_(nullptr)
 {
 }
 

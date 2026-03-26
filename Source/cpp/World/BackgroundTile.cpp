@@ -43,10 +43,10 @@ void BackgroundTile::InitializeComponents()
 	try
 	{
 		unsigned int componentIndex;
-		sprite_ = dynamic_cast<SpriteComponent*>(resourceManager.CreateComponent(EComponentClassType::SpriteComponent, componentIndex, this));
+		sprite_ = resourceManager.CreateComponent<SpriteComponent>(componentIndex, this);
 		RegisterComponent(sprite_);
 		
-		collider_ = dynamic_cast<BoxCollisionComponent*>(resourceManager.CreateComponent(EComponentClassType::BoxCollisionComponent, componentIndex, this));
+		collider_ = resourceManager.CreateComponent<BoxCollisionComponent>(componentIndex, this);
 		collider_->SetColliderScale(glm::vec2(0.8f, 0.8f));
 		collider_->SetOverlap(true);
 		RegisterComponent(collider_);

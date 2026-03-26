@@ -6,14 +6,18 @@
 #include FT_FREETYPE_H
 #include "robin_hood_hash/robin_hood.h"
 
+#include "Components/BaseComponent.hpp"
+#include "EngineDataStructures.hpp"
+#include "Game/GameObject.hpp"
 #include "Rendering/Shader.hpp"
 #include "Rendering/Texture2D.hpp"
-#include "EngineDataStructures.hpp"
-#include "Components/BaseComponent.hpp"
-#include "Game/GameObject.hpp"
+#include "Utils/Logger.hpp"
 
 #include <filesystem>
 #include <string>
+#include <typeindex>
+#include <typeinfo>
+#include <fstream>
 
 class ResourceManager
 {
@@ -22,7 +26,7 @@ class ResourceManager
     
     robin_hood::unordered_map<std::string, Shader> shaders_;
     robin_hood::unordered_map<ESpriteKey, Texture2D> textures_;
-	robin_hood::unordered_map<EComponentClassType, std::vector<BaseComponent*>> components_;
+	robin_hood::unordered_map<std::type_index, std::vector<BaseComponent*>> components_;
 	std::vector<GameObject*> game_objects_;
     FontsMap fonts_;
     FT_Library free_type_library_;
@@ -57,10 +61,14 @@ public:
     bool ContainsFont(const std::string& name) const;
 	
 	// Level loading
-	BaseComponent* CreateComponent(EComponentClassType type, unsigned int& storageIndex, GameObject* owner); // Creates a component dynamically
-	BaseComponent* GetComponent(EComponentClassType type, unsigned int storageIndex); // Returns an existing component if available
-	GameObject* CreateGameObject(EGameObjectClassType type, unsigned int& storageIndex);
-	GameObject* GetGameObject(unsigned int storageIndex) const;
+	template <typename Type>
+	Type* CreateComponent(unsigned int& storageIndex, GameObject* owner); // Creates a component dynamically
+	template <typename Type>
+	Type* GetComponent(unsigned int storageIndex); // Returns an existing component if available
+	template <typename Type>
+	Type* CreateGameObject(unsigned int& storageIndex);
+	template <typename Type>
+	Type* GetGameObject(unsigned int storageIndex) const;
 	
 	void OpenFreeTypeLibrary(); // call before loading fonts. Note: this is called on construction
 	void CloseFreeTypeLibrary(); // call after we finish loading fonts
@@ -77,5 +85,74 @@ private:
     
     static Texture2D LoadTextureFromFile(const char* file, bool alpha);
 };
+
+template <typename Type>
+Type* ResourceManager::CreateComponent(unsigned int& storageIndex, GameObject* owner)
+{
+	Type* component = new Type();
+	try
+	{
+		BaseComponent* componentPtr = dynamic_cast<BaseComponent*>(component);
+		componentPtr->owner_ = owner;
+		components_[typeid(Type)].push_back(componentPtr);
+		storageIndex = static_cast<unsigned int>(components_[typeid(Type)].size());
+	}
+	catch (...)
+	{
+		auto log = Logger();
+		log.Log(ELogLevel::Error, "ResourceManager::CreateComponent: Type was not a component!!! : [ "
+				+ std::string(typeid(Type).name()) + " ]");
+		delete component;
+		return nullptr;
+	}
+	
+	return component;
+}
+
+template <typename Type>
+Type* ResourceManager::GetComponent(const unsigned int storageIndex)
+{
+	Type* result = nullptr;
+	if (components_.contains(typeid(Type)) && storageIndex < static_cast<unsigned int>(components_[typeid(Type)].size()))
+	{
+		result = components_[typeid(Type)][storageIndex];
+	}
+	return result;
+}
+
+template <typename Type>
+Type* ResourceManager::CreateGameObject(unsigned int& storageIndex)
+{
+	Type* result = new Type();
+	try
+	{
+		GameObject* gameObject = dynamic_cast<GameObject*>(result);
+		game_objects_.push_back(gameObject);
+	}
+	catch (...)
+	{
+		auto log = Logger();
+		log.Log(ELogLevel::Error, "ResourceManager::CreateGameObject: Type was not a GameObject: [ "
+			+ std::string(typeid(Type).name()) + " ]");
+		delete result;
+		return nullptr;
+	}
+	
+	return result;
+}
+
+template <typename Type>
+Type* ResourceManager::GetGameObject(const unsigned int storageIndex) const
+{
+	GameObject* result = nullptr;
+	
+	if (storageIndex < static_cast<unsigned int>(game_objects_.size()))
+	{
+		result = game_objects_[storageIndex];
+	}
+	
+	return result;
+}
+
 
 #endif

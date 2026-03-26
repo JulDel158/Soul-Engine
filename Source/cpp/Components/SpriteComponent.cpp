@@ -20,7 +20,6 @@ SpriteComponent::SpriteComponent() :
 color_(ONE_VECTOR_3_F),
 current_animation_(BASE_SPRITE_ID)
 {
-	component_type_ = EComponentClassType::SpriteComponent;
 }
 
 SpriteComponent::~SpriteComponent()

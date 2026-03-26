@@ -31,7 +31,6 @@ protected:
 	bool is_visible_;
 	GameObject* owner_;
 	BaseComponent* parent_;
-	EComponentClassType component_type_;
 	
 public:
 	BaseComponent();
@@ -51,7 +50,6 @@ public:
 	inline void SetRotation(const float rotation)					{ rotation_ = rotation; }
 	inline void SetEnabled(const bool enabled)						{ enabled_ = enabled; }
 	inline void SetIsVisible(const bool visible)					{ is_visible_ = visible; }
-	inline void SetComponentType(EComponentClassType componentType)	{ component_type_ = componentType; }
 	
 	// Getters
 	glm::vec2					GetPosition() const;
@@ -61,7 +59,6 @@ public:
 	inline bool					IsVisible() const		{ return is_visible_; }
 	inline bool					HasOwner() const		{ return owner_ != nullptr; }
 	inline bool					IsAttached() const		{ return parent_ != nullptr; }
-	inline EComponentClassType	GetType() const			{ return component_type_; }
 	inline GameObject*			GetOwner() const		{ return owner_; }
 	
 	virtual std::optional<RenderData> GetRenderData(); 

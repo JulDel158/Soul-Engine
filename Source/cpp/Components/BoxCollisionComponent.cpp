@@ -8,7 +8,6 @@ BoxCollisionComponent::BoxCollisionComponent()
 {
 	overlap_ = false;
 	function_on_collision_ = nullptr;
-	component_type_ = EComponentClassType::BoxCollisionComponent;
 	collider_.scale_ = glm::vec2(1.0f);
 	is_visible_ = false;
 	

@@ -13,8 +13,7 @@ namespace
 GameObject::GameObject() :
 	position_(ZERO_VECTOR_2_F),
 	size_(ONE_VECTOR_2_F),
-	rotation_(0.0f), 
-	type_(EGameObjectClassType::Base),
+	rotation_(0.0f),
 	is_active_(true),
 	is_visible_(true),
 	fixed_render_list_(false),
