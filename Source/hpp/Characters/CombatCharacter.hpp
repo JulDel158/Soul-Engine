@@ -30,15 +30,18 @@ protected:
 	
 public:
 	CombatCharacter();
-	~CombatCharacter() override = default;
-	
-	inline HealthComponent* GetHealthComponent() const { return health_component_; }
+	~CombatCharacter() override;
 	
 	template <typename Type>
 	void ApplyBuffStatus(int count);
 	template <typename Type>
 	void ApplyDebuffStatus(int count);
+	template <typename Type>
+	void ApplyTrigger(ECharacterConditionExecutionTime executionTime, CombatCharacter& caster);
 	
+	void ClearBuffs();
+	void ClearDebuffs();
+	void ClearConditions();
 	
 	virtual void OnTurnStart();
 	virtual void OnTurnEnd();
@@ -58,7 +61,8 @@ public:
 	virtual void OnBuffed(int amount);
 	virtual void OnDebuffed(int amount);
 	
-	CharacterStats GetStats(const bool baseStats=false) const { return baseStats ? stats_ : status_afflicted_stats_; }
+	inline CharacterStats GetStats(const bool baseStats=false) const { return baseStats ? stats_ : status_afflicted_stats_; }
+	inline HealthComponent* GetHealthComponent() const { return health_component_; }
 	
 private:
 	void InitComponents();
@@ -86,6 +90,7 @@ void CombatCharacter::ApplyBuffStatus(const int count)
 		{
 			auto log = Logger();
 			log.Log(ELogLevel::Error, "CombatCharacter::ApplyBuffStatus: Type: ["+ std::string(typeid(Type).name()) +"] was not a Status!");
+			delete buff;
 		}
 		return;
 	}
@@ -111,12 +116,57 @@ void CombatCharacter::ApplyDebuffStatus(const int count)
 		{
 			auto log = Logger();
 			log.Log(ELogLevel::Error, "CombatCharacter::ApplyDebuffStatus: Type: ["+ std::string(typeid(Type).name()) +"] was not a Status!");
+			delete debuff;
 		}
 		return;
 	}
 	
 	// Otherwise we just add to the current existing one
 	debuffs_[typeid(Type)]->IncreaseStack(count);
+}
+
+template <typename Type>
+void CombatCharacter::ApplyTrigger(const ECharacterConditionExecutionTime executionTime, CombatCharacter& caster)
+{
+	Type* type = new Type();
+	try
+	{
+		auto condition = dynamic_cast<Condition*>(type);
+		condition->SetCaster(caster);
+		if ( condition->IsStackable()) // No need to check for instances, just add it to the list
+		{
+			conditions_[executionTime].push_back(condition);
+		}
+		else
+		{
+			bool containsCondition = false;
+			for (const auto& ptr : conditions_[executionTime])
+			{
+				if (ptr->GetName() == condition->GetName())
+				{
+					containsCondition = true;
+					break;
+				}
+			}
+			
+			if (!containsCondition)
+			{
+				conditions_[executionTime].push_back(condition);
+			}
+			else
+			{
+				// The object won't be added to the list, therefore delete it
+				condition = nullptr;
+				delete type;
+			}
+		}
+	}
+	catch (...)
+	{
+		auto log = Logger();
+		log.Log(ELogLevel::Error, "CombatCharacter::ApplyTrigger: failed to create condition [" + std::string(typeid(Type).name()) + "]!");
+		delete type;
+	}
 }
 
 #endif

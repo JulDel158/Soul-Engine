@@ -24,8 +24,12 @@ public:
 	virtual void Trigger(CombatCharacter& target, int data);
 	virtual void Trigger(CombatCharacter& target, int data, bool flag);
 	virtual void Trigger(CombatCharacter& target, ECombatPosition destination);
+	
+	void SetCaster(CombatCharacter& caster) { caster_ = &caster; }
+	
 	virtual bool IsStackable() const;
 	virtual bool RemoveOnTurnCycleEnd() const;
+	virtual bool RemoveOnTrigger() const;
 	
 	std::string GetName() const { return name_;}
 	std::string GetDescription() const { return description_;}

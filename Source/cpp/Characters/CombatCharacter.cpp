@@ -14,6 +14,43 @@ health_component_(nullptr)
 	InitComponents();
 }
 
+CombatCharacter::~CombatCharacter()
+{
+	ClearBuffs();
+	ClearDebuffs();
+	ClearConditions();
+}
+
+void CombatCharacter::ClearBuffs()
+{
+	for (const auto& buff : buffs_)
+	{
+		delete buff.second;
+	}
+	buffs_.clear();
+}
+
+void CombatCharacter::ClearDebuffs()
+{
+	for (const auto& debuff : debuffs_)
+	{
+		delete debuff.second;
+	}
+	debuffs_.clear();
+}
+
+void CombatCharacter::ClearConditions()
+{
+	for (auto& list : conditions_)
+	{
+		for (const auto& condition : list.second)
+		{
+			delete condition;
+		}
+	}
+	conditions_.clear();
+}
+
 void CombatCharacter::OnTurnStart()
 {
 	TriggerConditions(ECharacterConditionExecutionTime::OnTurnStart);
@@ -112,7 +149,6 @@ void CombatCharacter::InitComponents()
 		unsigned int componentIndex;
 		health_component_ = resourceManager.CreateComponent<HealthComponent>(componentIndex, this);
 		RegisterComponent(health_component_);
-		
 	}
 	catch (...)
 	{
@@ -174,6 +210,7 @@ void CombatCharacter::UpdateConditions()
 		{
 			if ((*it)->RemoveOnTurnCycleEnd())
 			{
+				delete (*it);
 				it = conditionList.second.erase(it);
 			}
 			else
@@ -187,9 +224,18 @@ void CombatCharacter::UpdateConditions()
 
 void CombatCharacter::TriggerConditions(const ECharacterConditionExecutionTime executionTime, int amount)
 {
-	for (auto& condition : conditions_[executionTime])
+	for (auto it = conditions_[executionTime].begin(); it != conditions_[executionTime].end();)
 	{
-		condition->Trigger(*this, amount);
+		(*it)->Trigger(*this, amount);
+		if ((*it)->RemoveOnTurnCycleEnd())
+		{
+			delete (*it);
+			it = conditions_[executionTime].erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
 }
 

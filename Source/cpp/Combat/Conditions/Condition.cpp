@@ -49,3 +49,8 @@ bool Condition::RemoveOnTurnCycleEnd() const
 {
 	return true;
 }
+
+bool Condition::RemoveOnTrigger() const
+{
+	return true;
+}
