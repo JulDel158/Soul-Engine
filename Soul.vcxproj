@@ -23,6 +23,7 @@
     <ClCompile Include="Source\cpp\Characters\Character.cpp" />
     <ClCompile Include="Source\cpp\Characters\CombatCharacter.cpp" />
     <ClCompile Include="Source\cpp\Characters\PlayerCharacter.cpp" />
+    <ClCompile Include="Source\cpp\Combat\Statuses\Status.cpp" />
     <ClCompile Include="Source\cpp\Components\BaseComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\BoxCollisionComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\HealthComponent.cpp" />
@@ -530,6 +531,7 @@
     <ClInclude Include="Source\hpp\Characters\Character.hpp" />
     <ClInclude Include="Source\hpp\Characters\CombatCharacter.hpp" />
     <ClInclude Include="Source\hpp\Characters\PlayerCharacter.hpp" />
+    <ClInclude Include="Source\hpp\Combat\Statuses\Status.hpp" />
     <ClInclude Include="Source\hpp\Components\BaseComponent.hpp" />
     <ClInclude Include="Source\hpp\Components\BoxCollisionComponent.hpp" />
     <ClInclude Include="Source\hpp\Components\HealthComponent.hpp" />
@@ -565,8 +567,8 @@
     <Content Include="Source\Dependencies\include\glm\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Source\cpp\Combat\" />
-    <Folder Include="Source\hpp\Combat\" />
+    <Folder Include="Source\cpp\Combat\Abilities\" />
+    <Folder Include="Source\hpp\Combat\Abilities\" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

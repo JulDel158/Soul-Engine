@@ -7,8 +7,6 @@
 #include "rapidjson/filewritestream.h"
 #include "rapidjson/writer.h"
 
-#include "Components/SpriteComponent.hpp"
-#include "Components/BoxCollisionComponent.hpp"
 #include "StringGlobals.hpp"
 #include "World/BackgroundTile.hpp"
 
@@ -311,7 +309,7 @@ void ResourceManager::Clear()
 	
 	for (auto& pair : components_)
 	{
-		for (auto& component : pair.second)
+		for (const auto& component : pair.second)
 		{
 			component->Clear();
 			delete component;

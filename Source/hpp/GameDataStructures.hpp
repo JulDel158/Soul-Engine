@@ -1,7 +1,11 @@
 #ifndef GAME_DATA_STRUCTURES_HPP
 #define GAME_DATA_STRUCTURES_HPP
 #pragma once
-#include <cstdint>
+
+#include "glm/common.hpp"
+
+constexpr int SPEED_MAX = 4;
+constexpr int ACCURACY_MAX = 5;
 
 enum class EMovementMode : unsigned char
 {
@@ -30,39 +34,53 @@ enum class EPlayerAnimationState : int
 	Walking_Right,
 };
 
-enum class ECombatModifierExecutionTime : unsigned char
-{
-	OnApply = 0,
-	TurnStart,
-	TurnEnd,
-	Ongoing,
-	OnSkillUsage,
-	OnAttackUsage,
-	OnBlockUsage,
-	OnDodge,
-	OnMove
-};
-
 enum class ETargetingType : unsigned char
 {
 	Self = 0,
 	Enemy,
 	Friend, // A teammate, but not self
-	Party, // Anyone from the caster's party including self
-	Any, // Doesn't include zone
-	Zone, // The physical zone itself
-	ZoneCharacters, // The characters in the zone
-	AllButSelf, // This affects everyone excluding the caster
-	Everyone // This affects everyone
+	PartyMember, // Anyone from the caster's party including self
+	Party, // The entire party at once
+	EnemyParty, // The entire enemy party at once
+	AnyCharacter,
+	EveryoneButSelf, // This affects everyone excluding the caster
+	Everyone, // This affects everyone
+	ZoneCharacters, // All the characters in a zone
+	Zone, // A physical zone itself
+	PlayerArea, // Both zones on the player's side
+	EnemyArea, // Both zones on the enemy's side
+	AnyArea, // Either the player or the enemy's area
+	AllAreas, // Both the Player and the Enemy's area
 };
 
 enum class EActionRange : unsigned char
 {
 	Short = 0,
-	Long,
-	Any,
-	Front = Short,
-	Back = Long
+	Long = 1,
+	Any = 2,
+};
+
+enum class ECombatPosition : unsigned char
+{
+	None = 0,
+	FrontPlayer,
+	BackPlayer,
+	FrontEnemy,
+	BackEnemy,
+};
+
+struct CharacterStats
+{
+	int damage_;
+	int block_;
+	int speed_;
+	int accuracy_;
+	int action_points_;
+	
+	explicit CharacterStats(const int damage, const int block, const int speed, const int accuracy, const int action_points) :
+	damage_(damage), block_(block), speed_(glm::clamp(speed, 0, SPEED_MAX)), accuracy_(glm::clamp(accuracy, 0, ACCURACY_MAX)), action_points_(action_points) {}
+	
+	CharacterStats() : damage_(0), block_(0), speed_(0), accuracy_(0), action_points_(0) {}
 };
 
 #endif
