@@ -5,12 +5,14 @@
 #include "Character.hpp"
 #include "GameDataStructures.hpp"
 #include "Combat/Statuses/Status.hpp"
+#include "Combat/Conditions/Condition.hpp"
 #include "Utils/Logger.hpp"
 
 #include "robin_hood_hash/robin_hood.h"
 
 #include <typeindex>
 #include <typeinfo>
+#include <list>
 
 class HealthComponent;
 
@@ -22,9 +24,9 @@ protected:
 	HealthComponent* health_component_;
 	ECombatPosition combat_position_;
 	
-	// TODO: Replace with maps using the class as the key
 	robin_hood::unordered_map<std::type_index, Status*> buffs_;
 	robin_hood::unordered_map<std::type_index, Status*> debuffs_;
+	robin_hood::unordered_map<ECharacterConditionExecutionTime, std::list<Condition*>> conditions_;
 	
 public:
 	CombatCharacter();
@@ -37,6 +39,7 @@ public:
 	template <typename Type>
 	void ApplyDebuffStatus(int count);
 	
+	
 	virtual void OnTurnStart();
 	virtual void OnTurnEnd();
 	virtual void OnTurnCycleStart();
@@ -44,13 +47,26 @@ public:
 	virtual void OnCombatStart();
 	virtual void OnCombatEnd();
 	
+	virtual void OnAttack(int hitAmount, bool hit);
+	virtual void OnAbility();
+	virtual void OnBlock(int blockAmount);
+	virtual void OnMove(ECombatPosition destination);
+	virtual void OnDodge();
+	virtual void OnMiss();
+	virtual void OnDamaged(int amount);
+	virtual void OnHealed(int amount);
+	virtual void OnBuffed(int amount);
+	virtual void OnDebuffed(int amount);
+	
 	CharacterStats GetStats(const bool baseStats=false) const { return baseStats ? stats_ : status_afflicted_stats_; }
 	
 private:
 	void InitComponents();
 	void UpdateStatuses();
 	void ApplyStatuses();
-	// TODO: Add combat character base attributes
+	void UpdateConditions();
+	void TriggerConditions(ECharacterConditionExecutionTime executionTime, int amount);
+	void TriggerConditions(ECharacterConditionExecutionTime executionTime);
 };
 
 template <typename Type>

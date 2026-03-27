@@ -69,6 +69,37 @@ enum class ECombatPosition : unsigned char
 	BackEnemy,
 };
 
+enum class ECharacterConditionExecutionTime : unsigned char
+{
+	OnTurnStart = 0,
+	OnTurnEnd,
+	OnTurnCycleStart,
+	OnTurnCycleEnd,
+	OnCombatStart,
+	OnCombatEnd,
+	
+	OnAttack,
+	OnAbility,
+	OnBlock,
+	OnMove,
+	OnDodge,
+	OnMiss,
+	OnDamaged,
+	OnHealed,
+	OnBuffed,
+	OnDebuffed,
+};
+
+enum class EZoneConditionExecutionTime : unsigned char
+{
+	OnTurnStart = 0,
+	OnTurnEnd,
+	OnTurnCycleStart,
+	OnTurnCycleEnd,
+	OnCombatStart,
+	OnCombatEnd,
+};
+
 struct CharacterStats
 {
 	int damage_;

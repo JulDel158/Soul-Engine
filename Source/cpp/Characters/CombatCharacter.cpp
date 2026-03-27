@@ -4,8 +4,8 @@
 #include "Utils/Logger.hpp"
 #include "EngineDataStructures.hpp"
 #include "Combat/Statuses/Status.hpp"
+#include "Combat/Conditions/Condition.hpp"
 #include "Components/HealthComponent.hpp"
-#include "Utils/RandomGenerator.hpp"
 
 
 CombatCharacter::CombatCharacter() : 
@@ -16,28 +16,92 @@ health_component_(nullptr)
 
 void CombatCharacter::OnTurnStart()
 {
+	TriggerConditions(ECharacterConditionExecutionTime::OnTurnStart);
 }
 
 void CombatCharacter::OnTurnEnd()
 {
+	TriggerConditions(ECharacterConditionExecutionTime::OnTurnEnd);
 }
 
 void CombatCharacter::OnTurnCycleStart()
 {
+	TriggerConditions(ECharacterConditionExecutionTime::OnTurnCycleStart);
 	ApplyStatuses();
 }
 
 void CombatCharacter::OnTurnCycleEnd()
 {
+	TriggerConditions(ECharacterConditionExecutionTime::OnTurnCycleEnd);
+	UpdateConditions();
 	UpdateStatuses();
 }
 
 void CombatCharacter::OnCombatStart()
 {
+	TriggerConditions(ECharacterConditionExecutionTime::OnCombatStart);
 }
 
 void CombatCharacter::OnCombatEnd()
 {
+	TriggerConditions(ECharacterConditionExecutionTime::OnCombatEnd);
+	// Todo: clear statuses and conditions 
+}
+
+void CombatCharacter::OnAttack(const int hitAmount, const bool hit)
+{
+	for (const auto& condition : conditions_[ECharacterConditionExecutionTime::OnAttack])
+	{
+		condition->Trigger(*this, hitAmount, hit);
+	}
+}
+
+void CombatCharacter::OnAbility()
+{
+	TriggerConditions(ECharacterConditionExecutionTime::OnAbility);
+}
+
+void CombatCharacter::OnBlock(const int blockAmount)
+{
+	TriggerConditions(ECharacterConditionExecutionTime::OnBlock, blockAmount);
+}
+
+void CombatCharacter::OnMove(const ECombatPosition destination)
+{
+	for (const auto& condition : conditions_[ECharacterConditionExecutionTime::OnMove])
+	{
+		condition->Trigger(*this, destination);
+	}
+}
+
+void CombatCharacter::OnDodge()
+{
+	TriggerConditions(ECharacterConditionExecutionTime::OnDodge);
+}
+
+void CombatCharacter::OnMiss()
+{
+	TriggerConditions(ECharacterConditionExecutionTime::OnMiss);
+}
+
+void CombatCharacter::OnDamaged(const int amount)
+{
+	TriggerConditions(ECharacterConditionExecutionTime::OnDamaged, amount);
+}
+
+void CombatCharacter::OnHealed(const int amount)
+{
+	TriggerConditions(ECharacterConditionExecutionTime::OnHealed, amount);
+}
+
+void CombatCharacter::OnBuffed(const int amount)
+{
+	TriggerConditions(ECharacterConditionExecutionTime::OnBuffed, amount);
+}
+
+void CombatCharacter::OnDebuffed(const int amount)
+{
+	TriggerConditions(ECharacterConditionExecutionTime::OnDebuffed, amount);
 }
 
 void CombatCharacter::InitComponents()
@@ -99,6 +163,41 @@ void CombatCharacter::ApplyStatuses()
 	for (const auto& debuff : debuffs_)
 	{
 		debuff.second->Modify(status_afflicted_stats_);
+	}
+}
+
+void CombatCharacter::UpdateConditions()
+{
+	for (auto& conditionList : conditions_)
+	{
+		for (auto it = conditionList.second.begin(); it != conditionList.second.end();)
+		{
+			if ((*it)->RemoveOnTurnCycleEnd())
+			{
+				it = conditionList.second.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
+	
+}
+
+void CombatCharacter::TriggerConditions(const ECharacterConditionExecutionTime executionTime, int amount)
+{
+	for (auto& condition : conditions_[executionTime])
+	{
+		condition->Trigger(*this, amount);
+	}
+}
+
+void CombatCharacter::TriggerConditions(const ECharacterConditionExecutionTime executionTime)
+{
+	for (auto& condition : conditions_[executionTime])
+	{
+		condition->Trigger(*this);
 	}
 }
 

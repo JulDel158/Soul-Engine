@@ -3,7 +3,9 @@
 Status::Status() :
 stack_(0),
 cost_per_cycle_(1),
-max_(999)
+max_(999),
+name_("Status"),
+description_("Default description...")
 {
 }
 
