@@ -43,6 +43,9 @@ public:
 	virtual void OnTurnCycleEnd();
 	virtual void OnCombatStart();
 	virtual void OnCombatEnd();
+	
+private:
+	void TriggerConditions(EZoneConditionExecutionTime executionTime);
 };
 
 template <typename Type>

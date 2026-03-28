@@ -23,6 +23,8 @@
     <ClCompile Include="Source\cpp\Characters\Character.cpp" />
     <ClCompile Include="Source\cpp\Characters\CombatCharacter.cpp" />
     <ClCompile Include="Source\cpp\Characters\PlayerCharacter.cpp" />
+    <ClCompile Include="Source\cpp\Combat\Abilities\Ability.cpp" />
+    <ClCompile Include="Source\cpp\Combat\CombatManager.cpp" />
     <ClCompile Include="Source\cpp\Combat\Conditions\Condition.cpp" />
     <ClCompile Include="Source\cpp\Combat\Statuses\Status.cpp" />
     <ClCompile Include="Source\cpp\Combat\Zones\Zone.cpp" />
@@ -533,6 +535,8 @@
     <ClInclude Include="Source\hpp\Characters\Character.hpp" />
     <ClInclude Include="Source\hpp\Characters\CombatCharacter.hpp" />
     <ClInclude Include="Source\hpp\Characters\PlayerCharacter.hpp" />
+    <ClInclude Include="Source\hpp\Combat\Abilities\Ability.hpp" />
+    <ClInclude Include="Source\hpp\Combat\CombatManager.hpp" />
     <ClInclude Include="Source\hpp\Combat\Conditions\Condition.hpp" />
     <ClInclude Include="Source\hpp\Combat\Statuses\Status.hpp" />
     <ClInclude Include="Source\hpp\Combat\Zones\Zone.hpp" />
@@ -569,10 +573,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Source\Dependencies\include\glm\CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Source\cpp\Combat\Abilities\" />
-    <Folder Include="Source\hpp\Combat\Abilities\" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

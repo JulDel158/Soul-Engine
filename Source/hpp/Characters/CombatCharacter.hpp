@@ -8,11 +8,13 @@
 #include "GameDataStructures.hpp"
 #include "Combat/Statuses/Status.hpp"
 #include "Combat/Conditions/Condition.hpp"
+#include "Combat/Abilities/Ability.hpp"
 #include "Utils/Logger.hpp"
 
 #include <typeindex>
 #include <typeinfo>
 #include <list>
+#include <vector>
 
 class HealthComponent;
 
@@ -22,7 +24,11 @@ protected:
 	CharacterStats stats_; // These are the base stats of the character, only modified by certain actions/equipment
 	CharacterStats status_afflicted_stats_; // These stats are updated at the start of each turn cycle
 	HealthComponent* health_component_;
+	Ability* attack_;
+	std::vector<Ability*> abilities_;
+	
 	ECombatPosition combat_position_;
+	bool is_blocking_;
 	
 	robin_hood::unordered_map<std::type_index, Status*> buffs_;
 	robin_hood::unordered_map<std::type_index, Status*> debuffs_;
@@ -39,6 +45,12 @@ public:
 	template <typename Type>
 	void ApplyTrigger(ECharacterConditionExecutionTime executionTime, CombatCharacter& caster);
 	
+	bool ApplyDamage(int& amount, bool inRange);
+	void ApplyHealing(int amount, bool inRange);
+	
+	void Move();
+	void Block();
+	
 	void ClearBuffs();
 	void ClearDebuffs();
 	void ClearConditions();
@@ -50,12 +62,12 @@ public:
 	virtual void OnCombatStart();
 	virtual void OnCombatEnd();
 	
-	virtual void OnAttack(int hitAmount, bool hit);
-	virtual void OnAbility();
+	virtual void OnAttack(int hitAmount, bool hit); // TODO: CALL
+	virtual void OnAbility(); // TODO: CALL
 	virtual void OnBlock(int blockAmount);
 	virtual void OnMove(ECombatPosition destination);
 	virtual void OnDodge();
-	virtual void OnMiss();
+	virtual void OnMiss(); // TODO: CALL
 	virtual void OnDamaged(int amount);
 	virtual void OnHealed(int amount);
 	virtual void OnBuffed(std::type_index type, int amount);
@@ -63,6 +75,11 @@ public:
 	
 	inline CharacterStats GetStats(const bool baseStats=false) const { return baseStats ? stats_ : status_afflicted_stats_; }
 	inline HealthComponent* GetHealthComponent() const { return health_component_; }
+	inline ECombatPosition GetCombatPosition() const { return combat_position_; }
+	
+	inline Ability* GetAttack() const { return attack_; }
+	inline const std::vector<Ability*>& GetAbilities() const { return abilities_; }
+	inline Ability* GetAbility(const unsigned int index) const { if (!abilities_.empty() && abilities_.size() > index) return abilities_[index]; return nullptr; }
 	
 private:
 	void InitComponents();
@@ -86,6 +103,7 @@ void CombatCharacter::ApplyBuffStatus(const int count)
 			auto* ptr = dynamic_cast<Status*>(buff);
 			ptr->SetStack(count);
 			buffs_[typeid(Type)] = ptr;
+			OnBuffed(typeid(Type), count);
 		}
 		catch (...)
 		{
@@ -98,6 +116,7 @@ void CombatCharacter::ApplyBuffStatus(const int count)
 	
 	// Otherwise we just add to the current existing one
 	buffs_[typeid(Type)]->IncreaseStack(count);
+	OnBuffed(typeid(Type), count);
 }
 
 template <typename Type>
@@ -112,6 +131,7 @@ void CombatCharacter::ApplyDebuffStatus(const int count)
 			auto* ptr = dynamic_cast<Status*>(debuff);
 			ptr->SetStack(count);
 			debuffs_[typeid(Type)] = ptr;
+			OnDebuffed(typeid(Type), count);
 		}
 		catch (...)
 		{
@@ -124,6 +144,7 @@ void CombatCharacter::ApplyDebuffStatus(const int count)
 	
 	// Otherwise we just add to the current existing one
 	debuffs_[typeid(Type)]->IncreaseStack(count);
+	OnDebuffed(typeid(Type), count);
 }
 
 template <typename Type>

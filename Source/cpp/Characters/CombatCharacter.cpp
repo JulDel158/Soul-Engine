@@ -6,11 +6,19 @@
 #include "Combat/Statuses/Status.hpp"
 #include "Combat/Conditions/Condition.hpp"
 #include "Components/HealthComponent.hpp"
+#include "Utils/RandomGenerator.hpp"
 
+namespace
+{
+	constexpr float LOWEST_DODGE_CHANCE = 12.5f;
+	constexpr float DODGE_CHANCE_PER_LEVEL = 25.0f;
+}
 
 CombatCharacter::CombatCharacter() : 
-health_component_(nullptr)
+health_component_(nullptr),
+attack_(nullptr)
 {
+	is_blocking_ = false;
 	InitComponents();
 }
 
@@ -19,6 +27,81 @@ CombatCharacter::~CombatCharacter()
 	ClearBuffs();
 	ClearDebuffs();
 	ClearConditions();
+}
+
+bool CombatCharacter::ApplyDamage(int& amount, const bool inRange)
+{
+	bool dodged = false;
+	int appliedDamage = 0;
+		
+	if (is_blocking_)
+	{
+		appliedDamage = amount - status_afflicted_stats_.block_;
+		OnBlock(status_afflicted_stats_.block_);
+	}
+	else if (!inRange)
+	{
+		const float dodgeChance = (status_afflicted_stats_.speed_ == 0) ? LOWEST_DODGE_CHANCE : static_cast<float>(status_afflicted_stats_.speed_) * DODGE_CHANCE_PER_LEVEL;
+		const float roll = RandomGenerator().GetRandomFloat(0.0f, 100.0f);
+		dodged = dodgeChance >= roll;
+	}
+	
+	if (dodged)
+	{
+		appliedDamage = 0;
+		OnDodge();
+	}
+	else
+	{
+		health_component_->Damage(appliedDamage, 0);
+		OnDamaged(appliedDamage);
+	}
+	
+	amount = appliedDamage;
+	
+	return !dodged;
+}
+
+void CombatCharacter::ApplyHealing(const int amount, const bool inRange)
+{
+	int total = amount;
+	health_component_->Heal(total, 0);
+	
+	OnHealed(total);
+}
+
+void CombatCharacter::Move()
+{
+	switch (combat_position_)
+	{
+	case ECombatPosition::None:
+		{
+			auto log = Logger();
+			log.Log(ELogLevel::Warning, "CombatCharacter::Move: combat_position_ was none?!?!");
+			break;
+		}
+	case ECombatPosition::FrontPlayer:
+		combat_position_ = ECombatPosition::BackPlayer;
+		break;
+	case ECombatPosition::BackPlayer:
+		combat_position_ = ECombatPosition::FrontPlayer;
+		break;
+	case ECombatPosition::FrontEnemy:
+		combat_position_ = ECombatPosition::BackEnemy;
+		break;
+	case ECombatPosition::BackEnemy:
+		combat_position_ = ECombatPosition::FrontEnemy;
+		break;
+	}
+	OnMove(combat_position_);
+}
+
+void CombatCharacter::Block()
+{
+	if (status_afflicted_stats_.can_block_)
+	{
+		is_blocking_ = true;
+	}
 }
 
 void CombatCharacter::ClearBuffs()
@@ -69,6 +152,7 @@ void CombatCharacter::OnTurnCycleStart()
 
 void CombatCharacter::OnTurnCycleEnd()
 {
+	is_blocking_ = false;
 	TriggerConditions(ECharacterConditionExecutionTime::OnTurnCycleEnd);
 	UpdateConditions();
 	UpdateStatuses();
@@ -227,7 +311,7 @@ void CombatCharacter::TriggerConditions(const ECharacterConditionExecutionTime e
 	for (auto it = conditions_[executionTime].begin(); it != conditions_[executionTime].end();)
 	{
 		(*it)->Trigger(*this, amount);
-		if ((*it)->RemoveOnTurnCycleEnd())
+		if ((*it)->RemoveOnTrigger())
 		{
 			delete (*it);
 			it = conditions_[executionTime].erase(it);
@@ -241,18 +325,36 @@ void CombatCharacter::TriggerConditions(const ECharacterConditionExecutionTime e
 
 void CombatCharacter::TriggerConditions(const ECharacterConditionExecutionTime executionTime)
 {
-	for (auto& condition : conditions_[executionTime])
+	for (auto it = conditions_[executionTime].begin(); it != conditions_[executionTime].end();)
 	{
-		condition->Trigger(*this);
+		(*it)->Trigger(*this);
+		if ((*it)->RemoveOnTrigger())
+		{
+			delete (*it);
+			it = conditions_[executionTime].erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
 }
 
-void CombatCharacter::TriggerConditions(ECharacterConditionExecutionTime executionTime, std::type_index type,
-	int amount)
+void CombatCharacter::TriggerConditions(const ECharacterConditionExecutionTime executionTime, const std::type_index type,
+	const int amount)
 {
-	for (auto& condition : conditions_[executionTime])
+	for (auto it = conditions_[executionTime].begin(); it != conditions_[executionTime].end();)
 	{
-		condition->Trigger(*this, type, amount);
+		(*it)->Trigger(*this, type , amount);
+		if ((*it)->RemoveOnTrigger())
+		{
+			delete (*it);
+			it = conditions_[executionTime].erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
 }
 

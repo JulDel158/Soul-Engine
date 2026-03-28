@@ -4,6 +4,8 @@
 
 #include "glm/common.hpp"
 
+#include <vector>
+
 constexpr int SPEED_MAX = 4;
 constexpr int ACCURACY_MAX = 5;
 
@@ -107,11 +109,21 @@ struct CharacterStats
 	int speed_;
 	int accuracy_;
 	int action_points_;
+	int attack_cost_mod_;
+	int block_cost_mod_;
+	int move_cost_mod_;
+	std::vector<int> ability_cost_mods_; // The index of the ability = the ability to be afflicted
+	bool can_block_;
 	
 	explicit CharacterStats(const int damage, const int block, const int speed, const int accuracy, const int action_points) :
-	damage_(damage), block_(block), speed_(glm::clamp(speed, 0, SPEED_MAX)), accuracy_(glm::clamp(accuracy, 0, ACCURACY_MAX)), action_points_(action_points) {}
+	damage_(damage), block_(block), speed_(glm::clamp(speed, 0, SPEED_MAX)), 
+	accuracy_(glm::clamp(accuracy, 0, ACCURACY_MAX)), action_points_(action_points),
+	attack_cost_mod_(0), block_cost_mod_(0), move_cost_mod_(0), can_block_(true) {}
 	
-	CharacterStats() : damage_(0), block_(0), speed_(0), accuracy_(0), action_points_(0) {}
+	CharacterStats() : damage_(0), block_(0), speed_(0), accuracy_(0), action_points_(0), 
+	attack_cost_mod_(0), block_cost_mod_(0), move_cost_mod_(0), can_block_(true)
+	{
+	}
 };
 
 #endif
