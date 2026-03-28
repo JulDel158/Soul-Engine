@@ -20,7 +20,9 @@ public:
 	Ability();
 	virtual ~Ability();
 	
-	virtual void Execute(std::vector<CombatCharacter&>& enemies, std::vector<CombatCharacter&>& allies);
+	inline void SetOwner(CombatCharacter* owner) { owner_ = owner; }
+	inline CombatCharacter* GetOwner() const { return owner_; }
+	virtual void Execute(std::vector<CombatCharacter*>& enemies, std::vector<CombatCharacter*>& allies);
 };
 
 #endif

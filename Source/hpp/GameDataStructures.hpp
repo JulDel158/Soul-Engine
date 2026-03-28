@@ -71,6 +71,25 @@ enum class ECombatPosition : unsigned char
 	BackEnemy,
 };
 
+inline bool IsInRange(const EActionRange range, const ECombatPosition position)
+{
+	bool result = false;
+	switch (range)
+	{
+	case EActionRange::Short:
+		result = position == ECombatPosition::FrontPlayer || position == ECombatPosition::FrontEnemy;
+		break;
+	case EActionRange::Long:
+		result = position ==ECombatPosition::BackPlayer || position == ECombatPosition::BackEnemy;
+		break;
+	case EActionRange::Any:
+		result = true;
+		break;
+	}
+	
+	return result;
+}
+
 enum class ECharacterConditionExecutionTime : unsigned char
 {
 	OnTurnStart = 0,
