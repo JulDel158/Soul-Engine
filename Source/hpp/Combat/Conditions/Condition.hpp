@@ -5,6 +5,7 @@
 #include "GameDataStructures.hpp"
 
 #include <string>
+#include <typeindex>
 
 class CombatCharacter;
 
@@ -24,6 +25,7 @@ public:
 	virtual void Trigger(CombatCharacter& target, int data);
 	virtual void Trigger(CombatCharacter& target, int data, bool flag);
 	virtual void Trigger(CombatCharacter& target, ECombatPosition destination);
+	virtual void Trigger(CombatCharacter& target, std::type_index type, int amount);
 	
 	void SetCaster(CombatCharacter& caster) { caster_ = &caster; }
 	

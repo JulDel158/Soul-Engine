@@ -131,14 +131,14 @@ void CombatCharacter::OnHealed(const int amount)
 	TriggerConditions(ECharacterConditionExecutionTime::OnHealed, amount);
 }
 
-void CombatCharacter::OnBuffed(const int amount)
+void CombatCharacter::OnBuffed(const std::type_index type, const int amount)
 {
-	TriggerConditions(ECharacterConditionExecutionTime::OnBuffed, amount);
+	TriggerConditions(ECharacterConditionExecutionTime::OnBuffed, type,amount);
 }
 
-void CombatCharacter::OnDebuffed(const int amount)
+void CombatCharacter::OnDebuffed(const std::type_index type, const int amount)
 {
-	TriggerConditions(ECharacterConditionExecutionTime::OnDebuffed, amount);
+	TriggerConditions(ECharacterConditionExecutionTime::OnDebuffed, type,amount);
 }
 
 void CombatCharacter::InitComponents()
@@ -244,6 +244,15 @@ void CombatCharacter::TriggerConditions(const ECharacterConditionExecutionTime e
 	for (auto& condition : conditions_[executionTime])
 	{
 		condition->Trigger(*this);
+	}
+}
+
+void CombatCharacter::TriggerConditions(ECharacterConditionExecutionTime executionTime, std::type_index type,
+	int amount)
+{
+	for (auto& condition : conditions_[executionTime])
+	{
+		condition->Trigger(*this, type, amount);
 	}
 }
 

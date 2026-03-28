@@ -25,6 +25,7 @@
     <ClCompile Include="Source\cpp\Characters\PlayerCharacter.cpp" />
     <ClCompile Include="Source\cpp\Combat\Conditions\Condition.cpp" />
     <ClCompile Include="Source\cpp\Combat\Statuses\Status.cpp" />
+    <ClCompile Include="Source\cpp\Combat\Zones\Zone.cpp" />
     <ClCompile Include="Source\cpp\Components\BaseComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\BoxCollisionComponent.cpp" />
     <ClCompile Include="Source\cpp\Components\HealthComponent.cpp" />
@@ -534,6 +535,7 @@
     <ClInclude Include="Source\hpp\Characters\PlayerCharacter.hpp" />
     <ClInclude Include="Source\hpp\Combat\Conditions\Condition.hpp" />
     <ClInclude Include="Source\hpp\Combat\Statuses\Status.hpp" />
+    <ClInclude Include="Source\hpp\Combat\Zones\Zone.hpp" />
     <ClInclude Include="Source\hpp\Components\BaseComponent.hpp" />
     <ClInclude Include="Source\hpp\Components\BoxCollisionComponent.hpp" />
     <ClInclude Include="Source\hpp\Components\HealthComponent.hpp" />

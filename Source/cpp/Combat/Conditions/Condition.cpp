@@ -40,6 +40,12 @@ void Condition::Trigger(CombatCharacter& target, ECombatPosition destination)
 	log.Log(ELogLevel::Warning, "Condition::Trigger(CombatCharacter&,ECombatPosition) called but base implementation executed!!");
 }
 
+void Condition::Trigger(CombatCharacter& target, std::type_index type, int amount)
+{
+	auto log = Logger();
+	log.Log(ELogLevel::Warning, "Condition::Trigger(CombatCharacter&,std::type_index,int) called but base implementation executed!!");
+}
+
 bool Condition::IsStackable() const
 {
 	return true;
