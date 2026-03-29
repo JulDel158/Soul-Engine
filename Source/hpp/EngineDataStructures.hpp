@@ -88,6 +88,10 @@ enum class ESpriteKey : unsigned int
 	Player_Down_1,
 	Player_Down_2,
 	Player_Down_3,
+	
+	Button1,
+	Button1_Focused,
+	Button1_Pressed
 };
 
 struct TextCharacter

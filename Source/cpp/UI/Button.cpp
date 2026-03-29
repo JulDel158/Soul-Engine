@@ -1,5 +1,8 @@
 #include "UI/Button.hpp"
 
+#include "Components/SpriteComponent.hpp"
+#include "Utils/ResourceManager.hpp"
+
 Button::Button() :
 left_click_function_(nullptr),
 right_click_function_(nullptr),
@@ -12,6 +15,10 @@ on_mouse_leave_function_(nullptr)
 {
 	can_listen_to_input_ = true;
 	can_be_focused_ = true;
+	
+	ResourceManager& resourceManager = ResourceManager::Instance();
+	unsigned int temp;
+	resourceManager.CreateComponent<SpriteComponent>(temp, nullptr);
 }
 
 void Button::OnMouseEnter()

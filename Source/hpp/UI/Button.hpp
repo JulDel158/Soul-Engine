@@ -8,6 +8,8 @@
 #include <string>
 #include <utility>
 
+class SpriteComponent;
+
 class Button : public Widget
 {
 protected:
@@ -20,6 +22,7 @@ protected:
 	std::function<void()> on_mouse_enter_function_;
 	std::function<void()> on_mouse_leave_function_;
 	std::string label_;
+	SpriteComponent* sprite_component_;
 	
 public:
 	Button();
@@ -43,6 +46,8 @@ public:
 	void OnReturnPressed() override;
 	
 	void SetLabel(std::string text) { label_ = std::move(text); }
+	
+	SpriteComponent* GetSpriteComponent() const { return sprite_component_; }
 	
 };
 

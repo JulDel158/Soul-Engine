@@ -1,6 +1,8 @@
 #include "Combat/CombatManager.hpp"
 
 #include "EngineDataStructures.hpp"
+#include "Components/SpriteComponent.hpp"
+#include "Utils/ResourceManager.hpp"
 
 namespace
 {
@@ -31,6 +33,7 @@ CombatManager& CombatManager::Instance()
 
 void CombatManager::InitializeAbilityButtons()
 {
+	ResourceManager& resourceManager = ResourceManager::Instance();
 	// TODO: Initialize button data
 	Button& attButton = ability_buttons_[ATTACK_BUTTON];
 	Button& skillButton = ability_buttons_[SKILL_BUTTON];
@@ -41,6 +44,11 @@ void CombatManager::InitializeAbilityButtons()
 	skillButton.SetLabel("Skills");
 	blockButton.SetLabel("Block");
 	moveButton.SetLabel("Move");
+	
+	attButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+	skillButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+	blockButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+	moveButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
 	
 	attButton.AddNeighbor(moveButton, EWidgetNeighbor::Up);
 	attButton.AddNeighbor(skillButton, EWidgetNeighbor::Down);

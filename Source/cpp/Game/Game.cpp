@@ -112,6 +112,10 @@ void Game::Init()
 	resourceManager.LoadTexture2D(PLAYER_WALKING_DOWN_1.data(), true, ESpriteKey::Player_Down_1);
 	resourceManager.LoadTexture2D(PLAYER_WALKING_DOWN_2.data(), true, ESpriteKey::Player_Down_2);
 	resourceManager.LoadTexture2D(PLAYER_WALKING_DOWN_3.data(), true, ESpriteKey::Player_Down_3);
+	
+	resourceManager.LoadTexture2D(BUTTON_1.data(), true, ESpriteKey::Button1);
+	resourceManager.LoadTexture2D(BUTTON_1_FOCUSED.data(), true, ESpriteKey::Button1_Focused);
+	resourceManager.LoadTexture2D(BUTTON_1_PRESSED.data(), true, ESpriteKey::Button1_Pressed);
     
     // set base shaders on renderers
     sprite_renderer_->SwapShader(spriteShader);

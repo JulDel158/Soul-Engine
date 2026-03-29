@@ -44,6 +44,10 @@ constexpr std::string_view PLAYER_WALKING_DOWN_1 = "Assets/Textures/debug/player
 constexpr std::string_view PLAYER_WALKING_DOWN_2 = "Assets/Textures/debug/player/walking_down2.png\0";
 constexpr std::string_view PLAYER_WALKING_DOWN_3 = "Assets/Textures/debug/player/walking_down3.png\0";
 
+constexpr std::string_view BUTTON_1 = "Assets/Textures/button1.png\0";
+constexpr std::string_view BUTTON_1_PRESSED = "Assets/Textures/button2.png\0";
+constexpr std::string_view BUTTON_1_FOCUSED = "Assets/Textures/button3.png\0";
+
 
 // font paths
 constexpr std::string_view FONT_ARIAL_PATH = "Assets/Fonts/arial.ttf\0";
