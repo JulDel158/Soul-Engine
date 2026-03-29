@@ -9,6 +9,7 @@
 #include "Combat/Statuses/Status.hpp"
 #include "Combat/Conditions/Condition.hpp"
 #include "Combat/Abilities/Ability.hpp"
+#include "Combat/Abilities/Attack.hpp"
 #include "Utils/Logger.hpp"
 
 #include <typeindex>
@@ -24,8 +25,8 @@ protected:
 	CharacterStats stats_; // These are the base stats of the character, only modified by certain actions/equipment
 	CharacterStats status_afflicted_stats_; // These stats are updated at the start of each turn cycle
 	HealthComponent* health_component_;
-	Ability* attack_;
-	std::vector<Ability*> abilities_;
+	Attack* attack_;
+	std::vector<Ability*> skills_;
 	
 	ECombatPosition combat_position_;
 	bool is_blocking_;
@@ -62,12 +63,12 @@ public:
 	virtual void OnCombatStart();
 	virtual void OnCombatEnd();
 	
-	virtual void OnAttack(int hitAmount, bool hit); // TODO: CALL
+	virtual void OnAttack(int hitAmount, bool hit);
 	virtual void OnAbility(); // TODO: CALL
 	virtual void OnBlock(int blockAmount);
 	virtual void OnMove(ECombatPosition destination);
 	virtual void OnDodge();
-	virtual void OnMiss(); // TODO: CALL
+	virtual void OnMiss();
 	virtual void OnDamaged(int amount);
 	virtual void OnHealed(int amount);
 	virtual void OnBuffed(std::type_index type, int amount);
@@ -78,8 +79,8 @@ public:
 	inline ECombatPosition GetCombatPosition() const { return combat_position_; }
 	
 	inline Ability* GetAttack() const { return attack_; }
-	inline const std::vector<Ability*>& GetAbilities() const { return abilities_; }
-	inline Ability* GetAbility(const unsigned int index) const { if (!abilities_.empty() && abilities_.size() > index) return abilities_[index]; return nullptr; }
+	inline const std::vector<Ability*>& GetAbilities() const { return skills_; }
+	inline Ability* GetAbility(const unsigned int index) const { if (!skills_.empty() && skills_.size() > index) return skills_[index]; return nullptr; }
 	
 private:
 	void InitComponents();

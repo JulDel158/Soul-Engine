@@ -10,6 +10,7 @@
 
 namespace
 {
+	// TODO: Move this to some data structure that can be modified externally from the code
 	constexpr float LOWEST_DODGE_CHANCE = 12.5f;
 	constexpr float DODGE_CHANCE_PER_LEVEL = 25.0f;
 }
