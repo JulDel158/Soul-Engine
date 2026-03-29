@@ -12,7 +12,7 @@ class Panel
 {
 protected:
 	friend class Game;
-	std::map<unsigned int, std::vector<Widget*>> widgets_; // naturally maps are sorted by key on descending order
+	std::map<unsigned int, std::vector<Widget*>> widgets_; // naturally maps are sorted by key on ascending order
 	// Mouse
 	InputAction cursor_input_action_;
 	InputAction left_click_input_action_;
