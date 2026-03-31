@@ -154,7 +154,7 @@ void Widget::AddChild(Widget& child)
 	child.SetParent(*this);
 }
 
-void Widget::AddNeighbor(Widget& neighbor, EWidgetNeighbor direction)
+void Widget::AddNeighbor(Widget* neighbor, EWidgetNeighbor direction)
 {
 	if (direction == EWidgetNeighbor::Count)
 	{
@@ -163,7 +163,7 @@ void Widget::AddNeighbor(Widget& neighbor, EWidgetNeighbor direction)
 		return;
 	}
 	
-	neighbors_[static_cast<unsigned int>(direction)] = &neighbor;
+	neighbors_[static_cast<unsigned int>(direction)] = neighbor;
 }
 
 void Widget::RegisterComponent(BaseComponent* component)

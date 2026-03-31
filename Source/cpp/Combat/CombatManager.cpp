@@ -64,17 +64,17 @@ void CombatManager::InitializeAbilityButtons()
 	blockButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
 	moveButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
 	
-	attButton.AddNeighbor(moveButton, EWidgetNeighbor::Up);
-	attButton.AddNeighbor(skillButton, EWidgetNeighbor::Down);
+	attButton.AddNeighbor(&moveButton, EWidgetNeighbor::Up);
+	attButton.AddNeighbor(&skillButton, EWidgetNeighbor::Down);
 	
-	skillButton.AddNeighbor(attButton, EWidgetNeighbor::Up);
-	skillButton.AddNeighbor(blockButton, EWidgetNeighbor::Down);
+	skillButton.AddNeighbor(&attButton, EWidgetNeighbor::Up);
+	skillButton.AddNeighbor(&blockButton, EWidgetNeighbor::Down);
 	
-	blockButton.AddNeighbor(skillButton, EWidgetNeighbor::Up);
-	blockButton.AddNeighbor(moveButton, EWidgetNeighbor::Down);
+	blockButton.AddNeighbor(&skillButton, EWidgetNeighbor::Up);
+	blockButton.AddNeighbor(&moveButton, EWidgetNeighbor::Down);
 	
-	moveButton.AddNeighbor(blockButton, EWidgetNeighbor::Up);
-	moveButton.AddNeighbor(attButton, EWidgetNeighbor::Down);
+	moveButton.AddNeighbor(&blockButton, EWidgetNeighbor::Up);
+	moveButton.AddNeighbor(&attButton, EWidgetNeighbor::Down);
 	
 	attButton.SetPosition(glm::vec2(40.0f, 50.0f));
 	skillButton.SetPosition(glm::vec2(40.0f, 100.0f));
@@ -119,35 +119,35 @@ void CombatManager::InitializeSkillButtons()
 	Button& button5 = skill_buttons_[4];
 	Button& button6 = skill_buttons_[5];
 	
-	button1.AddNeighbor(button5, EWidgetNeighbor::Up);
-	button1.AddNeighbor(button3, EWidgetNeighbor::Down);
-	button1.AddNeighbor(button2, EWidgetNeighbor::Left);
-	button1.AddNeighbor(button2, EWidgetNeighbor::Right);
+	//button1.AddNeighbor(&button5, EWidgetNeighbor::Up);
+	button1.AddNeighbor(&button3, EWidgetNeighbor::Down);
+	//button1.AddNeighbor(&button2, EWidgetNeighbor::Left);
+	button1.AddNeighbor(&button2, EWidgetNeighbor::Right);
 	
-	button2.AddNeighbor(button6, EWidgetNeighbor::Up);
-	button2.AddNeighbor(button4, EWidgetNeighbor::Down);
-	button2.AddNeighbor(button1, EWidgetNeighbor::Left);
-	button2.AddNeighbor(button1, EWidgetNeighbor::Right);
+	//button2.AddNeighbor(&button6, EWidgetNeighbor::Up);
+	button2.AddNeighbor(&button4, EWidgetNeighbor::Down);
+	button2.AddNeighbor(&button1, EWidgetNeighbor::Left);
+	//button2.AddNeighbor(&button1, EWidgetNeighbor::Right);
 	
-	button3.AddNeighbor(button1, EWidgetNeighbor::Up);
-	button3.AddNeighbor(button5, EWidgetNeighbor::Down);
-	button3.AddNeighbor(button4, EWidgetNeighbor::Left);
-	button3.AddNeighbor(button4, EWidgetNeighbor::Right);
+	button3.AddNeighbor(&button1, EWidgetNeighbor::Up);
+	button3.AddNeighbor(&button5, EWidgetNeighbor::Down);
+	//button3.AddNeighbor(&button4, EWidgetNeighbor::Left);
+	button3.AddNeighbor(&button4, EWidgetNeighbor::Right);
 	
-	button4.AddNeighbor(button2, EWidgetNeighbor::Up);
-	button4.AddNeighbor(button6, EWidgetNeighbor::Down);
-	button4.AddNeighbor(button3, EWidgetNeighbor::Left);
-	button4.AddNeighbor(button3, EWidgetNeighbor::Right);
+	button4.AddNeighbor(&button2, EWidgetNeighbor::Up);
+	button4.AddNeighbor(&button6, EWidgetNeighbor::Down);
+	button4.AddNeighbor(&button3, EWidgetNeighbor::Left);
+	//button4.AddNeighbor(&button3, EWidgetNeighbor::Right);
 	
-	button5.AddNeighbor(button3, EWidgetNeighbor::Up);
-	button5.AddNeighbor(button1, EWidgetNeighbor::Down);
-	button5.AddNeighbor(button6, EWidgetNeighbor::Left);
-	button5.AddNeighbor(button6, EWidgetNeighbor::Right);
+	button5.AddNeighbor(&button3, EWidgetNeighbor::Up);
+	//button5.AddNeighbor(&button1, EWidgetNeighbor::Down);
+	//button5.AddNeighbor(&button6, EWidgetNeighbor::Left);
+	button5.AddNeighbor(&button6, EWidgetNeighbor::Right);
 	
-	button6.AddNeighbor(button4, EWidgetNeighbor::Up);
-	button6.AddNeighbor(button2, EWidgetNeighbor::Down);
-	button6.AddNeighbor(button5, EWidgetNeighbor::Left);
-	button6.AddNeighbor(button5, EWidgetNeighbor::Right);
+	button6.AddNeighbor(&button4, EWidgetNeighbor::Up);
+	//button6.AddNeighbor(&button2, EWidgetNeighbor::Down);
+	button6.AddNeighbor(&button5, EWidgetNeighbor::Left);
+	//button6.AddNeighbor(&button5, EWidgetNeighbor::Right);
 	
 	for (int i = 0; i < 6; ++i)
 	{
@@ -175,10 +175,70 @@ void CombatManager::InitializeSkillButtons()
 
 void CombatManager::InitializePlayerTargetingButtons()
 {
-	// TODO:
+	ResourceManager& resourceManager = ResourceManager::Instance();
+	for (int i = 0; i < 4; ++i)
+	{
+		player_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));
+		player_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		player_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));
+		player_targeting_buttons_[i].SetScale(glm::vec2(0.5f));
+		player_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+		player_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
+		player_targeting_buttons_[i].BindLeftClick([](){std::cout << "Player targeting button pressed!\n";});
+		ui_panel_.AddWidget(player_targeting_buttons_[i]);
+	}
+	
+	// Neighboring and position will be updated dynamically
 }
 
 void CombatManager::InitializeEnemyTargetingButtons()
 {
+	ResourceManager& resourceManager = ResourceManager::Instance();
+	for (int i = 0; i < 7; ++i)
+	{
+		enemy_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));
+		enemy_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		enemy_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));
+		enemy_targeting_buttons_[i].SetScale(glm::vec2(0.5f));
+		enemy_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+		enemy_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
+		enemy_targeting_buttons_[i].BindLeftClick([](){std::cout << "Enemy targeting button pressed!\n";});
+		ui_panel_.AddWidget(enemy_targeting_buttons_[i]);
+	}
 	
+	// Neighboring and position will be updated dynamically
+}
+
+void CombatManager::InitializeZoneTargetingButtons()
+{
+	// 4 Enemy back
+	// 3 Enemy front
+	// 2 Player front
+	// 1 Player back
+	
+	Button& zone1 = zone_targeting_buttons_[0];
+	Button& zone2 = zone_targeting_buttons_[1];
+	Button& zone3 = zone_targeting_buttons_[2];
+	Button& zone4 = zone_targeting_buttons_[3];
+	
+	ResourceManager& resourceManager = ResourceManager::Instance();
+	for (int i = 0; i < 4; ++i)
+	{
+		zone_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));
+		zone_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		zone_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));
+		zone_targeting_buttons_[i].SetScale(glm::vec2(0.5f));
+		zone_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+		zone_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
+		zone_targeting_buttons_[i].BindLeftClick([](){std::cout << "Zone targeting button pressed!\n";});
+		ui_panel_.AddWidget(zone_targeting_buttons_[i]);
+	}
+	
+	
+	zone1.AddNeighbor(&zone2, EWidgetNeighbor::Up);
+	zone2.AddNeighbor(&zone3, EWidgetNeighbor::Up);
+	zone2.AddNeighbor(&zone1, EWidgetNeighbor::Down);
+	zone3.AddNeighbor(&zone4, EWidgetNeighbor::Up);
+	zone3.AddNeighbor(&zone2, EWidgetNeighbor::Down);
+	zone4.AddNeighbor(&zone3, EWidgetNeighbor::Down);
 }

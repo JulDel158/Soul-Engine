@@ -23,10 +23,10 @@ private:
 	Panel ui_panel_;
 	Button ability_buttons_[4];
 	Button skill_buttons_[6];
-	Button player_targeting_buttons_[4];
-	Button enemy_targeting_buttons_[8];
-	
-	// TODO: Add button for attack, skill, block, and Move action
+	// For the targeting buttons, we will have to dynamically update neighbors as we move characters around the field
+	Button player_targeting_buttons_[4]; 
+	Button enemy_targeting_buttons_[7];
+	Button zone_targeting_buttons_[4];
 	
 	CombatManager();
 	~CombatManager();
@@ -46,6 +46,7 @@ private:
 	void InitializeSkillButtons();
 	void InitializePlayerTargetingButtons();
 	void InitializeEnemyTargetingButtons();
+	void InitializeZoneTargetingButtons();
 };
 
 #endif
