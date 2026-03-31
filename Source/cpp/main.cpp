@@ -8,6 +8,8 @@
 #include "Utils/Logger.hpp"
 #include "EngineDataStructures.hpp"
 
+#include <string>
+
 namespace 
 {
     void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -20,7 +22,7 @@ namespace
     auto ErrorCallback(int error, const char* description) -> void
     {
     	auto logger = Logger();
-    	logger.Log(ELogLevel::Error, description);
+    	logger.Log(ELogLevel::Error, "main::ErrorCallback: " + std::string(description));
     }
 }
 

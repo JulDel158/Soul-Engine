@@ -53,6 +53,8 @@ public:
     
     void SetWindowPointer(GLFWwindow* window);
 	
+	void SetPanel(Panel* panel,unsigned int index);
+	
 private:
 	void GetUIPanelIndex(int& startIndex, int& endIndex) const;
 };

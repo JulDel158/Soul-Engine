@@ -13,6 +13,7 @@
 #include "UI/Panel.hpp"
 #include "Game/Level.hpp"
 #include "Game/TestLevel.hpp"
+#include "Combat/CombatManager.hpp"
 
 namespace
 {
@@ -123,6 +124,10 @@ void Game::Init()
 	
 	level_ = new TestLevel();
 	game_state_ = EGameState::InGame_Running;
+	
+	auto& combatManager = CombatManager::Instance();
+	combatManager.Initialize();
+	SetPanel(combatManager.GetUIPanel(), static_cast<unsigned int>(EPanelType::Game_1));
 }
 
 void Game::Start()
@@ -315,6 +320,14 @@ void Game::End()
 void Game::SetWindowPointer(GLFWwindow* window)
 {
     window_ = window;
+}
+
+void Game::SetPanel(Panel* panel, unsigned int index)
+{
+	if (index < static_cast<unsigned int>(EPanelType::Count))
+	{
+		ui_panels_[index] = panel;
+	}
 }
 
 void Game::GetUIPanelIndex(int& startIndex, int& endIndex) const

@@ -14,6 +14,7 @@ class GameObject;
 class SpriteComponent : public BaseComponent
 {
 protected:
+	friend class Button;
 	Texture2D base_texture_;
 	robin_hood::unordered_map<int,SpriteAnimation> animations_;
 	glm::vec3 color_;

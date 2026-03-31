@@ -12,6 +12,8 @@
 #include <tuple>
 #include <string>
 
+class BaseComponent;
+
 class Widget
 {
 protected:
@@ -41,6 +43,11 @@ protected:
 	bool can_refresh_;
 	bool can_listen_to_input_;
 	bool can_be_focused_;
+	bool fixed_render_list_;
+	bool render_list_initialized_;
+	bool click_pressed_l_;
+	bool click_pressed_r_;
+	std::vector<BaseComponent*> components_;
 	
 public:
 	Widget();
@@ -57,7 +64,8 @@ public:
 	virtual void OnMouseLeave(); // Event triggered when cursors stops hovering over widget
 	virtual void OnFocused(); // Event triggered when this widget becomes focused  via keyboard or controller
 	virtual void OnUnfocused(); // Event triggered when this widget loses focus via controller or keyboard
-	virtual void OnClick(bool leftClick = true); // Event triggered when mouse is clicked while hovering over widget
+	virtual void OnClick(glm::vec2 mousePosition,bool leftClick = true); // Event triggered when mouse is clicked while hovering over widget
+	virtual void OnClickRelease(bool leftClick = true);
 	virtual void OnSelected(); // Event triggered when widget is focused and selected via input (ex. pressing enter on keyboard or 'A'/'Start' on controller
 	virtual void OnReturnPressed(); // Event triggered when the return button/key is pressed while this widget is selected. (ex. escape key on keyboard or 'B'/'Back' on controller
 	
@@ -65,6 +73,8 @@ public:
 	void SetParent(Widget& parent);
 	void AddChild(Widget& child);
 	void AddNeighbor(Widget& neighbor, EWidgetNeighbor direction);
+	
+	void RegisterComponent(BaseComponent* component);
 	
 	inline void SetPosition(const glm::vec2 position)	{ position_ = position; }
 	inline void SetSize(const glm::vec2 size)			{ size_ = size; }
@@ -99,6 +109,9 @@ public:
 	inline bool			CanRefresh() const							{ return can_refresh_; }
 	inline bool			IsListeningToInput() const					{ return can_listen_to_input_; }
 	inline bool			CanBeFocused() const						{ return can_be_focused_; }
+	inline bool			IsBeingClicked() const						{ return click_pressed_l_ || click_pressed_r_; }
+	inline bool			IsLeftClicked() const						{ return click_pressed_l_; }
+	inline bool			IsRightClicked() const						{ return click_pressed_r_; }
 };
 
 #endif

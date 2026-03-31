@@ -56,6 +56,8 @@ private:
 	// Mouse 
 	void OnRightClick(const glm::vec2 data) const;
 	void OnLeftClick(const glm::vec2 data) const;
+	void OnRightClickReleased() const;
+	void OnLeftClickReleased() const;
 	void OnMouseMove(const glm::vec2 data, const float deltaTime) const;
 	
 	// Buttons

@@ -23,6 +23,7 @@ protected:
 	friend class GameObject;
 	friend class Game;
 	friend class ResourceManager;
+	friend class Widget;
 	
 	glm::vec2 position_;
 	glm::vec2 size_;

@@ -436,7 +436,7 @@ void InputManager::ProcessMouseButtonEvent(const int button, const int action, c
         {
             for (const auto& inputAction : mouse_button_input_actions_[button])
             {
-                inputAction->data_ = ONE_VECTOR;
+                inputAction->data_ = previous_cursor_position_;
                 inputAction->Pressed();
             }
             break;

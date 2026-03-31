@@ -40,6 +40,7 @@ visible_(true)
 	
 	left_click_input_action_.SetType(EInputActionType::Mouse_Button);
 	left_click_input_action_.BindPressed([this](const glm::vec2 data){ this->OnLeftClick(data); });
+	left_click_input_action_.BindReleased([this]() {this->OnLeftClickReleased();});
 	inputManager.BindInputAction(&left_click_input_action_, GLFW_MOUSE_BUTTON_LEFT);
 	
 	right_click_input_action_.SetType(EInputActionType::Mouse_Button);
@@ -172,7 +173,7 @@ void Panel::OnRightClick(const glm::vec2 data) const
 			}
 			if (PhysicsEngine::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
 			{
-				widget->OnClick(false);
+				widget->OnClick(data, false);
 			}
 		}
 	}
@@ -188,10 +189,42 @@ void Panel::OnLeftClick(const glm::vec2 data) const
 			{
 				continue;
 			}
-			if (PhysicsEngine::IsOverlapping(Quad(widget->position_, widget->size_, widget->scale_), data))
+			if (PhysicsEngine::IsOverlapping(Quad(widget->GetPosition(), widget->GetSize(), widget->GetScale()), data))
 			{
-				widget->OnClick(true);
+				widget->OnClick(data,true);
 			}
+		}
+	}
+}
+
+void Panel::OnRightClickReleased() const
+{
+	for (const auto& layer : widgets_) // NOLINT
+	{
+		for (const auto& widget : layer.second)
+		{
+			if (!widget->IsActive() || !widget->IsListeningToInput() || !widget->IsBeingClicked())
+			{
+				continue;
+			}
+			
+			widget->OnClickRelease(false);
+		}
+	}
+}
+
+void Panel::OnLeftClickReleased() const
+{
+	for (const auto& layer : widgets_) // NOLINT
+	{
+		for (const auto& widget : layer.second)
+		{
+			if (!widget->IsActive() || !widget->IsListeningToInput() || !widget->IsBeingClicked())
+			{
+				continue;
+			}
+			
+			widget->OnClickRelease(true);
 		}
 	}
 }

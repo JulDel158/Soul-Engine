@@ -51,8 +51,8 @@ public:
     void InputUpdate(const float dt) const;
     
     // ---- Binding functions ----
-    void BindInputAction(InputAction* const action, const int scancode = glfwGetKeyScancode(GLFW_KEY_UNKNOWN), const int controller = GLFW_JOYSTICK_1);
-    void UnbindInputAction(InputAction* const action, const int scancode = glfwGetKeyScancode(GLFW_KEY_UNKNOWN), const int controller = GLFW_JOYSTICK_1);
+    void BindInputAction(InputAction* const action, const int scancode = GLFW_KEY_UNKNOWN, const int controller = GLFW_JOYSTICK_1);
+    void UnbindInputAction(InputAction* const action, const int scancode = GLFW_KEY_UNKNOWN, const int controller = GLFW_JOYSTICK_1);
     void UnbindInputActions();
     
     // ---- Configurations ----

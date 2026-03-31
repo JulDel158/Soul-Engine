@@ -35,6 +35,10 @@ public:
 	
 	static CombatManager& Instance();
 	
+	Panel* GetUIPanel() { return &ui_panel_; } // NOLINT
+	
+	void Initialize();
+	
 private:
 	void InitializeAbilityButtons();
 	void InitializeSkillButtons();
