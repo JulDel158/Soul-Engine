@@ -163,6 +163,10 @@ void Panel::End() const
 
 void Panel::OnRightClick(const glm::vec2 data) const
 {
+	if (!active_)
+	{
+		return;
+	}
 	for (const auto& layer : widgets_) // NOLINT
 	{
 		for (const auto& widget : layer.second)
@@ -181,6 +185,10 @@ void Panel::OnRightClick(const glm::vec2 data) const
 
 void Panel::OnLeftClick(const glm::vec2 data) const
 {
+	if (!active_)
+	{
+		return;
+	}
 	for (const auto& layer : widgets_) // NOLINT
 	{
 		for (const auto& widget : layer.second)
@@ -199,6 +207,10 @@ void Panel::OnLeftClick(const glm::vec2 data) const
 
 void Panel::OnRightClickReleased() const
 {
+	if (!active_)
+	{
+		return;
+	}
 	for (const auto& layer : widgets_) // NOLINT
 	{
 		for (const auto& widget : layer.second)
@@ -215,6 +227,10 @@ void Panel::OnRightClickReleased() const
 
 void Panel::OnLeftClickReleased() const
 {
+	if (!active_)
+	{
+		return;
+	}
 	for (const auto& layer : widgets_) // NOLINT
 	{
 		for (const auto& widget : layer.second)
@@ -231,6 +247,10 @@ void Panel::OnLeftClickReleased() const
 
 void Panel::OnMouseMove(const glm::vec2 data, const float deltaTime) const
 {
+	if (!active_)
+	{
+		return;
+	}
 	for (const auto& layer : widgets_) // NOLINT
 	{
 		for (const auto& widget : layer.second)
@@ -253,6 +273,10 @@ void Panel::OnMouseMove(const glm::vec2 data, const float deltaTime) const
 
 void Panel::OnLeftPressed(const glm::vec2 data)
 {
+	if (!active_)
+	{
+		return;
+	}
 	if (active_widget_ == nullptr)
 	{
 		SearchForFocusTarget();
@@ -271,6 +295,10 @@ void Panel::OnLeftPressed(const glm::vec2 data)
 
 void Panel::OnRightPressed(const glm::vec2 data)
 {
+	if (!active_)
+	{
+		return;
+	}
 	if (active_widget_ == nullptr)
 	{
 		SearchForFocusTarget();
@@ -289,6 +317,10 @@ void Panel::OnRightPressed(const glm::vec2 data)
 
 void Panel::OnUpPressed(const glm::vec2 data)
 {
+	if (!active_)
+	{
+		return;
+	}
 	if (active_widget_ == nullptr)
 	{
 		SearchForFocusTarget();
@@ -307,6 +339,10 @@ void Panel::OnUpPressed(const glm::vec2 data)
 
 void Panel::OnDownPressed(const glm::vec2 data)
 {
+	if (!active_)
+	{
+		return;
+	}
 	if (active_widget_ == nullptr)
 	{
 		SearchForFocusTarget();
@@ -325,6 +361,10 @@ void Panel::OnDownPressed(const glm::vec2 data)
 
 void Panel::OnSelectPressed(const glm::vec2 data) const
 {
+	if (!active_)
+	{
+		return;
+	}
 	if (active_widget_ == nullptr)
 	{
 		return;
@@ -334,6 +374,10 @@ void Panel::OnSelectPressed(const glm::vec2 data) const
 
 void Panel::OnReturnPressed(const glm::vec2 data) const
 {
+	if (!active_)
+	{
+		return;
+	}
 	if (active_widget_ == nullptr)
 	{
 		return;
@@ -343,6 +387,10 @@ void Panel::OnReturnPressed(const glm::vec2 data) const
 
 void Panel::OnAxisUpdated(const glm::vec2 data, const float deltaTime)
 {
+	if (!active_)
+	{
+		return;
+	}
 	if (active_widget_ == nullptr)
 	{
 		SearchForFocusTarget();

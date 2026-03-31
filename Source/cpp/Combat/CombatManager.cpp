@@ -19,6 +19,8 @@ CombatManager::CombatManager() :
 	is_player_turn_(false), 
 	selected_character_index_(0)
 {
+	player_characters_.reserve(4);
+	enemy_characters_.reserve(7);
 }
 
 CombatManager::~CombatManager()
@@ -37,6 +39,10 @@ void CombatManager::Initialize()
 	InitializeSkillButtons();
 	InitializePlayerTargetingButtons();
 	InitializeEnemyTargetingButtons();
+	InitializeZoneTargetingButtons();
+	
+	ui_panel_.SetActive(false);
+	ui_panel_.SetVisible(false);
 }
 
 void CombatManager::InitializeAbilityButtons()
@@ -186,6 +192,9 @@ void CombatManager::InitializePlayerTargetingButtons()
 		player_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
 		player_targeting_buttons_[i].BindLeftClick([](){std::cout << "Player targeting button pressed!\n";});
 		ui_panel_.AddWidget(player_targeting_buttons_[i]);
+		player_targeting_buttons_[i].SetVisible(false);
+		player_targeting_buttons_[i].SetActive(false);
+		
 	}
 	
 	// Neighboring and position will be updated dynamically
@@ -204,6 +213,8 @@ void CombatManager::InitializeEnemyTargetingButtons()
 		enemy_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
 		enemy_targeting_buttons_[i].BindLeftClick([](){std::cout << "Enemy targeting button pressed!\n";});
 		ui_panel_.AddWidget(enemy_targeting_buttons_[i]);
+		enemy_targeting_buttons_[i].SetVisible(false);
+		enemy_targeting_buttons_[i].SetActive(false);
 	}
 	
 	// Neighboring and position will be updated dynamically
@@ -232,6 +243,8 @@ void CombatManager::InitializeZoneTargetingButtons()
 		zone_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
 		zone_targeting_buttons_[i].BindLeftClick([](){std::cout << "Zone targeting button pressed!\n";});
 		ui_panel_.AddWidget(zone_targeting_buttons_[i]);
+		zone_targeting_buttons_[i].SetVisible(false);
+		zone_targeting_buttons_[i].SetActive(false);
 	}
 	
 	
