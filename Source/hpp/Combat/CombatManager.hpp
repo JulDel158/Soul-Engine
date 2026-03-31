@@ -16,6 +16,8 @@ private:
 	std::vector<CombatCharacter*> player_characters_;
 	std::vector<CombatCharacter*> enemy_characters_;
 	Zone* zones_[4];
+	bool is_player_turn_;
+	unsigned int selected_character_index_;
 	
 	// UI
 	Panel ui_panel_;
