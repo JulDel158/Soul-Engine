@@ -12,6 +12,12 @@ namespace
 	constexpr unsigned int SKILL_BUTTON = 1;
 	constexpr unsigned int BLOCK_BUTTON = 2;
 	constexpr unsigned int MOVE_BUTTON = 3;
+	
+	constexpr unsigned int ABILITY_BUTTON_COUNT = 4;
+	constexpr unsigned int SKILL_BUTTON_COUNT = 6;
+	constexpr unsigned int PLAYER_TARGETS_BUTTON_COUNT = 4;
+	constexpr unsigned int ENEMY_TARGETS_BUTTON_COUNT = 7;
+	constexpr unsigned int ZONE_TARGETS_BUTTON_COUNT = 4;
 }
 
 CombatManager::CombatManager() :
@@ -21,10 +27,23 @@ CombatManager::CombatManager() :
 {
 	player_characters_.reserve(4);
 	enemy_characters_.reserve(7);
+	ui_panel_ = new Panel();
+	
+	ability_buttons_ = new Button[ABILITY_BUTTON_COUNT];
+	skill_buttons_ = new Button[SKILL_BUTTON_COUNT];
+	player_targeting_buttons_ = new Button[PLAYER_TARGETS_BUTTON_COUNT];
+	enemy_targeting_buttons_ = new Button[ENEMY_TARGETS_BUTTON_COUNT];
+	zone_targeting_buttons_ = new Button[ZONE_TARGETS_BUTTON_COUNT];
 }
 
 CombatManager::~CombatManager()
 {
+	delete ui_panel_;
+	delete[] ability_buttons_;
+	delete[] skill_buttons_;
+	delete[] player_targeting_buttons_;
+	delete[] enemy_targeting_buttons_;
+	delete[] zone_targeting_buttons_;
 }
 
 CombatManager& CombatManager::Instance()
@@ -41,74 +60,82 @@ void CombatManager::Initialize()
 	InitializeEnemyTargetingButtons();
 	InitializeZoneTargetingButtons();
 	
-	ui_panel_.SetActive(false);
-	ui_panel_.SetVisible(false);
+	//ui_panel_->SetActive(false);
+	//ui_panel_->SetVisible(false);
+}
+
+void CombatManager::BeginCombat()
+{
+}
+
+void CombatManager::EndCombat()
+{
 }
 
 void CombatManager::InitializeAbilityButtons()
 {
 	ResourceManager& resourceManager = ResourceManager::Instance();
 	// TODO: Initialize button data
-	Button& attButton = ability_buttons_[ATTACK_BUTTON];
-	Button& skillButton = ability_buttons_[SKILL_BUTTON];
-	Button& blockButton = ability_buttons_[BLOCK_BUTTON];
-	Button& moveButton = ability_buttons_[MOVE_BUTTON];
+	Button& button1 = ability_buttons_[ATTACK_BUTTON];	//NOLINT
+	Button& button2 = ability_buttons_[SKILL_BUTTON];	//NOLINT
+	Button& button3 = ability_buttons_[BLOCK_BUTTON];	//NOLINT
+	Button& button4 = ability_buttons_[MOVE_BUTTON];	//NOLINT
 	
-	attButton.SetLabel("Attack");
-	skillButton.SetLabel("Skills");
-	blockButton.SetLabel("Block");
-	moveButton.SetLabel("Move");
+	button1.SetLabel("Attack");
+	button2.SetLabel("Skills");
+	button3.SetLabel("Block");
+	button4.SetLabel("Move");
 	
 	constexpr glm::vec4 textColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	attButton.SetLabelBaseColor(textColor);
-	skillButton.SetLabelBaseColor(textColor);
-	blockButton.SetLabelBaseColor(textColor);
-	moveButton.SetLabelBaseColor(textColor);
+	button1.SetLabelBaseColor(textColor);
+	button2.SetLabelBaseColor(textColor);
+	button3.SetLabelBaseColor(textColor);
+	button4.SetLabelBaseColor(textColor);
 	
-	attButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
-	skillButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
-	blockButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
-	moveButton.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+	button1.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+	button2.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+	button3.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
+	button4.GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
 	
-	attButton.AddNeighbor(&moveButton, EWidgetNeighbor::Up);
-	attButton.AddNeighbor(&skillButton, EWidgetNeighbor::Down);
+	button1.AddNeighbor(&button4, EWidgetNeighbor::Up);
+	button1.AddNeighbor(&button2, EWidgetNeighbor::Down);
 	
-	skillButton.AddNeighbor(&attButton, EWidgetNeighbor::Up);
-	skillButton.AddNeighbor(&blockButton, EWidgetNeighbor::Down);
+	button2.AddNeighbor(&button1, EWidgetNeighbor::Up);
+	button2.AddNeighbor(&button3, EWidgetNeighbor::Down);
 	
-	blockButton.AddNeighbor(&skillButton, EWidgetNeighbor::Up);
-	blockButton.AddNeighbor(&moveButton, EWidgetNeighbor::Down);
+	button3.AddNeighbor(&button2, EWidgetNeighbor::Up);
+	button3.AddNeighbor(&button4, EWidgetNeighbor::Down);
 	
-	moveButton.AddNeighbor(&blockButton, EWidgetNeighbor::Up);
-	moveButton.AddNeighbor(&attButton, EWidgetNeighbor::Down);
+	button4.AddNeighbor(&button3, EWidgetNeighbor::Up);
+	button4.AddNeighbor(&button1, EWidgetNeighbor::Down);
 	
-	attButton.SetPosition(glm::vec2(40.0f, 50.0f));
-	skillButton.SetPosition(glm::vec2(40.0f, 100.0f));
-	blockButton.SetPosition(glm::vec2(40.0f, 150.0f));
-	moveButton.SetPosition(glm::vec2(40.0f, 200.0f));
+	button1.SetPosition(glm::vec2(40.0f, 50.0f));
+	button2.SetPosition(glm::vec2(40.0f, 100.0f));
+	button3.SetPosition(glm::vec2(40.0f, 150.0f));
+	button4.SetPosition(glm::vec2(40.0f, 200.0f));
 	
 	constexpr auto buttonSize = glm::vec2(80.f, 40.0f);
-	attButton.SetSize(buttonSize);
-	skillButton.SetSize(buttonSize);
-	blockButton.SetSize(buttonSize);
-	moveButton.SetSize(buttonSize);
+	button1.SetSize(buttonSize);
+	button2.SetSize(buttonSize);
+	button3.SetSize(buttonSize);
+	button4.SetSize(buttonSize);
 	
 	constexpr auto buttonScale = glm::vec2(0.5f);
-	attButton.SetScale(buttonScale);
-	skillButton.SetScale(buttonScale);
-	blockButton.SetScale(buttonScale);
-	moveButton.SetScale(buttonScale);
+	button1.SetScale(buttonScale);
+	button2.SetScale(buttonScale);
+	button3.SetScale(buttonScale);
+	button4.SetScale(buttonScale);
 	
-	attButton.BindLeftClick([](){ std::cout << "attack button clicked!\n"; });
-	skillButton.BindLeftClick([](){ std::cout << "skill button clicked!\n"; });
-	blockButton.BindLeftClick([](){ std::cout << "block button clicked!\n"; });
-	moveButton.BindLeftClick([](){ std::cout << "move button clicked!\n"; });
-	skillButton.BindSelected([](){ std::cout << "!!skill button selected!!\n"; });
+	button1.BindLeftClick([](){ std::cout << "attack button clicked!\n"; });
+	button2.BindLeftClick([](){ std::cout << "skill button clicked!\n"; });
+	button3.BindLeftClick([](){ std::cout << "block button clicked!\n"; });
+	button4.BindLeftClick([](){ std::cout << "move button clicked!\n"; });
+	button2.BindSelected([](){ std::cout << "!!skill button selected!!\n"; });
 	
-	ui_panel_.AddWidget(attButton);
-	ui_panel_.AddWidget(skillButton);
-	ui_panel_.AddWidget(blockButton);
-	ui_panel_.AddWidget(moveButton);
+	ui_panel_->AddWidget(button1);
+	ui_panel_->AddWidget(button2);
+	ui_panel_->AddWidget(button3);
+	ui_panel_->AddWidget(button4);
 }
 
 void CombatManager::InitializeSkillButtons()
@@ -118,12 +145,12 @@ void CombatManager::InitializeSkillButtons()
 	// 5 6
 	ResourceManager& resourceManager = ResourceManager::Instance();
 	
-	Button& button1 = skill_buttons_[0];
-	Button& button2 = skill_buttons_[1];
-	Button& button3 = skill_buttons_[2];
-	Button& button4 = skill_buttons_[3];
-	Button& button5 = skill_buttons_[4];
-	Button& button6 = skill_buttons_[5];
+	Button& button1 = skill_buttons_[0];	//NOLINT
+	Button& button2 = skill_buttons_[1];	//NOLINT
+	Button& button3 = skill_buttons_[2];	//NOLINT
+	Button& button4 = skill_buttons_[3];	//NOLINT
+	Button& button5 = skill_buttons_[4];	//NOLINT
+	Button& button6 = skill_buttons_[5];	//NOLINT
 	
 	//button1.AddNeighbor(&button5, EWidgetNeighbor::Up);
 	button1.AddNeighbor(&button3, EWidgetNeighbor::Down);
@@ -157,12 +184,12 @@ void CombatManager::InitializeSkillButtons()
 	
 	for (int i = 0; i < 6; ++i)
 	{
-		skill_buttons_[i].SetLabel("Skill " + std::to_string(i+1));
-		skill_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		skill_buttons_[i].SetSize(glm::vec2(160.0f, 40.0f));
-		skill_buttons_[i].SetScale(glm::vec2(0.5f));
-		skill_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
-		ui_panel_.AddWidget(skill_buttons_[i]);
+		skill_buttons_[i].SetLabel("Skill " + std::to_string(i+1)); // NOLINT
+		skill_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)); // NOLINT
+		skill_buttons_[i].SetSize(glm::vec2(160.0f, 40.0f)); // NOLINT
+		skill_buttons_[i].SetScale(glm::vec2(0.5f)); // NOLINT
+		skill_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1)); // NOLINT
+		ui_panel_->AddWidget(skill_buttons_[i]); //NOLINT
 	}
 	button1.SetPosition(glm::vec2(250.0f, 250.0f));
 	button2.SetPosition(glm::vec2(420.0f, 250.0f));
@@ -184,16 +211,16 @@ void CombatManager::InitializePlayerTargetingButtons()
 	ResourceManager& resourceManager = ResourceManager::Instance();
 	for (int i = 0; i < 4; ++i)
 	{
-		player_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));
-		player_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		player_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));
-		player_targeting_buttons_[i].SetScale(glm::vec2(0.5f));
-		player_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
-		player_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
-		player_targeting_buttons_[i].BindLeftClick([](){std::cout << "Player targeting button pressed!\n";});
-		ui_panel_.AddWidget(player_targeting_buttons_[i]);
-		player_targeting_buttons_[i].SetVisible(false);
-		player_targeting_buttons_[i].SetActive(false);
+		player_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));	// NOLINT
+		player_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	// NOLINT
+		player_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));	// NOLINT
+		player_targeting_buttons_[i].SetScale(glm::vec2(0.5f));	// NOLINT
+		player_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));	// NOLINT
+		player_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));	// NOLINT
+		player_targeting_buttons_[i].BindLeftClick([](){std::cout << "Player targeting button pressed!\n";});	// NOLINT
+		ui_panel_->AddWidget(player_targeting_buttons_[i]);	// NOLINT
+		player_targeting_buttons_[i].SetVisible(false);	// NOLINT
+		player_targeting_buttons_[i].SetActive(false);	// NOLINT
 		
 	}
 	
@@ -205,16 +232,16 @@ void CombatManager::InitializeEnemyTargetingButtons()
 	ResourceManager& resourceManager = ResourceManager::Instance();
 	for (int i = 0; i < 7; ++i)
 	{
-		enemy_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));
-		enemy_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		enemy_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));
-		enemy_targeting_buttons_[i].SetScale(glm::vec2(0.5f));
-		enemy_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
-		enemy_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
-		enemy_targeting_buttons_[i].BindLeftClick([](){std::cout << "Enemy targeting button pressed!\n";});
-		ui_panel_.AddWidget(enemy_targeting_buttons_[i]);
-		enemy_targeting_buttons_[i].SetVisible(false);
-		enemy_targeting_buttons_[i].SetActive(false);
+		enemy_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));	//NOLINT
+		enemy_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	//NOLINT
+		enemy_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));	//NOLINT
+		enemy_targeting_buttons_[i].SetScale(glm::vec2(0.5f));	//NOLINT
+		enemy_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));	//NOLINT
+		enemy_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));	//NOLINT
+		enemy_targeting_buttons_[i].BindLeftClick([](){std::cout << "Enemy targeting button pressed!\n";});	//NOLINT
+		ui_panel_->AddWidget(enemy_targeting_buttons_[i]);	//NOLINT
+		enemy_targeting_buttons_[i].SetVisible(false);	//NOLINT
+		enemy_targeting_buttons_[i].SetActive(false);	//NOLINT
 	}
 	
 	// Neighboring and position will be updated dynamically
@@ -227,24 +254,24 @@ void CombatManager::InitializeZoneTargetingButtons()
 	// 2 Player front
 	// 1 Player back
 	
-	Button& zone1 = zone_targeting_buttons_[0];
-	Button& zone2 = zone_targeting_buttons_[1];
-	Button& zone3 = zone_targeting_buttons_[2];
-	Button& zone4 = zone_targeting_buttons_[3];
+	Button& zone1 = zone_targeting_buttons_[0]; // NOLINT
+	Button& zone2 = zone_targeting_buttons_[1]; // NOLINT
+	Button& zone3 = zone_targeting_buttons_[2]; // NOLINT
+	Button& zone4 = zone_targeting_buttons_[3]; // NOLINT
 	
 	ResourceManager& resourceManager = ResourceManager::Instance();
 	for (int i = 0; i < 4; ++i)
 	{
-		zone_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));
-		zone_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		zone_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));
-		zone_targeting_buttons_[i].SetScale(glm::vec2(0.5f));
-		zone_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));
-		zone_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));
-		zone_targeting_buttons_[i].BindLeftClick([](){std::cout << "Zone targeting button pressed!\n";});
-		ui_panel_.AddWidget(zone_targeting_buttons_[i]);
-		zone_targeting_buttons_[i].SetVisible(false);
-		zone_targeting_buttons_[i].SetActive(false);
+		zone_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));	// NOLINT
+		zone_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	// NOLINT
+		zone_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));	// NOLINT
+		zone_targeting_buttons_[i].SetScale(glm::vec2(0.5f));	// NOLINT
+		zone_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));	// NOLINT
+		zone_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));	// NOLINT
+		zone_targeting_buttons_[i].BindLeftClick([](){std::cout << "Zone targeting button pressed!\n";});	// NOLINT
+		ui_panel_->AddWidget(zone_targeting_buttons_[i]);	// NOLINT
+		zone_targeting_buttons_[i].SetVisible(false);	// NOLINT
+		zone_targeting_buttons_[i].SetActive(false);	// NOLINT
 	}
 	
 	

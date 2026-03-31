@@ -20,13 +20,13 @@ private:
 	unsigned int selected_character_index_;
 	
 	// UI
-	Panel ui_panel_;
-	Button ability_buttons_[4];
-	Button skill_buttons_[6];
+	Panel* ui_panel_;
+	Button* ability_buttons_;
+	Button* skill_buttons_;
 	// For the targeting buttons, we will have to dynamically update neighbors as we move characters around the field
-	Button player_targeting_buttons_[4]; 
-	Button enemy_targeting_buttons_[7];
-	Button zone_targeting_buttons_[4];
+	Button* player_targeting_buttons_; 
+	Button* enemy_targeting_buttons_;
+	Button* zone_targeting_buttons_;
 	
 	CombatManager();
 	~CombatManager();
@@ -37,9 +37,12 @@ public:
 	
 	static CombatManager& Instance();
 	
-	Panel* GetUIPanel() { return &ui_panel_; } // NOLINT
+	Panel* GetUIPanel() { return ui_panel_; } // NOLINT
 	
 	void Initialize();
+	
+	void BeginCombat();
+	void EndCombat();
 	
 private:
 	void InitializeAbilityButtons();
