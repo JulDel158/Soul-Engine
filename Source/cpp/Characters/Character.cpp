@@ -26,11 +26,10 @@ void Character::InitializeComponents()
 	{
 		unsigned int componentIndex;
 		sprite_component_ = resourceManager.CreateComponent<SpriteComponent>(componentIndex, this);
-		RegisterComponent(sprite_component_);
+		sprite_component_->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::PlaceHolder));
 		sprite_component_->SetSize(glm::vec2(DEFAULT_SPRITE_SIZE));
 		
 		movement_component_ = resourceManager.CreateComponent<MovementComponent>(componentIndex, this);
-		RegisterComponent(movement_component_);
 		
 		movement_component_->SetMovementSpeed(100.0f);
 		movement_component_->SetWalkingSpeed(1.5f);
@@ -41,7 +40,6 @@ void Character::InitializeComponents()
 		
 		// Size and position will be the same as the owner, we can adjust it by setting the scale instead
 		box_collision_component_ = resourceManager.CreateComponent<BoxCollisionComponent>(componentIndex, this);
-		RegisterComponent(box_collision_component_);
 		box_collision_component_->SetColliderScale(glm::vec2(1.0f, 1.0f)); 
 	}
 	catch (...)

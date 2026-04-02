@@ -73,27 +73,7 @@ void CombatCharacter::ApplyHealing(const int amount, const bool inRange)
 
 void CombatCharacter::Move()
 {
-	switch (combat_position_)
-	{
-	case ECombatPosition::None:
-		{
-			auto log = Logger();
-			log.Log(ELogLevel::Warning, "CombatCharacter::Move: combat_position_ was none?!?!");
-			break;
-		}
-	case ECombatPosition::FrontPlayer:
-		combat_position_ = ECombatPosition::BackPlayer;
-		break;
-	case ECombatPosition::BackPlayer:
-		combat_position_ = ECombatPosition::FrontPlayer;
-		break;
-	case ECombatPosition::FrontEnemy:
-		combat_position_ = ECombatPosition::BackEnemy;
-		break;
-	case ECombatPosition::BackEnemy:
-		combat_position_ = ECombatPosition::FrontEnemy;
-		break;
-	}
+	combat_position_ = GetMoveDestination(combat_position_);
 	OnMove(combat_position_);
 }
 
@@ -233,7 +213,6 @@ void CombatCharacter::InitComponents()
 		auto& resourceManager = ResourceManager::Instance();
 		unsigned int componentIndex;
 		health_component_ = resourceManager.CreateComponent<HealthComponent>(componentIndex, this);
-		RegisterComponent(health_component_);
 	}
 	catch (...)
 	{

@@ -62,14 +62,37 @@ enum class EActionRange : unsigned char
 	Any = 2,
 };
 
-enum class ECombatPosition : unsigned char
+enum class ECombatPosition : int
 {
-	None = 0,
-	FrontPlayer,
-	BackPlayer,
-	FrontEnemy,
-	BackEnemy,
+	None = -1,
+	BackEnemy = 0,
+	FrontEnemy = 1,
+	FrontPlayer = 2,
+	BackPlayer = 3,
 };
+
+inline ECombatPosition GetMoveDestination(const ECombatPosition currentPosition)
+{
+	ECombatPosition result;
+	switch (currentPosition) {
+	case ECombatPosition::None:
+		result = ECombatPosition::None;
+		break;
+	case ECombatPosition::BackEnemy:
+		result = ECombatPosition::FrontEnemy;
+		break;
+	case ECombatPosition::FrontEnemy:
+		result = ECombatPosition::BackEnemy;
+		break;
+	case ECombatPosition::FrontPlayer:
+		result = ECombatPosition::BackPlayer;
+		break;
+	case ECombatPosition::BackPlayer:
+		result = ECombatPosition::FrontPlayer;
+		break;
+	}
+	return result;
+}
 
 inline bool IsInRange(const EActionRange range, const ECombatPosition position)
 {
@@ -143,6 +166,17 @@ struct CharacterStats
 	attack_cost_mod_(0), block_cost_mod_(0), move_cost_mod_(0), can_block_(true)
 	{
 	}
+};
+
+enum class ECombatState : unsigned char
+{
+	None = 0,
+	CycleStart,
+	PlayerTurnStart,
+	PlayerTurnEnd,
+	EnemyTurnStart,
+	EnemyTurnEnd,
+	CycleEnd
 };
 
 #endif

@@ -44,12 +44,10 @@ void BackgroundTile::InitializeComponents()
 	{
 		unsigned int componentIndex;
 		sprite_ = resourceManager.CreateComponent<SpriteComponent>(componentIndex, this);
-		RegisterComponent(sprite_);
 		
 		collider_ = resourceManager.CreateComponent<BoxCollisionComponent>(componentIndex, this);
 		collider_->SetColliderScale(glm::vec2(0.8f, 0.8f));
 		collider_->SetOverlap(true);
-		RegisterComponent(collider_);
 	}
 	catch (...)
 	{

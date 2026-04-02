@@ -3,8 +3,10 @@
 #include "EngineDataStructures.hpp"
 #include "Components/SpriteComponent.hpp"
 #include "Utils/ResourceManager.hpp"
+#include "Characters/CombatCharacter.hpp"
 
 #include <iostream>
+#include <utility>
 
 namespace
 {
@@ -20,20 +22,35 @@ namespace
 	constexpr unsigned int ZONE_TARGETS_BUTTON_COUNT = 4;
 }
 
-CombatManager::CombatManager() :
-	zones_{nullptr}, 
-	is_player_turn_(false), 
-	selected_character_index_(0)
+CombatManager::CombatManager() : 
+player_characters_{nullptr},
+zones_{nullptr}, 
+occupied_positions_{{false}},
+selected_character_index_(0),
+is_player_turn_(false),
+combat_state_(ECombatState::None)
 {
-	player_characters_.reserve(4);
-	enemy_characters_.reserve(7);
+	enemy_characters_.reserve(6);
+
 	ui_panel_ = new Panel();
-	
 	ability_buttons_ = new Button[ABILITY_BUTTON_COUNT];
 	skill_buttons_ = new Button[SKILL_BUTTON_COUNT];
 	player_targeting_buttons_ = new Button[PLAYER_TARGETS_BUTTON_COUNT];
 	enemy_targeting_buttons_ = new Button[ENEMY_TARGETS_BUTTON_COUNT];
 	zone_targeting_buttons_ = new Button[ZONE_TARGETS_BUTTON_COUNT];
+	end_turn_button_ = new Button();
+
+	row_positions_[0] = 0.2f;
+	row_positions_[1] = 0.4f;
+	row_positions_[2] = 0.6f;
+	row_positions_[3] = 0.8f;
+
+	column_positions_[0] = 1.0f / 8.0f;
+	column_positions_[1] = 2.0f / 8.0f;
+	column_positions_[2] = 3.0f / 8.0f;
+	column_positions_[3] = 4.0f / 8.0f;
+	column_positions_[4] = 5.0f / 8.0f;
+	column_positions_[5] = 6.0f / 8.0f;
 }
 
 CombatManager::~CombatManager()
@@ -44,11 +61,12 @@ CombatManager::~CombatManager()
 	delete[] player_targeting_buttons_;
 	delete[] enemy_targeting_buttons_;
 	delete[] zone_targeting_buttons_;
+	delete end_turn_button_;
 }
 
 CombatManager& CombatManager::Instance()
 {
-	static CombatManager instance = CombatManager();
+	static auto instance = CombatManager();
 	return instance;
 }
 
@@ -59,20 +77,112 @@ void CombatManager::Initialize()
 	InitializePlayerTargetingButtons();
 	InitializeEnemyTargetingButtons();
 	InitializeZoneTargetingButtons();
+	InitializeEndTurnButton();
 	
-	//ui_panel_->SetActive(false);
-	//ui_panel_->SetVisible(false);
+	ui_panel_->SetActive(false);
+	ui_panel_->SetVisible(false);
 }
 
-void CombatManager::BeginCombat()
+void CombatManager::BeginCombat(std::vector<CombatCharacter*> enemies)
 {
+	enemy_characters_.clear();
+	enemy_characters_ = std::move(enemies);
+	
+	is_player_turn_ = true;
+	
+	ui_panel_->SetActive(true);
+	ui_panel_->SetVisible(true);
+	
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		if (player_characters_[i] == nullptr)
+		{
+			continue;
+		}
+		player_characters_[i]->SetPosition(GetLocationPosition(player_characters_[i]->GetCombatPosition(), i));
+	}
+	
+	for (unsigned int i = 0; i < enemy_characters_.size(); ++i)
+	{
+		if (enemy_characters_[i] == nullptr)
+		{
+			continue;
+		}
+		enemy_characters_[i]->SetPosition(GetLocationPosition(enemy_characters_[i]->GetCombatPosition(), i));
+	}
 }
 
 void CombatManager::EndCombat()
 {
 }
 
-void CombatManager::InitializeAbilityButtons()
+
+bool CombatManager::IsPositionOccupied(const ECombatPosition targetRow, const unsigned int column) const
+{
+	if (targetRow == ECombatPosition::None || column >= 6)
+	{
+		// Invalid row and column
+		return false;
+	}
+	
+	return occupied_positions_[static_cast<unsigned int>(targetRow)][column];
+}
+
+bool CombatManager::MoveCharacter(const ECombatPosition currentPosition, const unsigned int column)
+{
+	switch (currentPosition)
+	{
+	case ECombatPosition::None:
+		return false;
+	case ECombatPosition::BackEnemy:
+	case ECombatPosition::FrontEnemy:
+		if (column >= 6 || enemy_characters_[column] == nullptr)
+		{
+			return false;
+		}
+		enemy_characters_[column]->Move(); // This should probably be called later but for now will do
+		enemy_characters_[column]->SetPosition(GetLocationPosition(enemy_characters_[column]->GetCombatPosition(), column));
+		break;
+	case ECombatPosition::FrontPlayer:
+	case ECombatPosition::BackPlayer:
+		if (column > 3 || player_characters_[column] == nullptr)
+		{
+			return false;
+		}
+		player_characters_[column]->Move(); // This should probably be called later 
+		player_characters_[column]->SetPosition(GetLocationPosition(player_characters_[column]->GetCombatPosition(), column));
+		break;
+	}
+	
+	occupied_positions_[static_cast<unsigned int>(currentPosition)][column] = false;
+	occupied_positions_[static_cast<unsigned int>(GetMoveDestination(currentPosition))][column] = true;
+	
+	return true;
+}
+
+glm::vec2 CombatManager::GetLocationPosition(ECombatPosition row, unsigned int column) const
+{
+	if (row == ECombatPosition::BackPlayer || row == ECombatPosition::FrontPlayer)
+	{
+		column += 1;
+	}
+	
+	if (row == ECombatPosition::None || column >= 6)
+	{
+		return glm::vec2(0.0f);
+	}
+	
+	const auto& resourceManager = ResourceManager::Instance();
+	const auto settings = resourceManager.GetSettings();
+	glm::vec2 result;
+	
+	result.x = row_positions_[static_cast<unsigned int>(row)] * static_cast<float>(settings.screen_height_);
+	result.y = column_positions_[column] * static_cast<float>(settings.screen_width_);
+	
+	return result;
+}
+
+void CombatManager::InitializeAbilityButtons() const
 {
 	ResourceManager& resourceManager = ResourceManager::Instance();
 	// TODO: Initialize button data
@@ -138,7 +248,7 @@ void CombatManager::InitializeAbilityButtons()
 	ui_panel_->AddWidget(button4);
 }
 
-void CombatManager::InitializeSkillButtons()
+void CombatManager::InitializeSkillButtons() const
 {
 	// 1 2
 	// 3 4
@@ -182,7 +292,7 @@ void CombatManager::InitializeSkillButtons()
 	button6.AddNeighbor(&button5, EWidgetNeighbor::Left);
 	//button6.AddNeighbor(&button5, EWidgetNeighbor::Right);
 	
-	for (int i = 0; i < 6; ++i)
+	for (unsigned int i = 0; i < SKILL_BUTTON_COUNT; ++i)
 	{
 		skill_buttons_[i].SetLabel("Skill " + std::to_string(i+1)); // NOLINT
 		skill_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)); // NOLINT
@@ -206,10 +316,10 @@ void CombatManager::InitializeSkillButtons()
 	button6.BindLeftClick([](){std::cout << "Skill button: 6 pressed!!\n";});
 }
 
-void CombatManager::InitializePlayerTargetingButtons()
+void CombatManager::InitializePlayerTargetingButtons() const
 {
 	ResourceManager& resourceManager = ResourceManager::Instance();
-	for (int i = 0; i < 4; ++i)
+	for (unsigned int i = 0; i < PLAYER_TARGETS_BUTTON_COUNT; ++i)
 	{
 		player_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));	// NOLINT
 		player_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	// NOLINT
@@ -227,10 +337,10 @@ void CombatManager::InitializePlayerTargetingButtons()
 	// Neighboring and position will be updated dynamically
 }
 
-void CombatManager::InitializeEnemyTargetingButtons()
+void CombatManager::InitializeEnemyTargetingButtons() const
 {
 	ResourceManager& resourceManager = ResourceManager::Instance();
-	for (int i = 0; i < 7; ++i)
+	for (unsigned int i = 0; i < ENEMY_TARGETS_BUTTON_COUNT; ++i)
 	{
 		enemy_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));	//NOLINT
 		enemy_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	//NOLINT
@@ -247,7 +357,7 @@ void CombatManager::InitializeEnemyTargetingButtons()
 	// Neighboring and position will be updated dynamically
 }
 
-void CombatManager::InitializeZoneTargetingButtons()
+void CombatManager::InitializeZoneTargetingButtons() const
 {
 	// 4 Enemy back
 	// 3 Enemy front
@@ -260,7 +370,7 @@ void CombatManager::InitializeZoneTargetingButtons()
 	Button& zone4 = zone_targeting_buttons_[3]; // NOLINT
 	
 	ResourceManager& resourceManager = ResourceManager::Instance();
-	for (int i = 0; i < 4; ++i)
+	for (unsigned int i = 0; i < ZONE_TARGETS_BUTTON_COUNT; ++i)
 	{
 		zone_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));	// NOLINT
 		zone_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	// NOLINT
@@ -274,11 +384,21 @@ void CombatManager::InitializeZoneTargetingButtons()
 		zone_targeting_buttons_[i].SetActive(false);	// NOLINT
 	}
 	
-	
 	zone1.AddNeighbor(&zone2, EWidgetNeighbor::Up);
 	zone2.AddNeighbor(&zone3, EWidgetNeighbor::Up);
 	zone2.AddNeighbor(&zone1, EWidgetNeighbor::Down);
 	zone3.AddNeighbor(&zone4, EWidgetNeighbor::Up);
 	zone3.AddNeighbor(&zone2, EWidgetNeighbor::Down);
 	zone4.AddNeighbor(&zone3, EWidgetNeighbor::Down);
+}
+
+void CombatManager::InitializeEndTurnButton() const
+{
+	end_turn_button_->SetLabel("End Turn");	// NOLINT
+	end_turn_button_->SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	// NOLINT
+	end_turn_button_->SetSize(glm::vec2(100.0f, 100.0f));	// NOLINT
+	end_turn_button_->SetScale(glm::vec2(0.5f));	// NOLINT
+	end_turn_button_->GetSpriteComponent()->SetDefaultTexture( ResourceManager::Instance().GetTexture2D(ESpriteKey::Button1));
+	end_turn_button_->SetPosition(glm::vec2(0.0f));	// NOLINT
+	end_turn_button_->BindLeftClick([](){std::cout << "Zone targeting button pressed!\n";});
 }

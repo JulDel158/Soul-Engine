@@ -70,6 +70,8 @@ public:
 	template <typename Type>
 	Type* GetGameObject(unsigned int storageIndex) const;
 	
+	// TODO: Make function to create widgets
+	
 	void OpenFreeTypeLibrary(); // call before loading fonts. Note: this is called on construction
 	void CloseFreeTypeLibrary(); // call after we finish loading fonts
     
@@ -94,6 +96,10 @@ Type* ResourceManager::CreateComponent(unsigned int& storageIndex, GameObject* o
 	{
 		BaseComponent* componentPtr = dynamic_cast<BaseComponent*>(component);
 		componentPtr->owner_ = owner;
+		if (owner != nullptr)
+		{
+			owner->RegisterComponent(componentPtr);
+		}
 		components_[typeid(Type)].push_back(componentPtr);
 		storageIndex = static_cast<unsigned int>(components_[typeid(Type)].size());
 	}
