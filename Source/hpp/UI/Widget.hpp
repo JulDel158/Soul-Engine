@@ -73,6 +73,7 @@ public:
 	void SetParent(Widget& parent);
 	void AddChild(Widget& child);
 	void AddNeighbor(Widget* neighbor, EWidgetNeighbor direction);
+	void ClearNeighbors();
 	
 	void RegisterComponent(BaseComponent* component);
 	

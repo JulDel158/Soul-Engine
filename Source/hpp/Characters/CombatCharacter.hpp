@@ -18,6 +18,7 @@
 #include <vector>
 
 class HealthComponent;
+class Button;
 
 class CombatCharacter : public Character
 {
@@ -27,8 +28,10 @@ protected:
 	HealthComponent* health_component_;
 	Attack* attack_;
 	std::vector<Ability*> skills_;
+	Button* targeting_button_;
 	
 	ECombatPosition combat_position_;
+	EPartyType party_type_;
 	bool is_blocking_;
 	
 	robin_hood::unordered_map<std::type_index, Status*> buffs_;
@@ -81,6 +84,9 @@ public:
 	inline Ability* GetAttack() const { return attack_; }
 	inline const std::vector<Ability*>& GetAbilities() const { return skills_; }
 	inline Ability* GetAbility(const unsigned int index) const { if (!skills_.empty() && skills_.size() > index) return skills_[index]; return nullptr; }
+	
+	bool IsValidTarget(ETargetingType targetType, ECombatPosition zone, bool isAlly, bool isSelf, EPartyType targetParty) const;
+	inline Button* GetTargetingButton() const { return targeting_button_; }
 	
 private:
 	void InitComponents();

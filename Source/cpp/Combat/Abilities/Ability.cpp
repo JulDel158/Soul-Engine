@@ -7,7 +7,7 @@
 Ability::Ability() :
 	cost_(0),
 	owner_(nullptr),
-	targeting_type_(ETargetingType::Enemy), 
+	targeting_type_(ETargetingType::Foe), 
 	range_(EActionRange::Any)
 {
 }

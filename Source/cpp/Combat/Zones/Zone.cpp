@@ -1,8 +1,10 @@
 #include "Combat/Zones/Zone.hpp"
+#include "UI/Button.hpp"
 
 Zone::Zone() : 
 location_(ECombatPosition::None)
 {
+	targeting_button_ = new Button();
 }
 
 Zone::~Zone()
@@ -10,6 +12,7 @@ Zone::~Zone()
 	ClearBuffs();
 	ClearDebuffs();
 	ClearConditions();
+	delete targeting_button_;
 }
 
 void Zone::ClearBuffs()
@@ -70,6 +73,43 @@ void Zone::OnCombatStart()
 void Zone::OnCombatEnd()
 {
 	TriggerConditions(EZoneConditionExecutionTime::OnCombatEnd);
+}
+
+bool Zone::IsValidTarget(ETargetingType targetType, ECombatPosition zone) const
+{
+	bool result = false;
+	switch (targetType)
+	{
+	case ETargetingType::CharacterSelection:
+	case ETargetingType::Self:
+	case ETargetingType::Foe:
+	case ETargetingType::Friend:
+	case ETargetingType::PartyMember:
+	case ETargetingType::Party:
+	case ETargetingType::FoeParty:
+	case ETargetingType::AnyCharacter:
+	case ETargetingType::EveryoneButSelf:
+	case ETargetingType::AnyoneButSelf:
+	case ETargetingType::Everyone:
+	case ETargetingType::ZoneCharacters:
+		result = false;
+		break;
+		
+	case ETargetingType::PlayerArea:
+		result = location_ == ECombatPosition::BackPlayer || location_ == ECombatPosition::FrontPlayer;
+		break;
+	case ETargetingType::EnemyArea:
+		result = location_ == ECombatPosition::BackEnemy || location_ == ECombatPosition::FrontEnemy;
+		break;
+		
+	case ETargetingType::Zone:
+	case ETargetingType::AnyArea:
+	case ETargetingType::AllAreas:
+		result = true;
+		break;
+	}
+	
+	return result;
 }
 
 void Zone::TriggerConditions(EZoneConditionExecutionTime executionTime)

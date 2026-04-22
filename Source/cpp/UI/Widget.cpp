@@ -166,6 +166,14 @@ void Widget::AddNeighbor(Widget* neighbor, EWidgetNeighbor direction)
 	neighbors_[static_cast<unsigned int>(direction)] = neighbor;
 }
 
+void Widget::ClearNeighbors()
+{
+	for (int i = 0 ; i < 4; ++i)
+	{
+		neighbors_[i] = nullptr;
+	}
+}
+
 void Widget::RegisterComponent(BaseComponent* component)
 {
 	components_.push_back(component);

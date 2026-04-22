@@ -14,19 +14,20 @@ class Zone;
 class CombatManager
 {
 private:
-	CombatCharacter* player_characters_[4];
+	CombatCharacter* player_characters_[MAX_PLAYER_COUNT];
 	std::vector<CombatCharacter*> enemy_characters_;
-	Zone* zones_[4];
+	Zone* zones_[MAX_ZONES_COUNT];
 	
 	// UI
 	Panel* ui_panel_;
 	Button* ability_buttons_;
 	Button* skill_buttons_;
 	// For the targeting buttons, we will have to dynamically update neighbors as we move characters around the field
-	Button* player_targeting_buttons_; 
-	Button* enemy_targeting_buttons_;
+	Button* player_targeting_buttons_[4]; // DEPRECATED TODO: REMOVE
+	Button* enemy_targeting_buttons_[6]; // DEPRECATED TODO: REMOVE
 	Button* zone_targeting_buttons_;
 	Button* end_turn_button_;
+	std::vector<Button*> active_targeting_buttons_;
 	
 	float row_positions_[4];
 	float column_positions_[6];
@@ -67,6 +68,8 @@ private:
 	void InitializeEnemyTargetingButtons() const;
 	void InitializeZoneTargetingButtons() const;
 	void InitializeEndTurnButton() const;
+	
+	void UpdateTargetingButtons(ETargetingType targetingType, ECombatPosition targetZone, bool isPlayerCharacter, EPartyType targetParty, const CombatCharacter* caster);
 };
 
 #endif

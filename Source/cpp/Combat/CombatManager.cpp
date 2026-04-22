@@ -2,11 +2,14 @@
 
 #include "EngineDataStructures.hpp"
 #include "Components/SpriteComponent.hpp"
+#include "Components/HealthComponent.hpp"
 #include "Utils/ResourceManager.hpp"
 #include "Characters/CombatCharacter.hpp"
+#include "Combat/Zones/Zone.hpp"
 
 #include <iostream>
 #include <utility>
+
 
 namespace
 {
@@ -35,8 +38,14 @@ combat_state_(ECombatState::None)
 	ui_panel_ = new Panel();
 	ability_buttons_ = new Button[ABILITY_BUTTON_COUNT];
 	skill_buttons_ = new Button[SKILL_BUTTON_COUNT];
-	player_targeting_buttons_ = new Button[PLAYER_TARGETS_BUTTON_COUNT];
-	enemy_targeting_buttons_ = new Button[ENEMY_TARGETS_BUTTON_COUNT];
+	for (auto& button : player_targeting_buttons_)
+	{
+		button = new Button();
+	}
+	for (auto& button : enemy_targeting_buttons_)
+	{
+		button = new Button();
+	}
 	zone_targeting_buttons_ = new Button[ZONE_TARGETS_BUTTON_COUNT];
 	end_turn_button_ = new Button();
 
@@ -58,8 +67,14 @@ CombatManager::~CombatManager()
 	delete ui_panel_;
 	delete[] ability_buttons_;
 	delete[] skill_buttons_;
-	delete[] player_targeting_buttons_;
-	delete[] enemy_targeting_buttons_;
+	for (auto& button : player_targeting_buttons_)
+	{
+		delete button;
+	}
+	for (auto& button : enemy_targeting_buttons_)
+	{
+		delete button;
+	}
 	delete[] zone_targeting_buttons_;
 	delete end_turn_button_;
 }
@@ -321,16 +336,16 @@ void CombatManager::InitializePlayerTargetingButtons() const
 	ResourceManager& resourceManager = ResourceManager::Instance();
 	for (unsigned int i = 0; i < PLAYER_TARGETS_BUTTON_COUNT; ++i)
 	{
-		player_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));	// NOLINT
-		player_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	// NOLINT
-		player_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));	// NOLINT
-		player_targeting_buttons_[i].SetScale(glm::vec2(0.5f));	// NOLINT
-		player_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));	// NOLINT
-		player_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));	// NOLINT
-		player_targeting_buttons_[i].BindLeftClick([](){std::cout << "Player targeting button pressed!\n";});	// NOLINT
-		ui_panel_->AddWidget(player_targeting_buttons_[i]);	// NOLINT
-		player_targeting_buttons_[i].SetVisible(false);	// NOLINT
-		player_targeting_buttons_[i].SetActive(false);	// NOLINT
+		player_targeting_buttons_[i]->SetLabel("Player Character " + std::to_string(i+1));	// NOLINT
+		player_targeting_buttons_[i]->SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	// NOLINT
+		player_targeting_buttons_[i]->SetSize(glm::vec2(100.0f, 100.0f));	// NOLINT
+		player_targeting_buttons_[i]->SetScale(glm::vec2(0.5f));	// NOLINT
+		player_targeting_buttons_[i]->GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));	// NOLINT
+		player_targeting_buttons_[i]->SetPosition(glm::vec2(0.0f));	// NOLINT
+		player_targeting_buttons_[i]->BindLeftClick([](){std::cout << "Player targeting button pressed!\n";});	// NOLINT
+		ui_panel_->AddWidget(*player_targeting_buttons_[i]);
+		player_targeting_buttons_[i]->SetVisible(false);	
+		player_targeting_buttons_[i]->SetActive(false);	
 		
 	}
 	
@@ -342,16 +357,15 @@ void CombatManager::InitializeEnemyTargetingButtons() const
 	ResourceManager& resourceManager = ResourceManager::Instance();
 	for (unsigned int i = 0; i < ENEMY_TARGETS_BUTTON_COUNT; ++i)
 	{
-		enemy_targeting_buttons_[i].SetLabel("Player Character " + std::to_string(i+1));	//NOLINT
-		enemy_targeting_buttons_[i].SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	//NOLINT
-		enemy_targeting_buttons_[i].SetSize(glm::vec2(100.0f, 100.0f));	//NOLINT
-		enemy_targeting_buttons_[i].SetScale(glm::vec2(0.5f));	//NOLINT
-		enemy_targeting_buttons_[i].GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));	//NOLINT
-		enemy_targeting_buttons_[i].SetPosition(glm::vec2(0.0f));	//NOLINT
-		enemy_targeting_buttons_[i].BindLeftClick([](){std::cout << "Enemy targeting button pressed!\n";});	//NOLINT
-		ui_panel_->AddWidget(enemy_targeting_buttons_[i]);	//NOLINT
-		enemy_targeting_buttons_[i].SetVisible(false);	//NOLINT
-		enemy_targeting_buttons_[i].SetActive(false);	//NOLINT
+		enemy_targeting_buttons_[i]->SetLabel("Player Character " + std::to_string(i+1));	//NOLINT
+		enemy_targeting_buttons_[i]->SetLabelBaseColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));	//NOLINT
+		enemy_targeting_buttons_[i]->SetSize(glm::vec2(100.0f, 100.0f));	//NOLINT
+		enemy_targeting_buttons_[i]->SetScale(glm::vec2(0.5f));	//NOLINT
+		enemy_targeting_buttons_[i]->GetSpriteComponent()->SetDefaultTexture(resourceManager.GetTexture2D(ESpriteKey::Button1));	//NOLINT
+		enemy_targeting_buttons_[i]->SetPosition(glm::vec2(0.0f));	//NOLINT
+		enemy_targeting_buttons_[i]->BindLeftClick([](){std::cout << "Enemy targeting button pressed!\n";});	//NOLINT
+		ui_panel_->AddWidget(*enemy_targeting_buttons_[i]);	//NOLINT
+		enemy_targeting_buttons_[i]->SetActive(false);	//NOLINT
 	}
 	
 	// Neighboring and position will be updated dynamically
@@ -401,4 +415,70 @@ void CombatManager::InitializeEndTurnButton() const
 	end_turn_button_->GetSpriteComponent()->SetDefaultTexture( ResourceManager::Instance().GetTexture2D(ESpriteKey::Button1));
 	end_turn_button_->SetPosition(glm::vec2(0.0f));	// NOLINT
 	end_turn_button_->BindLeftClick([](){std::cout << "Zone targeting button pressed!\n";});
+}
+
+// This function is in charge of linking target buttons and delinking them based on mode
+void CombatManager::UpdateTargetingButtons(const ETargetingType targetingType, const ECombatPosition targetZone, const bool isPlayerCharacter, const EPartyType targetParty, const CombatCharacter * const caster)
+{
+	// DEPRECATED
+	// for (auto& button : enemy_targeting_buttons_)
+	// {
+	// 	button->ClearNeighbors(); // NOLINT
+	// }
+	//
+	// for (auto& button : player_targeting_buttons_)
+	// {
+	// 	button->ClearNeighbors(); // NOLINT
+	// }
+	
+	active_targeting_buttons_.clear();
+	active_targeting_buttons_.reserve(MAX_PLAYER_COUNT + enemy_characters_.size());
+	
+	for (const auto& playerCharacter : player_characters_)
+	{
+		if (playerCharacter == nullptr || playerCharacter->GetHealthComponent()->IsDead())
+		{
+			continue;
+		}
+		
+		if (playerCharacter->IsValidTarget(targetingType, targetZone, isPlayerCharacter, caster == playerCharacter, targetParty))
+		{
+			active_targeting_buttons_.emplace_back(playerCharacter->GetTargetingButton());
+		}
+	}
+	
+	for (const auto& enemy : enemy_characters_)
+	{
+		if (enemy == nullptr || enemy->GetHealthComponent()->IsDead())
+		{
+			continue;
+		}
+		
+		if (enemy->IsValidTarget(targetingType, targetZone, !isPlayerCharacter, caster == enemy, targetParty))
+		{
+			active_targeting_buttons_.emplace_back(enemy->GetTargetingButton());
+		}
+	}
+	
+	for (const auto& zone : zones_)
+	{
+		if (zone == nullptr)
+		{
+			continue;
+		}
+		
+		if (zone->IsValidTarget(targetingType, targetZone))
+		{
+			active_targeting_buttons_.emplace_back(zone->GetTargetingButton());
+		}
+	}
+	
+	for (int i = 0; i < static_cast<int>(active_targeting_buttons_.size()) - 1; ++i)
+	{
+		active_targeting_buttons_[i]->ClearNeighbors();
+		active_targeting_buttons_[i]->SetActive(true);
+		active_targeting_buttons_[i]->SetVisible(true);
+		active_targeting_buttons_[i]->AddNeighbor(active_targeting_buttons_[i+1], EWidgetNeighbor::Right);
+		active_targeting_buttons_[i+1]->AddNeighbor(active_targeting_buttons_[i], EWidgetNeighbor::Left);
+	}
 }

@@ -14,12 +14,16 @@
 #include <typeindex>
 #include <typeinfo>
 
+class Button;
+
 class Zone
 {
 	robin_hood::unordered_map<std::type_index, Status*> buffs_;
 	robin_hood::unordered_map<std::type_index, Status*> debuffs_;
 	robin_hood::unordered_map<EZoneConditionExecutionTime, std::list<Condition*>> conditions_;
 	ECombatPosition location_;
+	Button* targeting_button_;
+	
 	
 public:
 	Zone();
@@ -43,6 +47,10 @@ public:
 	virtual void OnTurnCycleEnd();
 	virtual void OnCombatStart();
 	virtual void OnCombatEnd();
+	
+	inline Button* GetTargetingButton() const { return targeting_button_; }
+	
+	bool IsValidTarget(ETargetingType targetType, ECombatPosition zone) const;
 	
 private:
 	void TriggerConditions(EZoneConditionExecutionTime executionTime);

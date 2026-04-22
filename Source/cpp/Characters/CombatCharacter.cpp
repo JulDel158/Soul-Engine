@@ -7,6 +7,7 @@
 #include "Combat/Conditions/Condition.hpp"
 #include "Components/HealthComponent.hpp"
 #include "Utils/RandomGenerator.hpp"
+#include "UI/Button.hpp"
 
 namespace
 {
@@ -20,6 +21,7 @@ health_component_(nullptr),
 attack_(nullptr)
 {
 	is_blocking_ = false;
+	targeting_button_ = new Button();
 	InitComponents();
 }
 
@@ -28,6 +30,7 @@ CombatCharacter::~CombatCharacter()
 	ClearBuffs();
 	ClearDebuffs();
 	ClearConditions();
+	delete targeting_button_;
 }
 
 bool CombatCharacter::ApplyDamage(int& amount, const bool inRange)
@@ -69,6 +72,66 @@ void CombatCharacter::ApplyHealing(const int amount, const bool inRange)
 	health_component_->Heal(total, 0);
 	
 	OnHealed(total);
+}
+
+bool CombatCharacter::IsValidTarget(const ETargetingType targetType, const ECombatPosition zone, const bool isAlly, const bool isSelf, 
+	const EPartyType targetParty) const
+{
+	bool result = false;
+	switch (targetType)
+	{
+	case ETargetingType::Self:
+		result = isSelf;
+		break;
+		
+	case ETargetingType::Foe:
+		result = !isAlly;
+		break;
+		
+	case ETargetingType::Friend:
+		result = isAlly && !isSelf;
+		break;
+		
+	case ETargetingType::PartyMember:
+		result = isAlly || isSelf;
+		break;
+		
+	case ETargetingType::Party:
+		result = targetParty == party_type_;
+		break;
+		
+	case ETargetingType::TeamParty:
+		result = isAlly;
+		break;
+		
+	case ETargetingType::FoeParty:
+		result = !isAlly;
+		break;
+		
+	case ETargetingType::EveryoneButSelf:
+	case ETargetingType::AnyoneButSelf:
+		result = !isSelf;
+		break;
+		
+	case ETargetingType::AnyCharacter:
+	case ETargetingType::Everyone:
+		result = true;
+		break;
+		
+	case ETargetingType::ZoneCharacters:
+		result = zone == GetCombatPosition();
+		break;
+		
+	case ETargetingType::CharacterSelection: // we will ignore these cases
+	case ETargetingType::Zone:
+	case ETargetingType::PlayerArea:
+	case ETargetingType::EnemyArea:
+	case ETargetingType::AnyArea:
+	case ETargetingType::AllAreas:
+		result = false;
+	}
+	
+	return result && !health_component_->IsDead();
 }
 
 void CombatCharacter::Move()

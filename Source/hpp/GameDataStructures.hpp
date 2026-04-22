@@ -9,6 +9,10 @@
 constexpr int SPEED_MAX = 4;
 constexpr int ACCURACY_MAX = 5;
 
+static constexpr unsigned int MAX_PLAYER_COUNT = 4;
+static constexpr unsigned int MAX_ENEMIES_COUNT = 6;
+static constexpr unsigned int MAX_ZONES_COUNT = 4;
+
 enum class EMovementMode : unsigned char
 {
 	None = 0,
@@ -38,16 +42,19 @@ enum class EPlayerAnimationState : int
 
 enum class ETargetingType : unsigned char
 {
-	Self = 0,
-	Enemy,
+	CharacterSelection = 0, //This is done when player is selecting a character to use during their turn
+	Self, // Only yourself
+	Foe, // A single foe
 	Friend, // A teammate, but not self
 	PartyMember, // Anyone from the caster's party including self
-	Party, // The entire party at once
-	EnemyParty, // The entire enemy party at once
-	AnyCharacter,
-	EveryoneButSelf, // This affects everyone excluding the caster
-	Everyone, // This affects everyone
-	ZoneCharacters, // All the characters in a zone
+	Party, // The entire party at once, either friend's or foe TODO: Requires unique way to target
+	TeamParty, // The entire ally's party at once // TODO: Requires unique way to target
+	FoeParty, // The entire foe's party at once // TODO: Requires unique way to target
+	AnyCharacter, // Any single character both friend or foe including self
+	AnyoneButSelf, // Any single character excluding self
+	EveryoneButSelf, // This affects everyone at once excluding the caster
+	Everyone, // This affects everyone include caster
+	ZoneCharacters, // All the characters in a zone NOTE: Might get removed
 	Zone, // A physical zone itself
 	PlayerArea, // Both zones on the player's side
 	EnemyArea, // Both zones on the enemy's side
@@ -69,6 +76,13 @@ enum class ECombatPosition : int
 	FrontEnemy = 1,
 	FrontPlayer = 2,
 	BackPlayer = 3,
+};
+
+enum class EPartyType : unsigned char
+{
+	None = 0,
+	Player = 1,
+	Enemy = 2
 };
 
 inline ECombatPosition GetMoveDestination(const ECombatPosition currentPosition)
